@@ -1,4 +1,6 @@
-package dev.roder.INTQTOOLBackend;
+package dev.roder.INTQTOOLBackend.Controllers;
+
+import dev.roder.INTQTOOLBackend.Entities.Quiz;
 
 public class QuizController {
 

@@ -8,7 +8,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private String id;
+    private Integer id;
 
     private String passHash;
 
@@ -23,11 +23,11 @@ public class User {
 
     }
 
-    public String getUserID () {
+    public Integer getUserID () {
         return id;
     }
 
-    public void setUserID (String id) {
+    public void setUserID (Integer id) {
         this.id=id;
     }
 
@@ -63,7 +63,9 @@ public class User {
         this.userName=userName;
     }
 
-
+    public boolean isValid(){
+        return true;
+    }
 
 
 }

@@ -1,4 +1,6 @@
-package dev.roder.INTQTOOLBackend;
+package dev.roder.INTQTOOLBackend.Objects;
+
+import dev.roder.INTQTOOLBackend.Objects.Course;
 
 import java.util.ArrayList;
 

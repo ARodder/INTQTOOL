@@ -22,7 +22,7 @@ public class IntqtoolUserDetails implements UserDetails {
     private Date expirationDate;
 
     public IntqtoolUserDetails(User user){
-        this.userName = user.getUserName();
+        this.userName = user.getUsername();
         this.password = user.getPassword();
         this.authorities = Arrays.stream(user.getRoles().split(","))
                 .map(SimpleGrantedAuthority :: new)

@@ -14,6 +14,9 @@ public class Course {
 
     private String description;
 
+    @Column(unique = true)
+    private String joinCode;
+
     public String getCourseID () {
         return courseID;
     }

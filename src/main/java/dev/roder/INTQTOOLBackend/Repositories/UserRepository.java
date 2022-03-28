@@ -10,5 +10,5 @@ import java.util.Optional;
 // CRUD refers Create, Read, Update, Delete
 
 public interface UserRepository extends CrudRepository<User, Integer> {
-    Optional<User> findByUserName(String userName);
+    Optional<User> findByUsername(String username);
 }

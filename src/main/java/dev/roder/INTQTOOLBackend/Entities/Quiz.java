@@ -9,6 +9,8 @@ public class Quiz {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private String quizID;
+
+    private String title;
     @OneToMany
     private List<Question> questions;
 
@@ -29,6 +31,14 @@ public class Quiz {
         return description;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -47,5 +57,15 @@ public class Quiz {
 
     public void setQuestions (List<Question> questions) {
         this.questions=questions;
+    }
+
+    public String getDetails(){
+        StringBuilder details = new StringBuilder();
+        details.append("title:"+this.title+",\n");
+        details.append("description:"+this.description+",\n");
+        details.append("quizLength:"+this.questions.size()+",\n");
+
+
+        return details.toString();
     }
 }

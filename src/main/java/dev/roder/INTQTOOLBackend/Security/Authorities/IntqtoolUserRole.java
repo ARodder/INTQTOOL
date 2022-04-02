@@ -2,7 +2,10 @@ package dev.roder.INTQTOOLBackend.Security.Authorities;
 
 import com.google.common.collect.Sets;
 
+import javax.persistence.Entity;
+import java.util.List;
 import java.util.Set;
+
 
 public enum IntqtoolUserRole {
     STUDENT(Sets.newHashSet(IntqtoolUserPermission.COURSE_READ,
@@ -22,6 +25,10 @@ public enum IntqtoolUserRole {
 
     IntqtoolUserRole(Set<IntqtoolUserPermission> permissions){
         this.permissions = permissions;
+    }
+
+    public Set<IntqtoolUserPermission> getPermissions(){
+        return permissions;
     }
 
 

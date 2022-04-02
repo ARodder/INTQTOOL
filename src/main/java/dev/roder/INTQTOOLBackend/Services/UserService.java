@@ -1,12 +1,20 @@
 package dev.roder.INTQTOOLBackend.Services;
 
+import dev.roder.INTQTOOLBackend.Entities.Course;
+import dev.roder.INTQTOOLBackend.Entities.Quiz;
 import dev.roder.INTQTOOLBackend.Entities.User;
 import dev.roder.INTQTOOLBackend.Repositories.UserRepository;
+import dev.roder.INTQTOOLBackend.Security.Authorities.IntqtoolUserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -15,6 +23,11 @@ public class UserService {
     private UserRepository userRepository;
 
     public void addUser(User user){
+        user.setSettings("0,0,0,0,0");
+        user.setRole(IntqtoolUserRole.STUDENT);
+        user.setExpirationDate(LocalDate.now().plusYears(5));
+        user.setAccountLock(false);
+        user.setUserEnabled(true);
         userRepository.save(user);
     }
 
@@ -28,5 +41,21 @@ public class UserService {
         }
 
         return allUsers;
+    }
+
+    public List<String> getUsersActiveQuizes(){
+        List<String> quizzes = new ArrayList<String>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+
+        for(Course course: currentUser.getCourses()){
+            for(Quiz quiz :course.getActiveQuizzes()){
+                quizzes.add(quiz.getDetails());
+            }
+        }
+
+        return quizzes;
     }
 }

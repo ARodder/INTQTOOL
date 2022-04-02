@@ -16,6 +16,8 @@ public class Course {
 
     @Column(unique = true)
     private String joinCode;
+    @OneToMany
+    private List<Quiz> activeQuizzes;
 
     public String getCourseID () {
         return courseID;
@@ -40,4 +42,22 @@ public class Course {
     public void setDescription (String description) {
         this.description=description;
     }
+
+    public String getJoinCode() {
+        return joinCode;
+    }
+
+    public void setJoinCode(String joinCode) {
+        this.joinCode = joinCode;
+    }
+
+    public List<Quiz> getActiveQuizzes() {
+        return activeQuizzes;
+    }
+
+    public void setActiveQuizzes(List<Quiz> activeQuizzes) {
+        this.activeQuizzes = activeQuizzes;
+    }
+
+
 }

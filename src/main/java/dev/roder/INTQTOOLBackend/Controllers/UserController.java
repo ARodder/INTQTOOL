@@ -51,6 +51,13 @@ public class UserController {
         return userService.getAllUsers();
     }
 
+    @GetMapping(path="/myquizzes")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER')")
+    public void getUsersActiveQuizes(){
+        userService.getUsersActiveQuizes();
+
+    }
+
 
 
 }

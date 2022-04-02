@@ -1,6 +1,6 @@
 package dev.roder.INTQTOOLBackend.Security;
 
-
+import dev.roder.INTQTOOLBackend.Security.IntqtoolUserDetails;
 import dev.roder.INTQTOOLBackend.Entities.User;
 import dev.roder.INTQTOOLBackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,6 @@ public class IntqtoolUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
          Optional<User> user = userRepository.findByUsername(username);
-        return user.get();
+        return new IntqtoolUserDetails(user.get());
     }
 }

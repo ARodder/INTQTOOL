@@ -1,27 +1,23 @@
 package dev.roder.INTQTOOLBackend.Security;
 
 
-import dev.roder.INTQTOOLBackend.Repositories.UserRepository;
+import dev.roder.INTQTOOLBackend.Security.jwt.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
 
@@ -33,11 +29,15 @@ import static java.lang.String.format;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    UserDetailsService userDetailsService;
-    private final UserRepository userRepo;
+    private UserDetailsService userDetailsService;
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
 
-    public SecurityConfiguration(UserRepository userRepo){
-        this.userRepo = userRepo;
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public SecurityConfiguration(PasswordEncoder passwordEncoder){
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -48,16 +48,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .cors().and()
+                .csrf().disable().cors().and()
                 .authorizeRequests()
-                .antMatchers("/user/all").hasRole("ADMIN")
-                .antMatchers("/login").permitAll()
-                .and().formLogin().permitAll().successHandler(new AuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-            }
-        });
+                .antMatchers("/authenticate").permitAll()
+                .anyRequest().authenticated()
+                .and().sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
     @Bean
@@ -74,8 +78,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-    @Bean
-    public PasswordEncoder getPasswordEncoder(){return new BCryptPasswordEncoder(10);}
+
 
 
 }

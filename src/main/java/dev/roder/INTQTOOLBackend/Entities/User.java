@@ -1,20 +1,13 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
-import dev.roder.INTQTOOLBackend.Security.Authorities.IntqtoolUserRole;
 import org.checkerframework.common.aliasing.qual.Unique;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import javax.persistence.*;
 
 @Entity
-public class User implements UserDetails {
+public class User{
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -27,7 +20,12 @@ public class User implements UserDetails {
     private String username;
     @Unique
     private String email;
-    private IntqtoolUserRole role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id")
+    )
+    private Set<Role> roles = new LinkedHashSet<>();
     private String firstName;
     private String lastName;
     private LocalDate expirationDate;
@@ -76,8 +74,14 @@ public class User implements UserDetails {
     public boolean isValid(){
         return true;
     }
-    public IntqtoolUserRole getRole() {return role;}
-    public void setRole(IntqtoolUserRole roles) {this.role = roles;}
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+    public void addRole(Role role) {roles.add(role);}
     public LocalDate getExpirationDate() {return expirationDate;}
     public void setExpirationDate(LocalDate expirationDate) {this.expirationDate = expirationDate;}
     public boolean isAccountLock() {return !accountLock;}
@@ -112,45 +116,15 @@ public class User implements UserDetails {
         }
         userString.append("],");
         userString.append("\"email\":"+"\""+this.email+"\"," );
-        userString.append("\"roles\":"+"\""+this.role +"\"," );
+        userString.append("\"roles\":"+"[" );
+        roles.forEach(role ->{userString.append("\""+role.getName()+"\",");});
+        if(roles.size() >=1){
+            userString.deleteCharAt(userString.length()-1);
+        }
+        userString.append("]");
         userString.append("}");
         return userString.toString();
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        List<GrantedAuthority> authorities
-                = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(role.name()));
-            role.getPermissions().stream()
-                    .map(p -> new SimpleGrantedAuthority(p.name()))
-                    .forEach(authorities::add);
-
-        return authorities;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        boolean isExpired = false;
-        if(this.expirationDate.compareTo(LocalDate.now())>0){
-            isExpired = true;
-        }
-        return isExpired;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return accountLock;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return userEnabled;
-    }
 }

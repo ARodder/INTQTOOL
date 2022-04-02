@@ -2,12 +2,13 @@ package dev.roder.INTQTOOLBackend.Services;
 
 import dev.roder.INTQTOOLBackend.Entities.Course;
 import dev.roder.INTQTOOLBackend.Entities.Quiz;
+import dev.roder.INTQTOOLBackend.Entities.Role;
 import dev.roder.INTQTOOLBackend.Entities.User;
 import dev.roder.INTQTOOLBackend.Repositories.UserRepository;
-import dev.roder.INTQTOOLBackend.Security.Authorities.IntqtoolUserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -22,10 +23,18 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserService(PasswordEncoder passwordEncoder){
+        this.passwordEncoder = passwordEncoder;
+    }
+
     public void addUser(User user){
         user.setSettings("0,0,0,0,0");
-        user.setRole(IntqtoolUserRole.STUDENT);
+        user.addRole(new Role("ROLE_STUDENT"));
         user.setExpirationDate(LocalDate.now().plusYears(5));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setAccountLock(false);
         user.setUserEnabled(true);
         userRepository.save(user);

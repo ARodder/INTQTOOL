@@ -25,13 +25,20 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    private String currentUserName;
 
+
+    @GetMapping(path="/myuser")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody String getUser() {
+        // This returns a JSON or XML with the users
+
+
+        return userService.getUser();
+    }
 
     @PostMapping("/add")
     @PermitAll
     public ResponseEntity<String> UserController(@RequestBody User user){
-        currentUserName = SecurityContextHolder.getContext().getAuthentication().getName();
 
         ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if(user.isValid()){
@@ -47,14 +54,13 @@ public class UserController {
     public @ResponseBody Iterable<String> getAllUsers() {
         // This returns a JSON or XML with the users
 
-
         return userService.getAllUsers();
     }
 
-    @GetMapping(path="/myquizzes")
-    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER')")
-    public void getUsersActiveQuizes(){
-        userService.getUsersActiveQuizes();
+    @RequestMapping(method=RequestMethod.GET, path="/quizzes")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody Iterable<String> getUsersActiveQuizes(){
+        return userService.getUsersActiveQuizes();
 
     }
 

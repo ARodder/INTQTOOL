@@ -1,5 +1,7 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
+import org.json.JSONObject;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -60,10 +62,10 @@ public class Quiz {
     }
 
     public String getDetails(){
-        StringBuilder details = new StringBuilder();
-        details.append("title:"+this.title+",\n");
-        details.append("description:"+this.description+",\n");
-        details.append("quizLength:"+this.questions.size()+",\n");
+        JSONObject details = new JSONObject();
+        details.put("title",this.title);
+        details.put("description",this.description);
+        details.put("quizLength:",this.questions.size());
 
 
         return details.toString();

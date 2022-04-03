@@ -52,6 +52,16 @@ public class UserService {
         return allUsers;
     }
 
+    public String getUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+
+        return currentUser.toString();
+
+    }
+
     public List<String> getUsersActiveQuizes(){
         List<String> quizzes = new ArrayList<String>();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -1,5 +1,7 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
+import org.checkerframework.common.aliasing.qual.Unique;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.List;
 public class Course {
 
     @Id
+    @Unique
     private String courseID;
 
     private String courseName;

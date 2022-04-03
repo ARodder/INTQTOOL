@@ -1,6 +1,8 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
 import org.checkerframework.common.aliasing.qual.Unique;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -105,25 +107,25 @@ public class User{
 
     @Override
     public String toString() {
-        StringBuilder userString = new StringBuilder();
-        userString.append("{\n");
-        userString.append("\"id\":"+this.id+",");
-        userString.append("\"username\":"+"\""+this.username+"\"," );
-        userString.append("\"courses\":"+"[");
-        courses.forEach(course -> {userString.append(course.getCourseID()+",");});
-        if(courses.size() >=1){
-            userString.deleteCharAt(userString.length()-1);
+
+        JSONObject userObject = new JSONObject();
+        userObject.put("id",id);
+        userObject.put("username",username);
+        userObject.put("firstName",firstName);
+        userObject.put("lastName",lastName);
+        JSONArray courseJsonArray = new JSONArray();
+        for(Course course:courses){
+            courseJsonArray.put(course.getCourseID());
         }
-        userString.append("],");
-        userString.append("\"email\":"+"\""+this.email+"\"," );
-        userString.append("\"roles\":"+"[" );
-        roles.forEach(role ->{userString.append("\""+role.getName()+"\",");});
-        if(roles.size() >=1){
-            userString.deleteCharAt(userString.length()-1);
+        userObject.put("courses",courseJsonArray);
+        userObject.put("email",email);
+
+        JSONArray roleJsonArray = new JSONArray();
+        for(Role role:roles){
+            roleJsonArray.put(role.getName());
         }
-        userString.append("]");
-        userString.append("}");
-        return userString.toString();
+        userObject.put("roles",roleJsonArray);
+        return userObject.toString();
     }
 
 

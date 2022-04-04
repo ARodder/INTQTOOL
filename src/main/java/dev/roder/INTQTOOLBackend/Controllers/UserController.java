@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    @PermitAll
+    @PreAuthorize("permitAll()")
     public ResponseEntity<String> UserController(@RequestBody User user){
 
         ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -61,6 +61,13 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
     public @ResponseBody Iterable<String> getUsersActiveQuizes(){
         return userService.getUsersActiveQuizes();
+
+    }
+
+    @RequestMapping(method=RequestMethod.GET, path="/courses")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody Iterable<String> getUsersCourses(){
+        return userService.getUsersCourses();
 
     }
 

@@ -4,13 +4,13 @@ import dev.roder.INTQTOOLBackend.Entities.Course;
 import dev.roder.INTQTOOLBackend.Entities.Quiz;
 import dev.roder.INTQTOOLBackend.Entities.Role;
 import dev.roder.INTQTOOLBackend.Entities.User;
+import dev.roder.INTQTOOLBackend.Repositories.RoleRepository;
 import dev.roder.INTQTOOLBackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,6 +23,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -31,12 +34,15 @@ public class UserService {
     }
 
     public void addUser(User user){
+        Role role = new Role("ROLE_STUDENT");
+
         user.setSettings("0,0,0,0,0");
-        user.addRole(new Role("ROLE_STUDENT"));
+        user.addRole(role);
         user.setExpirationDate(LocalDate.now().plusYears(5));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setAccountLock(false);
         user.setUserEnabled(true);
+        roleRepository.save(role);
         userRepository.save(user);
     }
 
@@ -76,5 +82,19 @@ public class UserService {
         }
 
         return quizzes;
+    }
+
+    public List<String> getUsersCourses(){
+        List<String> courses = new ArrayList<String>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+
+        for(Course course: currentUser.getCourses()){
+            courses.add(course.getDetails());
+        }
+
+        return courses;
     }
 }

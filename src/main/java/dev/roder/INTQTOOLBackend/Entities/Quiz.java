@@ -63,6 +63,7 @@ public class Quiz {
 
     public String getDetails(){
         JSONObject details = new JSONObject();
+        details.put("id",this.quizID);
         details.put("title",this.title);
         details.put("description",this.description);
         details.put("quizLength:",this.questions.size());

@@ -1,5 +1,7 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
+import org.json.JSONObject;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,17 @@ public class Notification {
     private String recipientID;
     private String quizID;
     private String type;
+    private String message;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+
 
     public String getNotificationID () {
         return notificationID;
@@ -45,5 +58,14 @@ public class Notification {
 
     public void setType (String type) {
         this.type=type;
+    }
+
+    public String getDetails(){
+        JSONObject details = new JSONObject();
+        details.put("id",notificationID);
+        details.put("message",this.message);
+        details.put("type",this.type);
+
+        return details.toString();
     }
 }

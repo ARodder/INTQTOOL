@@ -1,9 +1,6 @@
 package dev.roder.INTQTOOLBackend.Services;
 
-import dev.roder.INTQTOOLBackend.Entities.Course;
-import dev.roder.INTQTOOLBackend.Entities.Quiz;
-import dev.roder.INTQTOOLBackend.Entities.Role;
-import dev.roder.INTQTOOLBackend.Entities.User;
+import dev.roder.INTQTOOLBackend.Entities.*;
 import dev.roder.INTQTOOLBackend.Repositories.RoleRepository;
 import dev.roder.INTQTOOLBackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,5 +93,19 @@ public class UserService {
         }
 
         return courses;
+    }
+
+    public List<String> getNotifications(){
+        List<String> notifications = new ArrayList<String>();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+
+        for(Notification notification:currentUser.getNotifications()){
+            notifications.add(notification.getDetails());
+        }
+
+        return notifications;
     }
 }

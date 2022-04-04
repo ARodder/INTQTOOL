@@ -28,6 +28,9 @@ public class User{
             inverseJoinColumns = @JoinColumn(name="role_id")
     )
     private Set<Role> roles = new LinkedHashSet<>();
+
+    @OneToMany
+    private List<Notification> notifications;
     private String firstName;
     private String lastName;
     private LocalDate expirationDate;
@@ -103,6 +106,18 @@ public class User{
     }
     public void setLastName(String lastname) {
         this.lastName = lastname;
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public void addNotification(Notification notification){
+        this.notifications.add(notification);
     }
 
     @Override

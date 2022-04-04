@@ -36,6 +36,15 @@ public class UserController {
         return userService.getUser();
     }
 
+    @GetMapping(path="/notification")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody Iterable<String> getNotifications() {
+        // This returns a JSON or XML with the users
+
+
+        return userService.getNotifications();
+    }
+
     @PostMapping("/add")
     @PreAuthorize("permitAll()")
     public ResponseEntity<String> UserController(@RequestBody User user){

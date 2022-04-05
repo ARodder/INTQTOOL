@@ -5,8 +5,7 @@ import dev.roder.INTQTOOLBackend.Services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(path="/quiz")
@@ -26,6 +25,12 @@ public class QuizController {
 
     public void deleteQuestion() {
 
+    }
+
+    @RequestMapping(method= RequestMethod.GET, path="/{quizID}")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody String getQuiz(@PathVariable("quizID") String quizID){
+        return quizService.getQuiz(quizID);
     }
 
 

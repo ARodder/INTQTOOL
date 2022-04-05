@@ -80,6 +80,13 @@ public class UserController {
 
     }
 
+    @RequestMapping(method=RequestMethod.GET, path="/joincourse/{joinCode}")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public void joinCourse(@PathVariable("joinCode") String joinCode){
+        userService.joinCourse(joinCode);
+
+    }
+
 
 
 }

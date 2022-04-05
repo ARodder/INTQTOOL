@@ -16,7 +16,11 @@ public class User{
     private Integer id;
     private String password;
     private String settings;
-    @OneToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name="user_courses",
+    joinColumns = @JoinColumn(name="user_id"),
+    inverseJoinColumns = @JoinColumn(name="course_id")
+    )
     private List<Course> courses;
     @Unique
     private String username;
@@ -118,6 +122,10 @@ public class User{
 
     public void addNotification(Notification notification){
         this.notifications.add(notification);
+    }
+
+    public void addCourse(Course course){
+        this.courses.add(course);
     }
 
     @Override

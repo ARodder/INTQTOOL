@@ -1,18 +1,23 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.List;
+import java.util.Set;
 import javax.persistence.*;
 
 @Entity
 public class Question {
 
     @Id
+    private String questionID;
     private String quizID;
     private String questionText;
     private String type;
-    private String alternatives;
+    @OneToMany
+    private Set<Alternativ> alternatives;
 
-    private String questionID;
 
     public String getQuizID () {
         return quizID;
@@ -38,11 +43,11 @@ public class Question {
         this.type=type;
     }
 
-    public String getAlternatives () {
+    public Set<Alternativ> getAlternatives () {
         return alternatives;
     }
 
-    public void setAlternatives (String alternatives) {
+    public void setAlternatives (Set<Alternativ> alternatives) {
         this.alternatives=alternatives;
     }
 
@@ -52,5 +57,21 @@ public class Question {
 
     public void setQuestionID (String questionID) {
         this.questionID=questionID;
+    }
+
+    @Override
+    public String toString(){
+        JSONObject details = new JSONObject();
+        details.put("id",this.questionID);
+        details.put("question",this.questionText);
+        details.put("type",this.type);
+        JSONArray jsonAlternatives = new JSONArray();
+        for(Alternativ alternativ:alternatives){
+            jsonAlternatives.put(alternativ.toString());
+        }
+        details.put("questions",jsonAlternatives);
+
+
+        return details.toString();
     }
 }

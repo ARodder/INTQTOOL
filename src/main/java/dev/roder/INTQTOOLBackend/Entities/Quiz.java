@@ -1,5 +1,6 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
@@ -67,6 +68,23 @@ public class Quiz {
         details.put("title",this.title);
         details.put("description",this.description);
         details.put("quizLength:",this.questions.size());
+
+
+        return details.toString();
+    }
+    @Override
+    public String toString(){
+        JSONObject details = new JSONObject();
+        details.put("id",this.quizID);
+        details.put("title",this.title);
+        details.put("description",this.description);
+        details.put("quizLength",this.questions.size());
+        details.put("author",this.author.getLastName()+", "+this.author.getFirstName());
+        JSONArray jsonQuestions = new JSONArray();
+        for(Question question:questions){
+            jsonQuestions.put(question.toString());
+        }
+        details.put("questions",jsonQuestions);
 
 
         return details.toString();

@@ -1,6 +1,7 @@
 package dev.roder.INTQTOOLBackend.Services;
 
 import dev.roder.INTQTOOLBackend.Entities.*;
+import dev.roder.INTQTOOLBackend.Repositories.CourseRepository;
 import dev.roder.INTQTOOLBackend.Repositories.RoleRepository;
 import dev.roder.INTQTOOLBackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -107,5 +111,22 @@ public class UserService {
         }
 
         return notifications;
+    }
+
+    public  void joinCourse(String joinCode){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+
+
+
+        Course newCourse = courseRepository.findByJoinCode(joinCode).get();
+        System.out.println(newCourse.getCourseName());
+        if(newCourse != null){
+            currentUser.addCourse(newCourse);
+            userRepository.save(currentUser);
+        }
+
     }
 }

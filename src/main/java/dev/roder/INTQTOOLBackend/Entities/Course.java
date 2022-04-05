@@ -1,22 +1,25 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
-import org.checkerframework.common.aliasing.qual.Unique;
+
 import org.json.JSONObject;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 public class Course {
 
     @Id
-    @Unique
     private String courseID;
 
     private String courseName;
 
     private String description;
+
+
+
+    @ManyToMany(mappedBy="courses")
+    private Set<User> users = new LinkedHashSet<>();
 
     @Column(unique = true)
     private String joinCode;
@@ -61,6 +64,17 @@ public class Course {
 
     public void setActiveQuizzes(List<Quiz> activeQuizzes) {
         this.activeQuizzes = activeQuizzes;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+    public void addUser(User user){
+        this.users.add(user);
     }
 
     public String getDetails(){

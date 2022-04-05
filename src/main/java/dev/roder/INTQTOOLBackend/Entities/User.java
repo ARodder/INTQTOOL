@@ -140,6 +140,12 @@ public class User{
             roleJsonArray.put(role.getName());
         }
         userObject.put("roles",roleJsonArray);
+        JSONArray notificationJsonArray = new JSONArray();
+        for(Notification notification:notifications){
+            roleJsonArray.put(notification.getDetails());
+        }
+        userObject.put("notifications",notificationJsonArray);
+
         return userObject.toString();
     }
 

@@ -142,7 +142,7 @@ public class User{
         userObject.put("roles",roleJsonArray);
         JSONArray notificationJsonArray = new JSONArray();
         for(Notification notification:notifications){
-            roleJsonArray.put(notification.getDetails());
+            notificationJsonArray.put(notification.getDetails());
         }
         userObject.put("notifications",notificationJsonArray);
 

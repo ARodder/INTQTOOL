@@ -13,7 +13,7 @@ public class Notification {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private String notificationID;
-    private String recipientID;
+    private String title;
     private String quizID;
     private String type;
     private String message;
@@ -36,12 +36,12 @@ public class Notification {
         this.notificationID=notificationID;
     }
 
-    public String getRecipientID () {
-        return recipientID;
+    public String getTitle() {
+        return title;
     }
 
-    public void setRecipientID (String recipientID) {
-        this.recipientID=recipientID;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getQuizID () {
@@ -63,6 +63,7 @@ public class Notification {
     public String getDetails(){
         JSONObject details = new JSONObject();
         details.put("id",notificationID);
+        details.put("title",this.title);
         details.put("message",this.message);
         details.put("type",this.type);
 

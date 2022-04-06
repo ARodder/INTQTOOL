@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 
 @Entity
@@ -90,15 +91,33 @@ public class User{
     public Set<Role> getRoles() {
         return roles;
     }
-    public void addRole(Role role) {roles.add(role);}
-    public LocalDate getExpirationDate() {return expirationDate;}
-    public void setExpirationDate(LocalDate expirationDate) {this.expirationDate = expirationDate;}
-    public boolean isAccountLock() {return !accountLock;}
-    public void setAccountLock(boolean accountLock) {this.accountLock = accountLock;}
-    public String getEmail() {return email;}
-    public void setEmail(String email) {this.email = email;}
-    public boolean isUserEnabled() {return userEnabled;}
-    public void setUserEnabled(boolean userEnabled) {this.userEnabled = userEnabled;}
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+    public LocalDate getExpirationDate() {
+        return expirationDate;
+    }
+    public void setExpirationDate(LocalDate expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+    public boolean isAccountLock() {
+        return !accountLock;
+    }
+    public void setAccountLock(boolean accountLock) {
+        this.accountLock = accountLock;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public boolean isUserEnabled() {
+        return userEnabled;
+    }
+    public void setUserEnabled(boolean userEnabled) {
+        this.userEnabled = userEnabled;
+    }
     public String getFirstName() {
         return firstName;
     }
@@ -122,6 +141,13 @@ public class User{
 
     public void addNotification(Notification notification){
         this.notifications.add(notification);
+    }
+    public void removeNotification(Notification notification){
+        this.notifications.remove(notification);
+    }
+
+    public void removeNotification(String notificationID){
+        this.notifications = this.notifications.stream().filter(notification -> notification.getNotificationID() != notificationID).collect(Collectors.toList());
     }
 
     public void addCourse(Course course){

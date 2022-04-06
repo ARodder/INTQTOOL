@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -113,20 +114,72 @@ public class UserService {
         return notifications;
     }
 
-    public  void joinCourse(String joinCode){
+    public boolean joinCourse(String joinCode){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+        boolean joinSuccess = false;
+
+
+        try{
+            Course newCourse = courseRepository.findByJoinCode(joinCode).get();
+            System.out.println(newCourse.getCourseName());
+            if(newCourse != null){
+                currentUser.addCourse(newCourse);
+                userRepository.save(currentUser);
+            }
+            joinSuccess = true;
+        } catch(Exception e){
+            System.out.println(e.getMessage());
+            joinSuccess = false;
+        }
+
+        return joinSuccess;
+    }
+
+    public boolean clearNotifications(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
         User currentUser = userRepository.findByUsername(currentPrincipalName).get();
 
+        boolean clearSuccess = false;
 
+        try{
+            currentUser.setNotifications(new ArrayList<>());
 
-        Course newCourse = courseRepository.findByJoinCode(joinCode).get();
-        System.out.println(newCourse.getCourseName());
-        if(newCourse != null){
-            currentUser.addCourse(newCourse);
             userRepository.save(currentUser);
+            clearSuccess = true;
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            clearSuccess = false;
         }
 
+        return clearSuccess;
+    }
+
+    public boolean removeNotification(String notificationID){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+
+        boolean delSuccess = false;
+
+        try{
+            List<String> notificationIDs = currentUser.getNotifications().stream().map(notification -> notification.getNotificationID()).collect(Collectors.toList());
+
+            if(notificationIDs.contains(notificationID)){
+                currentUser.removeNotification(notificationID);
+                delSuccess = true;
+            }
+
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            delSuccess = false;
+        }
+
+        return delSuccess;
     }
 }

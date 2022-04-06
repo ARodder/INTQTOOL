@@ -82,10 +82,42 @@ public class UserController {
 
     @RequestMapping(method=RequestMethod.GET, path="/joincourse/{joinCode}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public void joinCourse(@PathVariable("joinCode") String joinCode){
-        userService.joinCourse(joinCode);
+    public ResponseEntity<String> joinCourse(@PathVariable("joinCode") String joinCode){
+
+        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(userService.joinCourse(joinCode)) {
+            response = new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
+
+        return response;
 
     }
+
+    @RequestMapping(method=RequestMethod.GET, path="/clearnotifications")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> clearNotifications(){
+        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(userService.clearNotifications()){
+            response = new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return response;
+
+    }
+
+    @RequestMapping(method=RequestMethod.GET, path="/removenotification/{notificationID}")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> removeNotification(@PathVariable("notificationID") String notificationID){
+        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(userService.removeNotification(notificationID)){
+            response = new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return response;
+
+    }
+
+
 
 
 

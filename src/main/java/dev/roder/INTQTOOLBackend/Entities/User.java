@@ -146,7 +146,7 @@ public class User{
         this.notifications.remove(notification);
     }
 
-    public void removeNotification(String notificationID){
+    public void removeNotification(Integer notificationID){
         this.notifications = this.notifications.stream().filter(notification -> notification.getNotificationID() != notificationID).collect(Collectors.toList());
     }
 

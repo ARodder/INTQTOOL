@@ -12,7 +12,7 @@ public class Notification {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private String notificationID;
+    private Integer notificationID;
     private String title;
     private String quizID;
     private String type;
@@ -28,11 +28,11 @@ public class Notification {
 
 
 
-    public String getNotificationID () {
+    public Integer getNotificationID () {
         return notificationID;
     }
 
-    public void setNotificationID (String notificationID) {
+    public void setNotificationID (Integer notificationID) {
         this.notificationID=notificationID;
     }
 

@@ -107,7 +107,7 @@ public class UserController {
 
     @RequestMapping(method=RequestMethod.GET, path="/removenotification/{notificationID}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> removeNotification(@PathVariable("notificationID") String notificationID){
+    public ResponseEntity<String> removeNotification(@PathVariable("notificationID") Integer notificationID){
         ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if(userService.removeNotification(notificationID)){
             response = new ResponseEntity<>(HttpStatus.OK);

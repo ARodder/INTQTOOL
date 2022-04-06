@@ -2,6 +2,7 @@ package dev.roder.INTQTOOLBackend.Services;
 
 import dev.roder.INTQTOOLBackend.Entities.*;
 import dev.roder.INTQTOOLBackend.Repositories.CourseRepository;
+import dev.roder.INTQTOOLBackend.Repositories.NotificationRepository;
 import dev.roder.INTQTOOLBackend.Repositories.RoleRepository;
 import dev.roder.INTQTOOLBackend.Repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class UserService {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -147,6 +151,10 @@ public class UserService {
         boolean clearSuccess = false;
 
         try{
+            for(Notification notification: currentUser.getNotifications()){
+                notificationRepository.delete(notification);
+            }
+
             currentUser.setNotifications(new ArrayList<>());
 
             userRepository.save(currentUser);
@@ -159,7 +167,7 @@ public class UserService {
         return clearSuccess;
     }
 
-    public boolean removeNotification(String notificationID){
+    public boolean removeNotification(Integer notificationID){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -168,10 +176,11 @@ public class UserService {
         boolean delSuccess = false;
 
         try{
-            List<String> notificationIDs = currentUser.getNotifications().stream().map(notification -> notification.getNotificationID()).collect(Collectors.toList());
+            List<Integer> notificationIDs = currentUser.getNotifications().stream().map(notification -> notification.getNotificationID()).collect(Collectors.toList());
 
             if(notificationIDs.contains(notificationID)){
                 currentUser.removeNotification(notificationID);
+                notificationRepository.delete(notificationRepository.findByNotificationID(notificationID).get());
                 delSuccess = true;
             }
 

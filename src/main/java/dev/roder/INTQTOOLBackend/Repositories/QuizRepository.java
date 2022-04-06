@@ -11,5 +11,5 @@ import java.util.Set;
 
 public interface QuizRepository extends CrudRepository<Quiz, Integer> {
 
-        Optional<Quiz> findByQuizID(String quizID);
+        Optional<Quiz> findByQuizID(Integer quizID);
 }

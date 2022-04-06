@@ -1,5 +1,7 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
+import org.json.JSONObject;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -40,6 +42,16 @@ public class Alternativ {
 
     public void setRightAlternative(boolean rightAlternative) {
         this.rightAlternative = rightAlternative;
+    }
+
+    @Override
+    public String toString(){
+        JSONObject details = new JSONObject();
+        details.put("id",alternativeID);
+        details.put("alternative",alternative);
+
+        return details.toString();
+
     }
 
 }

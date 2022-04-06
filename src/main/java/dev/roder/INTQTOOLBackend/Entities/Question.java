@@ -3,7 +3,6 @@ package dev.roder.INTQTOOLBackend.Entities;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.List;
 import java.util.Set;
 import javax.persistence.*;
 
@@ -11,19 +10,23 @@ import javax.persistence.*;
 public class Question {
 
     @Id
-    private String questionID;
-    private String quizID;
+    private Integer questionID;
+    private Integer quizID;
     private String questionText;
     private String type;
     @OneToMany
+    @JoinTable(name="question_alternatives",
+            joinColumns = @JoinColumn(name="question_id"),
+            inverseJoinColumns = @JoinColumn(name="alternative_id")
+    )
     private Set<Alternativ> alternatives;
 
 
-    public String getQuizID () {
+    public Integer getQuizID () {
         return quizID;
     }
 
-    public void setQuizID (String quizID) {
+    public void setQuizID (Integer quizID) {
         this.quizID=quizID;
     }
 
@@ -51,11 +54,11 @@ public class Question {
         this.alternatives=alternatives;
     }
 
-    public String getQuestionID () {
+    public Integer getQuestionID () {
         return questionID;
     }
 
-    public void setQuestionID (String questionID) {
+    public void setQuestionID (Integer questionID) {
         this.questionID=questionID;
     }
 
@@ -69,7 +72,7 @@ public class Question {
         for(Alternativ alternativ:alternatives){
             jsonAlternatives.put(alternativ.toString());
         }
-        details.put("questions",jsonAlternatives);
+        details.put("alternatives",jsonAlternatives);
 
 
         return details.toString();

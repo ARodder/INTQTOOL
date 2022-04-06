@@ -24,6 +24,10 @@ public class Course {
     @Column(unique = true)
     private String joinCode;
     @OneToMany
+    @JoinTable(name="course_active_quizzes",
+            joinColumns = @JoinColumn(name="course_id"),
+            inverseJoinColumns = @JoinColumn(name="quiz_id")
+    )
     private List<Quiz> activeQuizzes;
 
     public String getCourseID () {

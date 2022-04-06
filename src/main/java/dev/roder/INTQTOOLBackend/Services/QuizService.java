@@ -23,7 +23,7 @@ public class QuizService {
     private UserRepository userRepository;
 
 
-    public String getQuiz(String quizID){
+    public String getQuiz(Integer quizID){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 

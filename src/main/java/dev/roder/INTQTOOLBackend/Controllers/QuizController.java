@@ -29,7 +29,7 @@ public class QuizController {
 
     @RequestMapping(method= RequestMethod.GET, path="/{quizID}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public @ResponseBody String getQuiz(@PathVariable("quizID") String quizID){
+    public @ResponseBody String getQuiz(@PathVariable("quizID") Integer quizID){
         return quizService.getQuiz(quizID);
     }
 

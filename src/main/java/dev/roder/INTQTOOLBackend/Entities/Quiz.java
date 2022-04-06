@@ -11,10 +11,15 @@ public class Quiz {
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private String quizID;
+    private Integer quizID;
 
     private String title;
     @OneToMany
+
+    @JoinTable(name="quiz_questions",
+            joinColumns = @JoinColumn(name="quiz_id"),
+            inverseJoinColumns = @JoinColumn(name="question_id")
+    )
     private List<Question> questions;
 
     @ManyToOne
@@ -46,11 +51,11 @@ public class Quiz {
         this.description = description;
     }
 
-    public String getQuizID () {
+    public Integer getQuizID () {
         return quizID;
     }
 
-    public void setQuizID (String quizID) {
+    public void setQuizID (Integer quizID) {
         this.quizID=quizID;
     }
 

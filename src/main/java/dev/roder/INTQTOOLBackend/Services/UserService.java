@@ -151,13 +151,16 @@ public class UserService {
         boolean clearSuccess = false;
 
         try{
-            for(Notification notification: currentUser.getNotifications()){
-                notificationRepository.delete(notification);
-            }
+            List<Notification> currentUserNotifications = currentUser.getNotifications();
+
 
             currentUser.setNotifications(new ArrayList<>());
 
             userRepository.save(currentUser);
+
+            for(Notification notification: currentUserNotifications){
+                notificationRepository.delete(notification);
+            }
             clearSuccess = true;
         }catch(Exception e){
             System.out.println(e.getMessage());

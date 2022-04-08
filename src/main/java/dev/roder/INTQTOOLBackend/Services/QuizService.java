@@ -47,4 +47,8 @@ public class QuizService {
         }
 
     }
+
+    public void addQuiz(Quiz quiz){
+        quizRepository.save(quiz);
+    }
 }

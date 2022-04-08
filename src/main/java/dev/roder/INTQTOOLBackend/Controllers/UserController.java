@@ -1,6 +1,7 @@
 package dev.roder.INTQTOOLBackend.Controllers;
 
 import dev.roder.INTQTOOLBackend.Entities.Course;
+import dev.roder.INTQTOOLBackend.Entities.QuizAnswer;
 import dev.roder.INTQTOOLBackend.Entities.User;
 import dev.roder.INTQTOOLBackend.Repositories.UserRepository;
 import dev.roder.INTQTOOLBackend.Services.UserService;
@@ -82,7 +83,7 @@ public class UserController {
 
     @RequestMapping(method=RequestMethod.GET, path="/joincourse/{joinCode}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> joinCourse(@PathVariable("joinCode") String joinCode){
+    public @ResponseBody ResponseEntity<String> joinCourse(@PathVariable("joinCode") String joinCode){
 
         ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if(userService.joinCourse(joinCode)) {
@@ -95,7 +96,7 @@ public class UserController {
 
     @RequestMapping(method=RequestMethod.GET, path="/clearnotifications")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> clearNotifications(){
+    public @ResponseBody ResponseEntity<String> clearNotifications(){
         ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if(userService.clearNotifications()){
             response = new ResponseEntity<>(HttpStatus.OK);
@@ -107,11 +108,34 @@ public class UserController {
 
     @RequestMapping(method=RequestMethod.GET, path="/removenotification/{notificationID}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> removeNotification(@PathVariable("notificationID") Integer notificationID){
+    public @ResponseBody ResponseEntity<String> removeNotification(@PathVariable("notificationID") Integer notificationID){
         ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if(userService.removeNotification(notificationID)){
             response = new ResponseEntity<>(HttpStatus.OK);
         }
+
+        return response;
+
+    }
+
+    @RequestMapping(method=RequestMethod.GET, path="/quizanswers/{quizID}")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody String getUserQuizAnswers(@PathVariable("quizID") Integer quizID){
+
+        return userService.getUserQuizAnswers(quizID);
+
+    }
+
+    @RequestMapping(method=RequestMethod.POST, path="/saveanswer")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody ResponseEntity<String> saveUserQuizAnswer(@RequestBody QuizAnswer qa){
+        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+        if(userService.saveUserQuizAnswer(qa)){
+            response = new ResponseEntity<>(HttpStatus.OK);
+        }
+
 
         return response;
 

@@ -1,10 +1,7 @@
 package dev.roder.INTQTOOLBackend.Services;
 
 import dev.roder.INTQTOOLBackend.Entities.*;
-import dev.roder.INTQTOOLBackend.Repositories.CourseRepository;
-import dev.roder.INTQTOOLBackend.Repositories.NotificationRepository;
-import dev.roder.INTQTOOLBackend.Repositories.RoleRepository;
-import dev.roder.INTQTOOLBackend.Repositories.UserRepository;
+import dev.roder.INTQTOOLBackend.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +28,12 @@ public class UserService {
 
     @Autowired
     private NotificationRepository notificationRepository;
+
+    @Autowired
+    private QuizAnswerRepository quizAnswerRepository;
+
+    @Autowired
+    private QuestionAnswerRepository questionAnswerRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -151,7 +154,7 @@ public class UserService {
         boolean clearSuccess = false;
 
         try{
-            List<Notification> currentUserNotifications = currentUser.getNotifications();
+            List<Notification> currentUserNotifications = currentUser.getNotifications().stream().map((notification)-> notification).collect(Collectors.toList());
 
 
             currentUser.setNotifications(new ArrayList<>());
@@ -193,5 +196,44 @@ public class UserService {
         }
 
         return delSuccess;
+    }
+
+    public String getUserQuizAnswers(Integer quizID){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+
+        QuizAnswer qa = currentUser.getQuizAnswers(quizID);
+
+        if(qa != null){
+            return qa.toString();
+        } else {
+            return "No answer";
+        }
+
+
+    }
+
+    public boolean saveUserQuizAnswer(QuizAnswer qa){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+
+        boolean saveSuccess = false;
+
+        try{
+            qa.getAnswers().forEach((ans)->questionAnswerRepository.save(ans));
+            quizAnswerRepository.save(qa);
+            currentUser.addQuizAnswer(qa);
+            userRepository.save(currentUser);
+            saveSuccess = true;
+        } catch (Exception e){
+            System.out.println(e);
+            saveSuccess = false;
+        }
+
+        return saveSuccess;
     }
 }

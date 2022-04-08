@@ -23,6 +23,9 @@ public class User{
     inverseJoinColumns = @JoinColumn(name="course_id")
     )
     private List<Course> courses;
+
+    @OneToMany
+    private List<QuizAnswer> quizAnswers;
     @Unique
     private String username;
     @Unique
@@ -45,6 +48,27 @@ public class User{
 
     public User(){
 
+    }
+
+    public List<QuizAnswer> getQuizAnswers() {
+        return quizAnswers;
+    }
+    public QuizAnswer getQuizAnswers(Integer quizID){
+
+        try{
+            return quizAnswers.stream().filter((quizAnswer)->quizAnswer.getQuizId() == quizID).collect(Collectors.toList()).get(0);
+        } catch(Exception e){
+            return null;
+        }
+
+    }
+
+    public void addQuizAnswer(QuizAnswer qa){
+        this.quizAnswers.add(qa);
+    }
+
+    public void setQuizAnswers(List<QuizAnswer> quizAnswers) {
+        this.quizAnswers = quizAnswers;
     }
 
     public Integer getId () {

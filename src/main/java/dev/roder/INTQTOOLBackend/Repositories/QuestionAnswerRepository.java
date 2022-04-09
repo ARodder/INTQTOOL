@@ -6,5 +6,4 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface QuestionAnswerRepository extends CrudRepository<QuestionAnswer, Integer> {
-    Optional<QuestionAnswer> findByQuestionAnswerID(Integer questionAnswerID);
 }

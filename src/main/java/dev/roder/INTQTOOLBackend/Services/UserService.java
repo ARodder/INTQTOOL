@@ -226,7 +226,7 @@ public class UserService {
 
         try{
             qa.getAnswers().forEach((ans)->{
-                QuestionAnswer existingAnswer = questionAnswerRepository.findByQuestionAnswerID(ans.getId()).get();
+                QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).get();
                 if(existingAnswer != null){
                     existingAnswer.setAnswer(ans.getAnswer());
                     existingAnswer.setStatus(ans.getStatus());

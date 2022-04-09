@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -131,12 +132,12 @@ public class UserService {
 
         try{
             Course newCourse = courseRepository.findByJoinCode(joinCode).get();
-            System.out.println(newCourse.getCourseName());
-            if(newCourse != null){
+
+            if(newCourse != null && !currentUser.getCourses().contains(newCourse)){
                 currentUser.addCourse(newCourse);
                 userRepository.save(currentUser);
+                joinSuccess = true;
             }
-            joinSuccess = true;
         } catch(Exception e){
             System.out.println(e.getMessage());
             joinSuccess = false;
@@ -224,9 +225,29 @@ public class UserService {
         boolean saveSuccess = false;
 
         try{
-            qa.getAnswers().forEach((ans)->questionAnswerRepository.save(ans));
-            quizAnswerRepository.save(qa);
-            currentUser.addQuizAnswer(qa);
+            qa.getAnswers().forEach((ans)->{
+                QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).get();
+                if(existingAnswer != null){
+                    existingAnswer.setAnswer(ans.getAnswer());
+                    existingAnswer.setStatus(ans.getStatus());
+                    questionAnswerRepository.save(existingAnswer);
+                }else{
+                    questionAnswerRepository.save(ans);
+                }
+
+            });
+
+            QuizAnswer existingQuizAnswer = quizAnswerRepository.findById(qa.getId()).get();
+
+            if(existingQuizAnswer != null){
+                existingQuizAnswer.setAnswers(qa.getAnswers());
+                quizAnswerRepository.save(existingQuizAnswer);
+            } else{
+                quizAnswerRepository.save(qa);
+                currentUser.addQuizAnswer(qa);
+            }
+
+
             userRepository.save(currentUser);
             saveSuccess = true;
         } catch (Exception e){

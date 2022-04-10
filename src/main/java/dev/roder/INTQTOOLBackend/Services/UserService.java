@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -208,7 +207,12 @@ public class UserService {
         QuizAnswer qa = currentUser.getQuizAnswers(quizID);
 
         if(qa != null){
-            return qa.toString();
+            if(qa.getStatus() != "submitted"){
+                return qa.toString();
+            }else {
+                return "Answers submitted";
+            }
+
         } else {
             return "No answer";
         }
@@ -225,30 +229,94 @@ public class UserService {
         boolean saveSuccess = false;
 
         try{
+            List<QuestionAnswer> savedQuestionAnswers = new ArrayList();
             qa.getAnswers().forEach((ans)->{
-                QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).get();
-                if(existingAnswer != null){
-                    existingAnswer.setAnswer(ans.getAnswer());
-                    existingAnswer.setStatus(ans.getStatus());
-                    questionAnswerRepository.save(existingAnswer);
+
+                if(ans.getId() != null){
+                    QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).get();
+                    if(!existingAnswer.getStatus().equals("submitted")){
+                        existingAnswer.setAnswer(ans.getAnswer());
+                        existingAnswer.setStatus(ans.getStatus());
+                        savedQuestionAnswers.add(questionAnswerRepository.save(existingAnswer));
+                    }
                 }else{
-                    questionAnswerRepository.save(ans);
+                    savedQuestionAnswers.add(questionAnswerRepository.save(ans));
                 }
 
             });
 
-            QuizAnswer existingQuizAnswer = quizAnswerRepository.findById(qa.getId()).get();
+            qa.setAnswers(savedQuestionAnswers);
 
-            if(existingQuizAnswer != null){
-                existingQuizAnswer.setAnswers(qa.getAnswers());
-                quizAnswerRepository.save(existingQuizAnswer);
+            if(qa.getId()  != null){
+                QuizAnswer existingQuizAnswer = quizAnswerRepository.findById(qa.getId()).get();
+                if(!existingQuizAnswer.getStatus().equals("submitted")){
+                    existingQuizAnswer.setAnswers(qa.getAnswers());
+                    existingQuizAnswer.setStatus(qa.getStatus());
+                    quizAnswerRepository.save(existingQuizAnswer);
+                }
             } else{
-                quizAnswerRepository.save(qa);
-                currentUser.addQuizAnswer(qa);
+                qa.setUser(currentUser);
+                QuizAnswer savedQuizAnswer = quizAnswerRepository.save(qa);
+                currentUser.addQuizAnswer(savedQuizAnswer);
+                userRepository.save(currentUser);
             }
 
 
-            userRepository.save(currentUser);
+
+            saveSuccess = true;
+        } catch (Exception e){
+            System.out.println(e);
+            saveSuccess = false;
+        }
+
+        return saveSuccess;
+    }
+
+    public boolean submitUserQuizAnswer(QuizAnswer qa){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+
+        boolean saveSuccess = false;
+
+        try{
+            List<QuestionAnswer> savedQuestionAnswers = new ArrayList();
+            qa.getAnswers().forEach((ans)->{
+
+                if(ans.getId() != null){
+                    QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).get();
+                    if(!existingAnswer.getStatus().equals("submitted")){
+                        existingAnswer.setAnswer(ans.getAnswer());
+                        existingAnswer.setStatus("submitted");
+                        savedQuestionAnswers.add(questionAnswerRepository.save(existingAnswer));
+                    }
+                }else{
+                    ans.setStatus("submitted");
+                    savedQuestionAnswers.add(questionAnswerRepository.save(ans));
+                }
+
+            });
+
+            qa.setAnswers(savedQuestionAnswers);
+
+            if(qa.getId()  != null){
+                QuizAnswer existingQuizAnswer = quizAnswerRepository.findById(qa.getId()).get();
+                if(!existingQuizAnswer.getStatus().equals("submitted")){
+                    existingQuizAnswer.setAnswers(qa.getAnswers());
+                    existingQuizAnswer.setStatus("submitted");
+                    quizAnswerRepository.save(existingQuizAnswer);
+                }
+            } else{
+                qa.setUser(currentUser);
+                qa.setStatus("submitted");
+                QuizAnswer savedQuizAnswer = quizAnswerRepository.save(qa);
+                currentUser.addQuizAnswer(savedQuizAnswer);
+                userRepository.save(currentUser);
+            }
+
+
+
             saveSuccess = true;
         } catch (Exception e){
             System.out.println(e);

@@ -12,15 +12,50 @@ public class QuizAnswer {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
-
     private Integer quizId;
-
-    @OneToMany
+    @ManyToOne
+    private User user;
+    private Integer courseID;
+    private String status;
+    private Integer grading;
+    @ManyToMany
     @JoinTable(name="quiz_answer_questions",
             joinColumns = @JoinColumn(name="quiz_answer_id"),
             inverseJoinColumns = @JoinColumn(name="question_answer_id")
     )
     private List<QuestionAnswer> answers;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Integer getCourseID() {
+        return courseID;
+    }
+
+    public void setCourseID(Integer courseID) {
+        this.courseID = courseID;
+    }
+
+    public Integer getGrading() {
+        return grading;
+    }
+
+    public void setGrading(Integer grading) {
+        this.grading = grading;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public Integer getId() {
         return id;
@@ -50,6 +85,9 @@ public class QuizAnswer {
     public String toString(){
         JSONObject details = new JSONObject();
         details.put("id",this.id);
+        details.put("userId",this.user.getId());
+        details.put("courseId",this.courseID);
+        details.put("status",this.status);
         details.put("quizId",this.quizId);
         JSONArray answerArray = new JSONArray();
         for(QuestionAnswer answer: answers){

@@ -26,9 +26,9 @@ public class User{
 
     @OneToMany
     private List<QuizAnswer> quizAnswers;
-    @Unique
+    @Column(unique=true)
     private String username;
-    @Unique
+    @Column(unique=true)
     private String email;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -56,7 +56,7 @@ public class User{
     public QuizAnswer getQuizAnswers(Integer quizID){
 
         try{
-            return quizAnswers.stream().filter((quizAnswer)->quizAnswer.getQuizId() == quizID).collect(Collectors.toList()).get(0);
+            return quizAnswers.stream().filter((quizAnswer)->(quizAnswer.getQuizId() == quizID && quizAnswer.getStatus().equals("in-progress"))).collect(Collectors.toList()).get(0);
         } catch(Exception e){
             return null;
         }

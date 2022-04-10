@@ -48,7 +48,7 @@ public class UserController {
 
     @PostMapping("/add")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<String> UserController(@RequestBody User user){
+    public ResponseEntity<String> createNewUser(@RequestBody User user){
 
         ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if(user.isValid()){
@@ -61,6 +61,7 @@ public class UserController {
     }
 
     @GetMapping(path="/all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public @ResponseBody Iterable<String> getAllUsers() {
         // This returns a JSON or XML with the users
 
@@ -83,11 +84,11 @@ public class UserController {
 
     @RequestMapping(method=RequestMethod.GET, path="/joincourse/{joinCode}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public @ResponseBody ResponseEntity<String> joinCourse(@PathVariable("joinCode") String joinCode){
+    public @ResponseBody ResponseEntity<Iterable<String>> joinCourse(@PathVariable("joinCode") String joinCode){
 
-        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        ResponseEntity<Iterable<String>> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if(userService.joinCourse(joinCode)) {
-            response = new ResponseEntity<>(HttpStatus.ACCEPTED);
+            response = new ResponseEntity<Iterable<String>>(userService.getUsersCourses(),HttpStatus.ACCEPTED);
         }
 
         return response;
@@ -120,9 +121,9 @@ public class UserController {
 
     @RequestMapping(method=RequestMethod.GET, path="/quizanswers/{quizID}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public @ResponseBody String getUserQuizAnswers(@PathVariable("quizID") Integer quizID){
+    public @ResponseBody ResponseEntity<String> getUserQuizAnswers(@PathVariable("quizID") Integer quizID){
 
-        return userService.getUserQuizAnswers(quizID);
+        return new ResponseEntity<String>(userService.getUserQuizAnswers(quizID),HttpStatus.OK);
 
     }
 
@@ -133,9 +134,23 @@ public class UserController {
 
 
         if(userService.saveUserQuizAnswer(qa)){
-            response = new ResponseEntity<>(HttpStatus.OK);
+            response = new ResponseEntity<String>(userService.getUserQuizAnswers(qa.getQuizId()),HttpStatus.OK);
         }
 
+
+        return response;
+
+    }
+
+    @RequestMapping(method=RequestMethod.POST, path="/submitanswer")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody ResponseEntity<String> submitUserQuiz(@RequestBody QuizAnswer qa){
+        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+        if(userService.submitUserQuizAnswer(qa)){
+            response = new ResponseEntity<>(HttpStatus.OK);
+        }
 
         return response;
 

@@ -3,42 +3,35 @@ package dev.roder.INTQTOOLBackend.Entities;
 import org.json.JSONObject;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class QuestionAnswer {
 
     @Id
-    private int id;
-    private String userID;
-    private String courseID;
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Integer id;
     private String answer;
     private String status;
     private String feedback;
+    private Integer grading;
 
-    public int getId() {
+    public Integer getGrading() {
+        return grading;
+    }
+
+
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
-    public String getCourseID() {
-        return courseID;
-    }
-
-    public void setCourseID(String courseID) {
-        this.courseID = courseID;
-    }
 
     public String getAnswer() {
         return answer;
@@ -67,8 +60,6 @@ public class QuestionAnswer {
     public String toString(){
         JSONObject details = new JSONObject();
         details.put("id",this.id);
-        details.put("userId",this.userID);
-        details.put("courseId",this.courseID);
         details.put("answer",this.answer);
         details.put("status",this.status);
         details.put("feedback",this.feedback);

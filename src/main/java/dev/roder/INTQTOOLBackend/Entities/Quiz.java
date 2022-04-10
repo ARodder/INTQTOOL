@@ -23,9 +23,20 @@ public class Quiz {
     private List<Question> questions;
 
     @ManyToOne
+    private Course deployementCourse;
+
+    @ManyToOne
     private User author;
 
     private String description;
+
+    public Course getDeployementCourse() {
+        return deployementCourse;
+    }
+
+    public void setDeployementCourse(Course deployementCourse) {
+        this.deployementCourse = deployementCourse;
+    }
 
     public User getAuthor() {
         return author;
@@ -82,6 +93,7 @@ public class Quiz {
         JSONObject details = new JSONObject();
         details.put("id",this.quizID);
         details.put("title",this.title);
+        details.put("courseId",deployementCourse.getCourseID());
         details.put("description",this.description);
         details.put("quizLength",this.questions.size());
         details.put("author",this.author.getLastName()+", "+this.author.getFirstName());

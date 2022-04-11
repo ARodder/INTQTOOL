@@ -2,6 +2,7 @@ package dev.roder.INTQTOOLBackend.Services;
 
 import dev.roder.INTQTOOLBackend.Entities.*;
 import dev.roder.INTQTOOLBackend.Repositories.*;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +35,9 @@ public class UserService {
 
     @Autowired
     private QuestionAnswerRepository questionAnswerRepository;
+
+    @Autowired
+    private QuizRepository quizRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -324,5 +328,25 @@ public class UserService {
         }
 
         return saveSuccess;
+    }
+
+    public Iterable<String> getArchivedQuizzes(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+
+        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+        return currentUser.getQuizAnswers()
+                .stream()
+                .filter((quizAnswer)->quizAnswer.getStatus() != "in-progress")
+                .map((quizAnswer ->{
+                    Quiz q = quizRepository.findById(quizAnswer.getQuizId()).get();
+                    JSONObject details = new JSONObject();
+                    details.put("id",quizAnswer.getId());
+                    details.put("title",q.getTitle());
+                    details.put("status",quizAnswer.getStatus());
+                    details.put("description",q.getDescription());
+                    details.put("quizLength",q.getQuestions().size());
+                    return details.toString();
+                })).collect(Collectors.toList());
     }
 }

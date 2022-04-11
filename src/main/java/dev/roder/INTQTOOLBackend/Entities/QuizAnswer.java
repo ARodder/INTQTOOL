@@ -81,6 +81,17 @@ public class QuizAnswer {
         this.answers = answers;
     }
 
+//    public String getDetails(){
+//        JSONObject details = new JSONObject();
+//        details.put("id",this.id);
+//        details.put("userId",this.user.getId());
+//        details.put("courseId",this.courseID);
+//        details.put("status",this.status);
+//        details.put("quizId",this.quizId);
+//
+//        return details.toString();
+//    }
+
     @Override
     public String toString(){
         JSONObject details = new JSONObject();

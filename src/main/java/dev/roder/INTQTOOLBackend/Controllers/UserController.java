@@ -156,6 +156,23 @@ public class UserController {
 
     }
 
+    @RequestMapping(method=RequestMethod.GET, path="/archivedquizzes")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody ResponseEntity<Iterable<String>> getArchivedQuizzes(){
+        ResponseEntity<Iterable<String>> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+        try {
+            response = new ResponseEntity<>(userService.getArchivedQuizzes(), HttpStatus.OK);
+        }catch(Exception e){
+            return response;
+        }
+
+
+        return response;
+
+    }
+
 
 
 

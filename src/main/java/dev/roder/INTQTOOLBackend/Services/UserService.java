@@ -337,7 +337,7 @@ public class UserService {
         User currentUser = userRepository.findByUsername(currentPrincipalName).get();
         return currentUser.getQuizAnswers()
                 .stream()
-                .filter((quizAnswer)->quizAnswer.getStatus() != "in-progress")
+                .filter((quizAnswer)->!quizAnswer.getStatus().equals("in-progress"))
                 .map((quizAnswer ->{
                     Quiz q = quizRepository.findById(quizAnswer.getQuizId()).get();
                     JSONObject details = new JSONObject();

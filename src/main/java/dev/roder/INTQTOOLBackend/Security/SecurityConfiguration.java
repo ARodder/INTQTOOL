@@ -67,8 +67,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowCredentials(false);
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList("https://quiz.web-tek.ninja"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("authorization", "withCredentials","content-type", "x-auth-token","Access-Control-Allow-Credentials","access-control-allow-origin","Access-Control-Allow-headers"));
         configuration.setExposedHeaders(Arrays.asList("x-auth-token"));

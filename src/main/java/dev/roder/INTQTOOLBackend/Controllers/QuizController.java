@@ -36,10 +36,17 @@ public class QuizController {
     }
 
     @RequestMapping(method= RequestMethod.POST, path="/new")
-    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
     public @ResponseBody ResponseEntity<String> createQuiz(@RequestBody Quiz quiz){
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
-        quizService.addQuiz(quiz);
+        try{
+            quizService.addQuiz(quiz);
+            response = new ResponseEntity<String>("Quiz was created",HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
 
         return response;
     }

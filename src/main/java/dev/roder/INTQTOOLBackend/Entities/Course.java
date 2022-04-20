@@ -4,7 +4,9 @@ package dev.roder.INTQTOOLBackend.Entities;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 public class Course {
@@ -17,41 +19,40 @@ public class Course {
     private String description;
 
 
-
-    @ManyToMany(mappedBy="courses")
+    @ManyToMany(mappedBy = "courses")
     private Set<User> users = new LinkedHashSet<>();
 
     @Column(unique = true)
     private String joinCode;
     @OneToMany
-    @JoinTable(name="course_active_quizzes",
-            joinColumns = @JoinColumn(name="course_id"),
-            inverseJoinColumns = @JoinColumn(name="quiz_id")
+    @JoinTable(name = "course_active_quizzes",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "deployment_id")
     )
-    private List<Quiz> activeQuizzes;
+    private List<DeployedQuiz> activeQuizzes;
 
-    public String getCourseID () {
+    public String getCourseID() {
         return courseID;
     }
 
-    public void setCourseID (String courseID) {
-        this.courseID=courseID;
+    public void setCourseID(String courseID) {
+        this.courseID = courseID;
     }
 
-    public String getCourseName () {
+    public String getCourseName() {
         return courseName;
     }
 
-    public void setCourseName (String courseName) {
-        this.courseName=courseName;
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 
-    public String getDescription () {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription (String description) {
-        this.description=description;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getJoinCode() {
@@ -63,10 +64,18 @@ public class Course {
     }
 
     public List<Quiz> getActiveQuizzes() {
-        return activeQuizzes;
+        return activeQuizzes.stream().map((deployedQuiz) -> {
+            if (deployedQuiz.getDeadline().isAfter(LocalDate.now())) {
+                return deployedQuiz.getDepolyedQuiz();
+            } else {
+                return null;
+            }
+        })
+                .filter((deployedQuiz) -> deployedQuiz != null)
+                .collect(Collectors.toList());
     }
 
-    public void setActiveQuizzes(List<Quiz> activeQuizzes) {
+    public void setActiveQuizzes(List<DeployedQuiz> activeQuizzes) {
         this.activeQuizzes = activeQuizzes;
     }
 
@@ -77,17 +86,18 @@ public class Course {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
-    public void addUser(User user){
+
+    public void addUser(User user) {
         this.users.add(user);
     }
 
-    public String getDetails(){
+    public String getDetails() {
         JSONObject details = new JSONObject();
-        details.put("id",this.courseID);
-        details.put("name",this.courseName);
-        details.put("description",description);
-        details.put("joinCode",this.joinCode);
-        details.put("activeQuizAmnt",this.activeQuizzes.size());
+        details.put("id", this.courseID);
+        details.put("name", this.courseName);
+        details.put("description", description);
+        details.put("joinCode", this.joinCode);
+        details.put("activeQuizAmnt", this.activeQuizzes.size());
 
         return details.toString();
     }

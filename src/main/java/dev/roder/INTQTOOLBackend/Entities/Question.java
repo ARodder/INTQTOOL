@@ -6,14 +6,22 @@ import org.json.JSONObject;
 import java.util.Set;
 import javax.persistence.*;
 
+/**
+ * Question is a class describing a question for a specific quiz.
+ * It can have two types represented by Integers, 1 for multiple
+ * choice and 2 for longtext answers.
+ */
+
 @Entity
 public class Question {
 
     @Id
     private Integer questionID;
     private Integer quizID;
+
+    @Column(length=2000)
     private String questionText;
-    private String type;
+    private Integer type;
     @OneToMany
     @JoinTable(name="question_alternatives",
             joinColumns = @JoinColumn(name="question_id"),
@@ -38,11 +46,11 @@ public class Question {
         this.questionText=questionText;
     }
 
-    public String getType () {
+    public Integer getType () {
         return type;
     }
 
-    public void setType (String type) {
+    public void setType (Integer type) {
         this.type=type;
     }
 

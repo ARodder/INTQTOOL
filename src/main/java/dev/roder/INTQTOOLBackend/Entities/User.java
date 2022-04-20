@@ -106,7 +106,15 @@ public class User{
         this.username=userName;
     }
     public boolean isValid(){
-        return true;
+        boolean valid = false;
+        if((password != null && password.length() >= 8) &&
+                (username != null && !username.isEmpty()) &&
+                (email != null && !email.isEmpty()) &&
+                (firstName != null && !firstName.isEmpty()) &&
+                (lastName != null && !lastName.isEmpty())){
+            valid = true;
+        }
+        return valid;
     }
     public void setRoles(Set<Role> roles) {
         this.roles = roles;

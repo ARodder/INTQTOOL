@@ -51,10 +51,21 @@ public class UserController {
     public ResponseEntity<String> createNewUser(@RequestBody User user){
 
         ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        if(user.isValid()){
-            userService.addUser(user);
-            response = new ResponseEntity<>(HttpStatus.CREATED);
+
+        try{
+            if(user.isValid()){
+                userService.addUser(user);
+                response = new ResponseEntity<>(HttpStatus.CREATED);
+            } else {
+                response = new ResponseEntity<>("User not valid",HttpStatus.BAD_REQUEST);
+            }
+        }catch(Exception e){
+            response = new ResponseEntity<>("Error was thrown",HttpStatus.BAD_REQUEST);
+            System.out.println("Create new user exception");
+            System.out.println(e.getMessage());
+            System.out.println(e.getCause());
         }
+
 
         return response;
 

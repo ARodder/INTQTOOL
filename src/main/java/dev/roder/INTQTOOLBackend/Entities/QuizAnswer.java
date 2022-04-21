@@ -91,7 +91,7 @@ public class QuizAnswer {
         details.put("userId",this.user.getId());
         details.put("courseId",this.deployedQuiz.getDeploymentCourse().getCourseID());
         details.put("status",this.status);
-        details.put("quizId",this.deployedQuiz.getDepolyedQuiz().getQuizID());
+        details.put("quizId",this.deployedQuiz.getDeployedQuiz().getQuizID());
         JSONArray answerArray = new JSONArray();
         for(QuestionAnswer answer: answers){
             answerArray.put(answer.toString());

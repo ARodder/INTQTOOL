@@ -1,24 +1,14 @@
 package dev.roder.INTQTOOLBackend.Controllers;
 
-import dev.roder.INTQTOOLBackend.Entities.Course;
 import dev.roder.INTQTOOLBackend.Entities.QuizAnswer;
 import dev.roder.INTQTOOLBackend.Entities.User;
-import dev.roder.INTQTOOLBackend.Repositories.UserRepository;
 import dev.roder.INTQTOOLBackend.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.security.PermitAll;
-import java.net.HttpCookie;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 @Controller
 @RequestMapping(path="/user")
@@ -145,7 +135,7 @@ public class UserController {
 
 
         if(userService.saveUserQuizAnswer(qa,deploymentId)){
-            response = new ResponseEntity<String>(userService.getUserQuizAnswers(qa.getDeployedQuiz().getDepolyedQuiz().getQuizID()),HttpStatus.OK);
+            response = new ResponseEntity<String>(userService.getUserQuizAnswers(qa.getDeployedQuiz().getDeployedQuiz().getQuizID()),HttpStatus.OK);
         }
 
 

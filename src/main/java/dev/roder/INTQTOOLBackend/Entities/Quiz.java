@@ -71,10 +71,11 @@ public class Quiz {
 
     public String getDetails(){
         JSONObject details = new JSONObject();
-        details.put("id",this.quizID);
+        details.put("quizID",this.quizID);
         details.put("title",this.title);
         details.put("description",this.description);
-        details.put("quizLength:",this.questions.size());
+        details.put("quizLength",this.questions.size());
+        details.put("author",this.author.getLastName()+", "+this.author.getFirstName());
 
 
         return details.toString();
@@ -82,7 +83,7 @@ public class Quiz {
     @Override
     public String toString(){
         JSONObject details = new JSONObject();
-        details.put("id",this.quizID);
+        details.put("quizID",this.quizID);
         details.put("title",this.title);
         details.put("description",this.description);
         details.put("quizLength",this.questions.size());

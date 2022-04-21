@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class Question {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer questionID;
     private Integer quizID;
 

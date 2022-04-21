@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class Course {
 
     @Id
-    private String courseID;
+    private Integer courseID;
 
     private String courseName;
 
@@ -31,11 +31,11 @@ public class Course {
     )
     private List<DeployedQuiz> activeQuizzes;
 
-    public String getCourseID() {
+    public Integer getCourseID() {
         return courseID;
     }
 
-    public void setCourseID(String courseID) {
+    public void setCourseID(Integer courseID) {
         this.courseID = courseID;
     }
 
@@ -77,6 +77,9 @@ public class Course {
 
     public void setActiveQuizzes(List<DeployedQuiz> activeQuizzes) {
         this.activeQuizzes = activeQuizzes;
+    }
+    public void addActiveQuiz(DeployedQuiz deployedQuiz) {
+        this.activeQuizzes.add(deployedQuiz);
     }
 
     public Set<User> getUsers() {

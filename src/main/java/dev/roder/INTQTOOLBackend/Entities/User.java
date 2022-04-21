@@ -1,6 +1,5 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
-import org.checkerframework.common.aliasing.qual.Unique;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -56,7 +55,7 @@ public class User{
     public QuizAnswer getQuizAnswers(Integer quizID){
 
         try{
-            return quizAnswers.stream().filter((quizAnswer)->(quizAnswer.getDeployedQuiz().getDepolyedQuiz().getQuizID() == quizID && quizAnswer.getStatus().equals("in-progress"))).collect(Collectors.toList()).get(0);
+            return quizAnswers.stream().filter((quizAnswer)->(quizAnswer.getDeployedQuiz().getDeployedQuiz().getQuizID() == quizID && quizAnswer.getStatus().equals("in-progress"))).collect(Collectors.toList()).get(0);
         } catch(Exception e){
             return null;
         }

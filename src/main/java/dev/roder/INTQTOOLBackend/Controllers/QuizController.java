@@ -1,5 +1,6 @@
 package dev.roder.INTQTOOLBackend.Controllers;
 
+import dev.roder.INTQTOOLBackend.Entities.DeployedQuiz;
 import dev.roder.INTQTOOLBackend.Entities.Quiz;
 import dev.roder.INTQTOOLBackend.Services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,6 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
-    public Quiz createQuiz() {
-        Quiz quiz = new Quiz();
-        return quiz;
-    }
 
     public void addQuestion() {
 
@@ -35,13 +32,45 @@ public class QuizController {
         return quizService.getQuiz(quizID);
     }
 
-    @RequestMapping(method= RequestMethod.POST, path="/new")
+    @RequestMapping(method= RequestMethod.POST, path="/new/{courseId}")
     @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public @ResponseBody ResponseEntity<String> createQuiz(@RequestBody Quiz quiz){
+    public @ResponseBody ResponseEntity<String> createQuiz(@RequestBody DeployedQuiz quiz,@PathVariable("courseId") Integer courseId){
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         try{
-            quizService.addQuiz(quiz);
-            response = new ResponseEntity<String>("Quiz was created",HttpStatus.OK);
+            Integer newQuizDeployId = quizService.addQuiz(quiz,courseId);
+            response = new ResponseEntity<String>("{\"deployedQuizId\":\""+newQuizDeployId+"\"}",HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+
+        return response;
+    }
+
+    @RequestMapping(method= RequestMethod.GET, path="/quizdetails/{deployedquizId}")
+    @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody ResponseEntity<String> getDeployedQuizDetails(@PathVariable("deployedquizId") Integer deployedquizId){
+        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        try{
+
+            response = new ResponseEntity<String>(quizService.getQuiz(deployedquizId),HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+
+        return response;
+    }
+
+    @RequestMapping(method= RequestMethod.POST, path="/save")
+    @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody ResponseEntity<String> saveUpdatedQuiz(@RequestBody DeployedQuiz updatedQuiz){
+        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        try{
+            quizService.saveQuiz(updatedQuiz);
+            response = new ResponseEntity<String>("Quiz updated",HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e.getMessage());
             response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);

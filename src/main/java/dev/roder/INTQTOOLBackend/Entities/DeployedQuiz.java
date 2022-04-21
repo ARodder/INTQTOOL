@@ -2,10 +2,7 @@ package dev.roder.INTQTOOLBackend.Entities;
 
 import org.json.JSONObject;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,11 +10,12 @@ import java.util.List;
 public class DeployedQuiz {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
     @ManyToOne
     private Course deploymentCourse;
     @ManyToOne
-    private Quiz depolyedQuiz;
+    private Quiz deployedQuiz;
     private LocalDate deadline;
     @OneToMany
     private List<QuizAnswer> quizAnswer;
@@ -46,12 +44,12 @@ public class DeployedQuiz {
         this.deploymentCourse = deploymentCourse;
     }
 
-    public Quiz getDepolyedQuiz() {
-        return depolyedQuiz;
+    public Quiz getDeployedQuiz() {
+        return deployedQuiz;
     }
 
-    public void setDepolyedQuiz(Quiz depolyedQuiz) {
-        this.depolyedQuiz = depolyedQuiz;
+    public void setDeployedQuiz(Quiz depolyedQuiz) {
+        this.deployedQuiz = depolyedQuiz;
     }
 
     public LocalDate getDeadline() {
@@ -65,11 +63,17 @@ public class DeployedQuiz {
     public String getDetails(){
         JSONObject details = new JSONObject();
         details.put("id",id);
-        details.put("quiz",depolyedQuiz.getDetails());
+        details.put("courseId",deploymentCourse.getCourseID());
+        details.put("deployedQuiz", deployedQuiz.getDetails());
 
         return details.toString();
     }
     public String toString(){
-        return depolyedQuiz.toString();
+        JSONObject details = new JSONObject();
+        details.put("id",id);
+        details.put("courseId",deploymentCourse.getCourseID());
+        details.put("deployedQuiz", deployedQuiz.toString());
+
+        return details.toString();
     }
 }

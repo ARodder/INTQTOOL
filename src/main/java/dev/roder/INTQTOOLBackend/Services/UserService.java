@@ -2,6 +2,7 @@ package dev.roder.INTQTOOLBackend.Services;
 
 import dev.roder.INTQTOOLBackend.Entities.*;
 import dev.roder.INTQTOOLBackend.Repositories.*;
+import org.apache.tomcat.jni.Local;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -38,6 +39,9 @@ public class UserService {
 
     @Autowired
     private QuizRepository quizRepository;
+
+    @Autowired
+    private DeployedQuizRepository deployedQuizRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -89,7 +93,7 @@ public class UserService {
         User currentUser = userRepository.findByUsername(currentPrincipalName).get();
 
         for(Course course: currentUser.getCourses()){
-            for(Quiz quiz :course.getActiveQuizzes()){
+            for(DeployedQuiz quiz :course.getActiveQuizzes()){
                 quizzes.add(quiz.getDetails());
             }
         }
@@ -224,7 +228,7 @@ public class UserService {
 
     }
 
-    public boolean saveUserQuizAnswer(QuizAnswer qa){
+    public boolean saveUserQuizAnswer(QuizAnswer qa,Integer deployementId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -260,6 +264,13 @@ public class UserService {
                 }
             } else{
                 qa.setUser(currentUser);
+                DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
+                if(currentDeployedQuiz.getDeadline().isBefore(LocalDate.now())){
+                    if(currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())){
+                        qa.setDeployedQuiz(currentDeployedQuiz);
+                    }
+                }
+
                 QuizAnswer savedQuizAnswer = quizAnswerRepository.save(qa);
                 currentUser.addQuizAnswer(savedQuizAnswer);
                 userRepository.save(currentUser);
@@ -276,7 +287,7 @@ public class UserService {
         return saveSuccess;
     }
 
-    public boolean submitUserQuizAnswer(QuizAnswer qa){
+    public boolean submitUserQuizAnswer(QuizAnswer qa, Integer deployementId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -314,6 +325,12 @@ public class UserService {
             } else{
                 qa.setUser(currentUser);
                 qa.setStatus("submitted");
+                DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
+                if(currentDeployedQuiz.getDeadline().isBefore(LocalDate.now())){
+                    if(currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())){
+                        qa.setDeployedQuiz(currentDeployedQuiz);
+                    }
+                }
                 QuizAnswer savedQuizAnswer = quizAnswerRepository.save(qa);
                 currentUser.addQuizAnswer(savedQuizAnswer);
                 userRepository.save(currentUser);
@@ -339,7 +356,7 @@ public class UserService {
                 .stream()
                 .filter((quizAnswer)->!quizAnswer.getStatus().equals("in-progress"))
                 .map((quizAnswer ->{
-                    Quiz q = quizRepository.findById(quizAnswer.getQuizId()).get();
+                    Quiz q = quizAnswer.getDeployedQuiz().getDepolyedQuiz();
                     JSONObject details = new JSONObject();
                     details.put("id",quizAnswer.getId());
                     details.put("title",q.getTitle());

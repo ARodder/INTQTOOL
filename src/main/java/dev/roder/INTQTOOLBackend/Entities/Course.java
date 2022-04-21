@@ -63,10 +63,10 @@ public class Course {
         this.joinCode = joinCode;
     }
 
-    public List<Quiz> getActiveQuizzes() {
+    public List<DeployedQuiz> getActiveQuizzes() {
         return activeQuizzes.stream().map((deployedQuiz) -> {
             if (deployedQuiz.getDeadline().isAfter(LocalDate.now())) {
-                return deployedQuiz.getDepolyedQuiz();
+                return deployedQuiz;
             } else {
                 return null;
             }

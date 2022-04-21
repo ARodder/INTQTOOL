@@ -56,7 +56,7 @@ public class User{
     public QuizAnswer getQuizAnswers(Integer quizID){
 
         try{
-            return quizAnswers.stream().filter((quizAnswer)->(quizAnswer.getQuizId() == quizID && quizAnswer.getStatus().equals("in-progress"))).collect(Collectors.toList()).get(0);
+            return quizAnswers.stream().filter((quizAnswer)->(quizAnswer.getDeployedQuiz().getDepolyedQuiz().getQuizID() == quizID && quizAnswer.getStatus().equals("in-progress"))).collect(Collectors.toList()).get(0);
         } catch(Exception e){
             return null;
         }

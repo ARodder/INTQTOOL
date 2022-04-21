@@ -1,9 +1,13 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
+import org.json.JSONObject;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class DeployedQuiz {
@@ -15,6 +19,16 @@ public class DeployedQuiz {
     @ManyToOne
     private Quiz depolyedQuiz;
     private LocalDate deadline;
+    @OneToMany
+    private List<QuizAnswer> quizAnswer;
+
+    public List<QuizAnswer> getQuizAnswer() {
+        return quizAnswer;
+    }
+
+    public void setQuizAnswer(List<QuizAnswer> quizAnswer) {
+        this.quizAnswer = quizAnswer;
+    }
 
     public Integer getId() {
         return id;
@@ -46,5 +60,16 @@ public class DeployedQuiz {
 
     public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
+    }
+
+    public String getDetails(){
+        JSONObject details = new JSONObject();
+        details.put("id",id);
+        details.put("quiz",depolyedQuiz.getDetails());
+
+        return details.toString();
+    }
+    public String toString(){
+        return depolyedQuiz.toString();
     }
 }

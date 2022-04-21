@@ -138,14 +138,14 @@ public class UserController {
 
     }
 
-    @RequestMapping(method=RequestMethod.POST, path="/saveanswer")
+    @RequestMapping(method=RequestMethod.POST, path="/saveanswer/{deploymentId}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public @ResponseBody ResponseEntity<String> saveUserQuizAnswer(@RequestBody QuizAnswer qa){
+    public @ResponseBody ResponseEntity<String> saveUserQuizAnswer(@RequestBody QuizAnswer qa,@PathVariable("deploymentId") Integer deploymentId){
         ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 
-        if(userService.saveUserQuizAnswer(qa)){
-            response = new ResponseEntity<String>(userService.getUserQuizAnswers(qa.getQuizId()),HttpStatus.OK);
+        if(userService.saveUserQuizAnswer(qa,deploymentId)){
+            response = new ResponseEntity<String>(userService.getUserQuizAnswers(qa.getDeployedQuiz().getDepolyedQuiz().getQuizID()),HttpStatus.OK);
         }
 
 
@@ -153,13 +153,13 @@ public class UserController {
 
     }
 
-    @RequestMapping(method=RequestMethod.POST, path="/submitanswer")
+    @RequestMapping(method=RequestMethod.POST, path="/submitanswer/{deploymentId}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public @ResponseBody ResponseEntity<String> submitUserQuiz(@RequestBody QuizAnswer qa){
+    public @ResponseBody ResponseEntity<String> submitUserQuiz(@RequestBody QuizAnswer qa,@PathVariable("deploymentId") Integer deploymentId){
         ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
 
-        if(userService.submitUserQuizAnswer(qa)){
+        if(userService.submitUserQuizAnswer(qa,deploymentId)){
             response = new ResponseEntity<>(HttpStatus.OK);
         }
 

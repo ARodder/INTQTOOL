@@ -12,10 +12,10 @@ public class QuizAnswer {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
-    private Integer quizId;
+    @ManyToOne
+    private DeployedQuiz deployedQuiz;
     @ManyToOne
     private User user;
-    private Integer courseID;
     private String status;
     private Integer grading;
     @ManyToMany
@@ -33,12 +33,12 @@ public class QuizAnswer {
         this.user = user;
     }
 
-    public Integer getCourseID() {
-        return courseID;
+    public DeployedQuiz getDeployedQuiz() {
+        return deployedQuiz;
     }
 
-    public void setCourseID(Integer courseID) {
-        this.courseID = courseID;
+    public void setDeployedQuiz(DeployedQuiz deployedQuiz) {
+        this.deployedQuiz = deployedQuiz;
     }
 
     public Integer getGrading() {
@@ -65,14 +65,6 @@ public class QuizAnswer {
         this.id = id;
     }
 
-    public Integer getQuizId() {
-        return quizId;
-    }
-
-    public void setQuizId(Integer quizId) {
-        this.quizId = quizId;
-    }
-
     public List<QuestionAnswer> getAnswers() {
         return answers;
     }
@@ -97,9 +89,9 @@ public class QuizAnswer {
         JSONObject details = new JSONObject();
         details.put("id",this.id);
         details.put("userId",this.user.getId());
-        details.put("courseId",this.courseID);
+        details.put("courseId",this.deployedQuiz.getDeploymentCourse().getCourseID());
         details.put("status",this.status);
-        details.put("quizId",this.quizId);
+        details.put("quizId",this.deployedQuiz.getDepolyedQuiz().getQuizID());
         JSONArray answerArray = new JSONArray();
         for(QuestionAnswer answer: answers){
             answerArray.put(answer.toString());

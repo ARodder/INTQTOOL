@@ -75,11 +75,26 @@ public class Question {
     public String toString(){
         JSONObject details = new JSONObject();
         details.put("id",this.questionID);
-        details.put("question",this.questionText);
+        details.put("questionText",this.questionText);
         details.put("type",this.type);
         JSONArray jsonAlternatives = new JSONArray();
         for(Alternativ alternativ:alternatives){
             jsonAlternatives.put(alternativ.toString());
+        }
+        details.put("alternatives",jsonAlternatives);
+
+
+        return details.toString();
+    }
+
+    public String getEditDetails(){
+        JSONObject details = new JSONObject();
+        details.put("id",this.questionID);
+        details.put("questionText",this.questionText);
+        details.put("type",this.type);
+        JSONArray jsonAlternatives = new JSONArray();
+        for(Alternativ alternativ:alternatives){
+            jsonAlternatives.put(alternativ.getDetailsForEdit());
         }
         details.put("alternatives",jsonAlternatives);
 

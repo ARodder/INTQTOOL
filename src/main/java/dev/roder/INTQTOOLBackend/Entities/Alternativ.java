@@ -13,10 +13,7 @@ public class Alternativ {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer alternativeID;
-
     private String alternative;
-
-
     private boolean rightAlternative;
 
     public Alternativ(){
@@ -52,6 +49,17 @@ public class Alternativ {
         JSONObject details = new JSONObject();
         details.put("id",alternativeID);
         details.put("alternative",alternative);
+
+        return details.toString();
+
+    }
+
+
+    public String getDetailsForEdit(){
+        JSONObject details = new JSONObject();
+        details.put("id",alternativeID);
+        details.put("alternative",alternative);
+        details.put("rightAlternative",rightAlternative);
 
         return details.toString();
 

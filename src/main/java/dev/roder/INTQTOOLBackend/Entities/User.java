@@ -77,7 +77,13 @@ public class User{
         this.id=id;
     }
 
+    public void removeRole(Role role){
+        this.roles.remove(role);
+    }
 
+    public boolean hasRole(String roleName){
+        return roles.stream().map((role)->role.getName()).collect(Collectors.toList()).contains(roleName);
+    }
     public String getPassword () {
         return password;
     }
@@ -210,6 +216,23 @@ public class User{
             notificationJsonArray.put(notification.getDetails());
         }
         userObject.put("notifications",notificationJsonArray);
+
+        return userObject.toString();
+    }
+
+    public String getDetails(){
+        JSONObject userObject = new JSONObject();
+        userObject.put("id",id);
+        userObject.put("username",username);
+        userObject.put("firstName",firstName);
+        userObject.put("lastName",lastName);
+        userObject.put("email",email);
+        JSONArray roleJsonArray = new JSONArray();
+        for(Role role:roles){
+            roleJsonArray.put(role.getName());
+        }
+        userObject.put("roles",roleJsonArray);
+
 
         return userObject.toString();
     }

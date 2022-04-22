@@ -68,7 +68,7 @@ public class UserService {
         Iterator<User> it = userRepository.findAll().iterator();
 
         while(it.hasNext()){
-            allUsers.add(it.next().toString());
+            allUsers.add(it.next().getDetails());
         }
 
         return allUsers;
@@ -370,5 +370,49 @@ public class UserService {
                         return null;
                     }
                 })).filter((qa)->qa != null).collect(Collectors.toList());
+    }
+
+    public void makeUserStudent(Integer userId){
+        User userToChange = userRepository.findById(userId).get();
+        if(!userToChange.hasRole("ROLE_STUDENT")){
+            for(Role role: userToChange.getRoles()){
+                userToChange.removeRole(role);
+                roleRepository.delete(role);
+            }
+            Role newStudentRole = new Role("ROLE_STUDENT");
+            roleRepository.save(newStudentRole);
+            userToChange.addRole(newStudentRole);
+            userRepository.save(userToChange);
+        }
+
+    }
+
+    public void makeUserTeacher(Integer userId){
+        User userToChange = userRepository.findById(userId).get();
+        if(!userToChange.hasRole("ROLE_TEACHER")){
+            for(Role role: userToChange.getRoles()){
+                userToChange.removeRole(role);
+                roleRepository.delete(role);
+            }
+            Role newStudentRole = new Role("ROLE_TEACHER");
+            roleRepository.save(newStudentRole);
+            userToChange.addRole(newStudentRole);
+            userRepository.save(userToChange);
+        }
+
+    }
+    public void makeUserAdmin(Integer userId){
+        User userToChange = userRepository.findById(userId).get();
+        if(!userToChange.hasRole("ROLE_ADMIN")){
+            for(Role role: userToChange.getRoles()){
+                userToChange.removeRole(role);
+                roleRepository.delete(role);
+            }
+            Role newStudentRole = new Role("ROLE_ADMIN");
+            roleRepository.save(newStudentRole);
+            userToChange.addRole(newStudentRole);
+            userRepository.save(userToChange);
+        }
+
     }
 }

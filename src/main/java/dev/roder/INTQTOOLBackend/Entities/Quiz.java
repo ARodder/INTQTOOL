@@ -97,4 +97,21 @@ public class Quiz {
 
         return details.toString();
     }
+
+    public String getEditDetails(){
+        JSONObject details = new JSONObject();
+        details.put("quizID",this.quizID);
+        details.put("title",this.title);
+        details.put("description",this.description);
+        details.put("quizLength",this.questions.size());
+        details.put("author",this.author.getLastName()+", "+this.author.getFirstName());
+        JSONArray jsonQuestions = new JSONArray();
+        for(Question question:questions){
+            jsonQuestions.put(question.getEditDetails());
+        }
+        details.put("questions",jsonQuestions);
+
+
+        return details.toString();
+    }
 }

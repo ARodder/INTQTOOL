@@ -16,6 +16,45 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping(path="/makestudent/{userid}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> makeUserStudent(@PathVariable("userid") Integer userId) {
+        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        try{
+            userService.makeUserStudent(userId);
+            response = new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            return response;
+        }
+        return response;
+    }
+
+    @GetMapping(path="/maketeacher/{userid}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> makeUserTeacher(@PathVariable("userid") Integer userId) {
+        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        try{
+            userService.makeUserTeacher(userId);
+            response = new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            return response;
+        }
+        return response;
+    }
+
+    @GetMapping(path="/makeadmin/{userid}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> makeUserAdmin(@PathVariable("userid") Integer userId) {
+        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        try{
+            userService.makeUserAdmin(userId);
+            response = new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            return response;
+        }
+        return response;
+    }
+
 
 
     @GetMapping(path="/myuser")

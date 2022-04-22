@@ -76,4 +76,13 @@ public class DeployedQuiz {
 
         return details.toString();
     }
+
+    public String getDetailsForEdit(){
+        JSONObject details = new JSONObject();
+        details.put("id",id);
+        details.put("courseId",deploymentCourse.getCourseID());
+        details.put("deployedQuiz", deployedQuiz.getEditDetails());
+
+        return details.toString();
+    }
 }

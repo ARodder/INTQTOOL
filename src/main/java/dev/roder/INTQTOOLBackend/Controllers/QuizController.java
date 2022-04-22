@@ -54,7 +54,7 @@ public class QuizController {
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         try{
 
-            response = new ResponseEntity<String>(quizService.getQuiz(deployedquizId),HttpStatus.OK);
+            response = new ResponseEntity<String>(quizService.getQuizDetails(deployedquizId),HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e.getMessage());
             response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
@@ -63,6 +63,7 @@ public class QuizController {
 
         return response;
     }
+
 
     @RequestMapping(method= RequestMethod.POST, path="/save")
     @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")

@@ -50,6 +50,28 @@ public class QuizService {
 
     }
 
+    public String getQuizDetails(Integer deplyedQuizID){
+        User currentUser = getCurrentUser();
+
+        DeployedQuiz foundQuiz = deployedQuizRepository.findById(deplyedQuizID).get();
+
+        List<Course> userCourses= currentUser.getCourses();
+
+        boolean userInCourse = false;
+        for(Course course:userCourses){
+            if(course.getActiveQuizzes().contains(foundQuiz)){
+                userInCourse = true;
+            }
+        }
+
+        if(userInCourse){
+            return foundQuiz.getDetailsForEdit();
+        }else{
+            return "";
+        }
+
+    }
+
     public Integer addQuiz(DeployedQuiz quiz,Integer courseId){
         User currentUser = getCurrentUser();
         Course quizCourse = courseRepository.findById(courseId).get();

@@ -2,10 +2,7 @@ package dev.roder.INTQTOOLBackend.Entities;
 
 import org.json.JSONObject;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class QuestionAnswer {
@@ -13,8 +10,10 @@ public class QuestionAnswer {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
+    @Column(length=500)
     private String answer;
     private String status;
+    @Column(length=500)
     private String feedback;
     private Integer grading;
 

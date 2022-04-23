@@ -26,6 +26,7 @@ public class Quiz {
     @ManyToOne
     private User author;
 
+    @Column(length=2000)
     private String description;
 
 

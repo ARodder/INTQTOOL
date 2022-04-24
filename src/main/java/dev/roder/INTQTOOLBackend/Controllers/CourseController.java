@@ -23,8 +23,17 @@ public class CourseController {
 
     @RequestMapping(method= RequestMethod.GET, path="/{courseId}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public String getCourse(@PathVariable("courseId") Integer courseId){
-        return courseService.getCourseDetails(courseId);
+    public ResponseEntity<String> getCourse(@PathVariable("courseId") Integer courseId){
+        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+
+        try{
+            String foundCourse =courseService.getCourseDetails(courseId);
+            response = new ResponseEntity<String>( foundCourse,HttpStatus.OK);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            return response;
+        }
+        return response;
     }
 
     @RequestMapping(method= RequestMethod.POST, path="/adduser/{courseId}")

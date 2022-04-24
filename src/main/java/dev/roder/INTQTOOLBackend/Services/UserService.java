@@ -267,10 +267,12 @@ public class UserService {
                 if(currentDeployedQuiz.getDeadline().isAfter(LocalDate.now())){
                     if(currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())){
                         qa.setDeployedQuiz(currentDeployedQuiz);
+                        currentDeployedQuiz.addQuizAnswer(qa);
                     }
                 }
 
                 QuizAnswer savedQuizAnswer = quizAnswerRepository.save(qa);
+                deployedQuizRepository.save(currentDeployedQuiz);
                 currentUser.addQuizAnswer(savedQuizAnswer);
                 userRepository.save(currentUser);
             }

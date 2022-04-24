@@ -72,6 +72,7 @@ public class DeployedQuiz {
         for(Integer questionId: questionIds){
             JSONArray allQuestionAnswers = new JSONArray();
             for(QuizAnswer qa:quizAnswer){
+                if(qa.getStatus().equals("submitted"))
                 allQuestionAnswers.put(qa.getAnswerForQuestion(questionId));
             }
             allQuizAnswers.put(allQuestionAnswers);

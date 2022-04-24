@@ -1,9 +1,11 @@
 package dev.roder.INTQTOOLBackend.Entities;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -58,6 +60,22 @@ public class DeployedQuiz {
 
     public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
+    }
+
+    public String getQuestionAnswers(){
+        JSONObject allQuizAnswers = new JSONObject();
+        List<Integer> questionIds = deployedQuiz.getQuestionIds();
+        int index =1;
+        for(Integer questionId: questionIds){
+            JSONArray allQuestionAnswers = new JSONArray();
+            for(QuizAnswer qa:quizAnswer){
+                allQuestionAnswers.put(qa.getAnswerForQuestion(questionId));
+            }
+            allQuizAnswers.put("question "+index,allQuestionAnswers);
+            index++;
+        }
+        return allQuizAnswers.toString();
+
     }
 
     public String getDetails(){

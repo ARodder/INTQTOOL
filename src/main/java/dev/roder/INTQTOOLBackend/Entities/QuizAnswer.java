@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class QuizAnswer {
@@ -55,6 +56,15 @@ public class QuizAnswer {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getAnswerForQuestion(Integer questionId){
+        List<QuestionAnswer> answer = answers.stream().filter((ans)->ans.getQuestionId()==questionId).collect(Collectors.toList());
+        if(answer.size() == 1){
+            return answer.get(0).getGradingDetails(user.getId());
+        }else{
+            return null;
+        }
     }
 
     public Integer getId() {

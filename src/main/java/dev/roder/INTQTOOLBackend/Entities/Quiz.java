@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Quiz {
@@ -68,6 +69,10 @@ public class Quiz {
 
     public void setQuestions (List<Question> questions) {
         this.questions=questions;
+    }
+
+    public List<Integer> getQuestionIds(){
+        return questions.stream().map((question)->question.getQuestionID()).collect(Collectors.toList());
     }
 
     public String getDetails(){

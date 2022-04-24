@@ -7,9 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class QuizService {
@@ -113,6 +111,17 @@ public class QuizService {
             }
             quizToUpDate.setQuestions(newInfo.getQuestions());
             quizRepository.save(quizToUpDate);
+        }
+
+    }
+
+    public String getQuestionAnswers(Integer deployedQuizId){
+        Optional<DeployedQuiz> foundDeployedQuiz = deployedQuizRepository.findById(deployedQuizId);
+        if(foundDeployedQuiz.isPresent()){
+            DeployedQuiz deployedQuiz = foundDeployedQuiz.get();
+            return deployedQuiz.getQuestionAnswers();
+        }else{
+            throw new NoSuchElementException("That quiz is not found in deployment");
         }
 
     }

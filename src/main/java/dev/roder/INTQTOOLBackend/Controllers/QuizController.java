@@ -81,5 +81,20 @@ public class QuizController {
         return response;
     }
 
+    @RequestMapping(method= RequestMethod.POST, path="/quizanswers/{deployedQuizId}")
+    @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody ResponseEntity<String> getDeployedQuizAnswers(@PathVariable("deployedQuizId") Integer deployedQuizId){
+        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        try{
+            response = new ResponseEntity<String>(quizService.getQuestionAnswers(deployedQuizId),HttpStatus.OK);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
+
+
+        return response;
+    }
+
 
 }

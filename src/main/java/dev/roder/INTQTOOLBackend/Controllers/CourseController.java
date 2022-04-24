@@ -19,15 +19,12 @@ import java.util.Map;
 public class CourseController {
 
     @Autowired
-    private CourseRepository courseRepository;
-
-    @Autowired
     private CourseService courseService;
 
     @RequestMapping(method= RequestMethod.GET, path="/{courseId}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
     public String getCourse(@PathVariable("courseId") Integer courseId){
-        return courseRepository.findById(courseId).get().getDetails();
+        return courseService.getCourseDetails(courseId);
     }
 
     @RequestMapping(method= RequestMethod.POST, path="/adduser/{courseId}")

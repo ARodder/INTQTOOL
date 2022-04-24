@@ -6,6 +6,9 @@ import dev.roder.INTQTOOLBackend.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @Service
 public class CourseService {
     @Autowired
@@ -23,6 +26,16 @@ public class CourseService {
 
         }else{
             throw new IllegalArgumentException("Course or user does not exist");
+        }
+
+    }
+
+    public String getCourseDetails(Integer courseId){
+        Optional<Course> foundCourse = courseRepository.findById(courseId);
+        if(foundCourse.isPresent()){
+            return foundCourse.get().getDetails();
+        }else{
+            throw new NoSuchElementException("Course does not exist");
         }
 
     }

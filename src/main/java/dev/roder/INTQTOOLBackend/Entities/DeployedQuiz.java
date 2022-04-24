@@ -38,6 +38,10 @@ public class DeployedQuiz {
         this.id = id;
     }
 
+    public void addQuizAnswer(QuizAnswer qa){
+        quizAnswer.add(qa);
+    }
+
     public Course getDeploymentCourse() {
         return deploymentCourse;
     }
@@ -63,16 +67,14 @@ public class DeployedQuiz {
     }
 
     public String getQuestionAnswers(){
-        JSONObject allQuizAnswers = new JSONObject();
+        JSONArray allQuizAnswers = new JSONArray();
         List<Integer> questionIds = deployedQuiz.getQuestionIds();
-        int index =1;
         for(Integer questionId: questionIds){
             JSONArray allQuestionAnswers = new JSONArray();
             for(QuizAnswer qa:quizAnswer){
                 allQuestionAnswers.put(qa.getAnswerForQuestion(questionId));
             }
-            allQuizAnswers.put("question "+index,allQuestionAnswers);
-            index++;
+            allQuizAnswers.put(allQuestionAnswers);
         }
         return allQuizAnswers.toString();
 

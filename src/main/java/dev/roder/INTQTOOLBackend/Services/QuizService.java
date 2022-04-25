@@ -91,13 +91,16 @@ public class QuizService {
         return userRepository.findByUsername(currentPrincipalName).get();
     }
 
-    public void saveQuiz(DeployedQuiz quiz){
+    public void saveQuiz(DeployedQuiz quiz,Integer courseId){
         User currentUser = getCurrentUser();
         DeployedQuiz updatedDeployment = deployedQuizRepository.findById(quiz.getId()).get();
         Quiz newInfo = quiz.getDeployedQuiz();
         newInfo.setAuthor(currentUser);
         Quiz quizToUpDate = quizRepository.findById(newInfo.getQuizID()).get();
         if(currentUser.getCourses().contains(updatedDeployment.getDeploymentCourse())){
+            if(updatedDeployment.getDeploymentCourse().getCourseID() != courseId){
+                updatedDeployment.setDeploymentCourse(courseRepository.findById(courseId).get());
+            }
             for(Question question: newInfo.getQuestions()){
                 question.setQuizID(quizToUpDate.getQuizID());
                 if(question.getType() == 1){
@@ -111,6 +114,7 @@ public class QuizService {
             }
             quizToUpDate.setQuestions(newInfo.getQuestions());
             quizRepository.save(quizToUpDate);
+            deployedQuizRepository.save(updatedDeployment);
         }
 
     }

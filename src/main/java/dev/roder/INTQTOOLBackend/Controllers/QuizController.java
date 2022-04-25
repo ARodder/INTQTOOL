@@ -65,12 +65,12 @@ public class QuizController {
     }
 
 
-    @RequestMapping(method= RequestMethod.POST, path="/save")
+    @RequestMapping(method= RequestMethod.POST, path="/save/{courseId}")
     @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public @ResponseBody ResponseEntity<String> saveUpdatedQuiz(@RequestBody DeployedQuiz updatedQuiz){
+    public @ResponseBody ResponseEntity<String> saveUpdatedQuiz(@RequestBody DeployedQuiz updatedQuiz, @PathVariable("courseId") Integer courseId){
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         try{
-            quizService.saveQuiz(updatedQuiz);
+            quizService.saveQuiz(updatedQuiz,courseId);
             response = new ResponseEntity<String>("Quiz updated",HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e.getMessage());

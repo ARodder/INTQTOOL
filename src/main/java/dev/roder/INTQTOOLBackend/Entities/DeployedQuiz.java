@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ public class DeployedQuiz {
     private Course deploymentCourse;
     @ManyToOne
     private Quiz deployedQuiz;
-    private LocalDate deadline;
+    private Date deadline;
     @OneToMany
     private List<QuizAnswer> quizAnswer;
 
@@ -58,11 +59,11 @@ public class DeployedQuiz {
         this.deployedQuiz = depolyedQuiz;
     }
 
-    public LocalDate getDeadline() {
+    public Date getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }
 
@@ -86,6 +87,7 @@ public class DeployedQuiz {
         details.put("id",id);
         details.put("courseId",deploymentCourse.getCourseID());
         details.put("deployedQuiz", deployedQuiz.getDetails());
+        details.put("deployedQuiz", deadline.toString());
 
         return details.toString();
     }

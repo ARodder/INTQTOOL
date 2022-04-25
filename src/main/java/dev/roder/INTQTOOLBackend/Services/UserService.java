@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -264,7 +265,7 @@ public class UserService {
             } else{
                 qa.setUser(currentUser);
                 DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
-                if(currentDeployedQuiz.getDeadline().isAfter(LocalDate.now())){
+                if(currentDeployedQuiz.getDeadline().compareTo(new Date())<0){
                     if(currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())){
                         qa.setDeployedQuiz(currentDeployedQuiz);
                         currentDeployedQuiz.addQuizAnswer(qa);
@@ -327,7 +328,7 @@ public class UserService {
                 qa.setUser(currentUser);
                 qa.setStatus("submitted");
                 DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
-                if(currentDeployedQuiz.getDeadline().isAfter(LocalDate.now())){
+                if(currentDeployedQuiz.getDeadline().compareTo(new Date())<0){
                     if(currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())){
                         qa.setDeployedQuiz(currentDeployedQuiz);
                         currentDeployedQuiz.addQuizAnswer(qa);

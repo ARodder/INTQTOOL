@@ -265,7 +265,7 @@ public class UserService {
             } else{
                 qa.setUser(currentUser);
                 DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
-                if(currentDeployedQuiz.getDeadline().compareTo(new Date())<0){
+                if(currentDeployedQuiz.getDeadline().compareTo(new Date())>0){
                     if(currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())){
                         qa.setDeployedQuiz(currentDeployedQuiz);
                         currentDeployedQuiz.addQuizAnswer(qa);
@@ -328,7 +328,7 @@ public class UserService {
                 qa.setUser(currentUser);
                 qa.setStatus("submitted");
                 DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
-                if(currentDeployedQuiz.getDeadline().compareTo(new Date())<0){
+                if(currentDeployedQuiz.getDeadline().compareTo(new Date())>0){
                     if(currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())){
                         qa.setDeployedQuiz(currentDeployedQuiz);
                         currentDeployedQuiz.addQuizAnswer(qa);

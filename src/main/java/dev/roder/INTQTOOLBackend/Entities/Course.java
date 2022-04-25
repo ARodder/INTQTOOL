@@ -65,7 +65,7 @@ public class Course {
 
     public List<DeployedQuiz> getActiveQuizzes() {
         return activeQuizzes.stream().map((deployedQuiz) -> {
-            if (deployedQuiz.getDeadline().compareTo(new Date())<0) {
+            if (deployedQuiz.getDeadline().compareTo(new Date())>0) {
                 return deployedQuiz;
             } else {
                 return null;

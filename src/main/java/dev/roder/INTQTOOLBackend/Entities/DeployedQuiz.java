@@ -87,7 +87,7 @@ public class DeployedQuiz {
         details.put("id",id);
         details.put("courseId",deploymentCourse.getCourseID());
         details.put("deployedQuiz", deployedQuiz.getDetails());
-        details.put("deployedQuiz", deadline.toString());
+        details.put("deadline", deadline.toString());
 
         return details.toString();
     }

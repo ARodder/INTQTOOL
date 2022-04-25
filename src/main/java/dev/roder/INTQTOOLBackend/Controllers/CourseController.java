@@ -36,6 +36,21 @@ public class CourseController {
         return response;
     }
 
+    @RequestMapping(method= RequestMethod.GET, path="/all")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> getAllCourses(@PathVariable("courseId") Integer courseId){
+        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+
+        try{
+            String foundCourse =courseService.getCourseDetails(courseId);
+            response = new ResponseEntity<String>( foundCourse,HttpStatus.OK);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            return response;
+        }
+        return response;
+    }
+
     @RequestMapping(method= RequestMethod.POST, path="/adduser/{courseId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> addUserToCourse(@PathVariable("courseId") Integer courseId, @RequestBody Map<String, Integer> json){

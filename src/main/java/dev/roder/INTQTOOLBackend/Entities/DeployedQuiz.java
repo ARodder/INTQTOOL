@@ -5,8 +5,7 @@ import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -19,7 +18,7 @@ public class DeployedQuiz {
     private Course deploymentCourse;
     @ManyToOne
     private Quiz deployedQuiz;
-    private Date deadline;
+    private Timestamp deadline;
     @OneToMany
     private List<QuizAnswer> quizAnswer;
 
@@ -59,11 +58,11 @@ public class DeployedQuiz {
         this.deployedQuiz = depolyedQuiz;
     }
 
-    public Date getDeadline() {
+    public Timestamp getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Date deadline) {
+    public void setDeadline(Timestamp deadline) {
         this.deadline = deadline;
     }
 

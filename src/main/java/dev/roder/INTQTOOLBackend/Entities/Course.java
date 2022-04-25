@@ -4,7 +4,6 @@ package dev.roder.INTQTOOLBackend.Entities;
 import org.json.JSONObject;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -12,9 +11,10 @@ import java.util.stream.Collectors;
 public class Course {
 
     @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer courseID;
 
-    private String courseName;
+    private String name;
 
     private String description;
 
@@ -39,12 +39,12 @@ public class Course {
         this.courseID = courseID;
     }
 
-    public String getCourseName() {
-        return courseName;
+    public String getName() {
+        return name;
     }
 
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
+    public void setName(String courseName) {
+        this.name = courseName;
     }
 
     public String getDescription() {
@@ -97,7 +97,7 @@ public class Course {
     public String getDetails() {
         JSONObject details = new JSONObject();
         details.put("id", this.courseID);
-        details.put("name", this.courseName);
+        details.put("name", this.name);
         details.put("description", description);
         details.put("joinCode", this.joinCode);
         details.put("activeQuizAmnt", this.activeQuizzes.size());

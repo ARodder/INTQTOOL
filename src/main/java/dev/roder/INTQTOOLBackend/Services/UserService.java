@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -327,6 +328,7 @@ public class UserService {
             } else{
                 qa.setUser(currentUser);
                 qa.setStatus("submitted");
+                qa.setSubmittedDate(new Timestamp(System.currentTimeMillis()));
                 DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
                 if(currentDeployedQuiz.getDeadline().compareTo(new Date())>0){
                     if(currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())){

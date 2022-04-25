@@ -1,6 +1,6 @@
 package dev.roder.INTQTOOLBackend.Controllers;
 
-import dev.roder.INTQTOOLBackend.Repositories.CourseRepository;
+import dev.roder.INTQTOOLBackend.Entities.Course;
 import dev.roder.INTQTOOLBackend.Services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,12 +38,27 @@ public class CourseController {
 
     @RequestMapping(method= RequestMethod.GET, path="/all")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<String> getAllCourses(@PathVariable("courseId") Integer courseId){
+    public ResponseEntity<String> getAllCourses(){
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 
         try{
-            String foundCourse =courseService.getCourseDetails(courseId);
-            response = new ResponseEntity<String>( foundCourse,HttpStatus.OK);
+            String foundCourses = courseService.getAllCourseDetails();
+            response = new ResponseEntity<String>( foundCourses,HttpStatus.OK);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+            return response;
+        }
+        return response;
+    }
+
+    @RequestMapping(method= RequestMethod.POST, path="/new")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> createNewCourse(@RequestBody Course newCourse){
+        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+
+        try{
+            String foundCourses = courseService.createNewQuiz(newCourse);
+            response = new ResponseEntity<String>( foundCourses,HttpStatus.OK);
         }catch(Exception e){
             System.out.println(e.getMessage());
             return response;

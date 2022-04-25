@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ public class QuizAnswer {
     private User user;
     private String status;
     private Integer grading;
+    private Timestamp submittedDate;
     @ManyToMany
     @JoinTable(name="quiz_answer_questions",
             joinColumns = @JoinColumn(name="quiz_answer_id"),
@@ -52,6 +54,14 @@ public class QuizAnswer {
 
     public String getStatus() {
         return status;
+    }
+
+    public Timestamp getSubmittedDate() {
+        return submittedDate;
+    }
+
+    public void setSubmittedDate(Timestamp submittedDate) {
+        this.submittedDate = submittedDate;
     }
 
     public void setStatus(String status) {

@@ -95,7 +95,10 @@ public class DeployedQuiz {
         details.put("id",id);
         details.put("courseId",deploymentCourse.getCourseID());
         details.put("deployedQuiz", deployedQuiz.toString());
-        details.put("deadline", deadline.toString());
+        String tempDeadline = deadline.toString();
+        tempDeadline = tempDeadline.replace(" ","T");
+        tempDeadline = tempDeadline +"Z";
+        details.put("deadline", tempDeadline);
 
         return details.toString();
     }
@@ -105,7 +108,10 @@ public class DeployedQuiz {
         details.put("id",id);
         details.put("courseId",deploymentCourse.getCourseID());
         details.put("deployedQuiz", deployedQuiz.getEditDetails());
-        details.put("deadline", deadline.toString());
+        String tempDeadline = deadline.toString();
+        tempDeadline = tempDeadline.replace(" ","T");
+        tempDeadline = tempDeadline +"Z";
+        details.put("deadline", tempDeadline);
 
         return details.toString();
     }

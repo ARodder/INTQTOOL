@@ -73,14 +73,36 @@ public class QuizService {
     public Integer addQuiz(DeployedQuiz quiz,Integer courseId){
         User currentUser = getCurrentUser();
         Course quizCourse = courseRepository.findById(courseId).get();
-        quiz.setDeploymentCourse(quizCourse);
-        quiz.getDeployedQuiz().setAuthor(currentUser);
-        quiz.getDeployedQuiz().setQuestions(new ArrayList<>());
-        quiz.setQuizAnswer(new ArrayList<>());
-        quizRepository.save(quiz.getDeployedQuiz());
-        deployedQuizRepository.save(quiz);
-        quizCourse.addActiveQuiz(quiz);
-        courseRepository.save(quizCourse);
+        if(quiz.getId() != null){
+            DeployedQuiz existingQuiz = deployedQuizRepository.findById(quiz.getId()).get();
+            if(quiz.getDeployedQuiz().getQuizID() !=null){
+                Quiz existingDeployedQuiz = quizRepository.findById(quiz.getDeployedQuiz().getQuizID()).get();
+                existingDeployedQuiz.setTitle(quiz.getDeployedQuiz().getTitle());
+                existingDeployedQuiz.setDescription(quiz.getDeployedQuiz().getDescription());
+                quizRepository.save(existingDeployedQuiz);
+            }else{
+                quiz.setDeploymentCourse(quizCourse);
+                quiz.getDeployedQuiz().setAuthor(currentUser);
+                quiz.getDeployedQuiz().setQuestions(new ArrayList<>());
+                quiz.setQuizAnswer(new ArrayList<>());
+                quizRepository.save(quiz.getDeployedQuiz());
+            }
+
+            existingQuiz.setDeploymentCourse(quizCourse);
+            existingQuiz.setDeadline(quiz.getDeadline());
+            deployedQuizRepository.save(existingQuiz);
+
+        }else{
+            quiz.setDeploymentCourse(quizCourse);
+            quiz.getDeployedQuiz().setAuthor(currentUser);
+            quiz.getDeployedQuiz().setQuestions(new ArrayList<>());
+            quiz.setQuizAnswer(new ArrayList<>());
+            quizRepository.save(quiz.getDeployedQuiz());
+            deployedQuizRepository.save(quiz);
+            quizCourse.addActiveQuiz(quiz);
+            courseRepository.save(quizCourse);
+        }
+
         return quiz.getId();
     }
 

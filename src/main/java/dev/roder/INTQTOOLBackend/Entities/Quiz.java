@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// TODO - hard to understand the naming and idea of each entity. Comments also needed - what is the
+//  main responsibility for this (and every other) class? What does it store?
 @Entity
 public class Quiz {
 
@@ -75,6 +77,8 @@ public class Quiz {
         return questions.stream().map((question)->question.getQuestionID()).collect(Collectors.toList());
     }
 
+    // TODO - why do you convert this and other objects to JSON? That can be done by Spring Boot automatically,
+    //  just return a Data Transfer Object (DTO)
     public String getDetails(){
         JSONObject details = new JSONObject();
         details.put("quizID",this.quizID);

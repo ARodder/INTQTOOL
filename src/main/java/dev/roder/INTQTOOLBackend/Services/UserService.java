@@ -303,6 +303,7 @@ public class UserService {
 
         boolean saveSuccess = false;
 
+        // TODO - Unclear what you do here. Save all the answers? Why? You should update only a single answer
         try{
             List<QuestionAnswer> savedQuestionAnswers = new ArrayList();
             qa.getAnswers().forEach((ans)->{
@@ -334,6 +335,7 @@ public class UserService {
                 qa.setUser(currentUser);
                 qa.setStatus("submitted");
                 qa.setSubmittedDate(new Timestamp(System.currentTimeMillis()));
+                // TODO - pay attention to warnings of code duplicate blocks like this one
                 DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
                 if(currentDeployedQuiz.getDeadline().compareTo(new Date())>0){
                     if(currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())){
@@ -362,6 +364,9 @@ public class UserService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
+        // TODO - it would probably be more efficient to define a function in the user repository (or answerRepository)
+        // for this instead of selecting all entries and filtering them in Java
+        // i.e, this can be easily selected by something like SELECT q.* FROM quiz q LEFT JOIN user u ON u.id = q.user_id WHERE q.status != "in-progress"
         User currentUser = userRepository.findByUsername(currentPrincipalName).get();
         return currentUser.getQuizAnswers()
                 .stream()
@@ -384,11 +389,13 @@ public class UserService {
                 })).filter((qa)->qa != null).collect(Collectors.toList());
     }
 
+    // TODO - refactor this and the other two methods to changeRole (userId, role)
     public void makeUserStudent(Integer userId){
         User userToChange = userRepository.findById(userId).get();
         if(!userToChange.hasRole("ROLE_STUDENT")){
             for(Role role: userToChange.getRoles()){
                 userToChange.removeRole(role);
+                // TODO - do you really need to delete the role? Does this even succeed (or you get an exception which is ignored)?
                 roleRepository.delete(role);
             }
             Role newStudentRole = new Role("ROLE_STUDENT");

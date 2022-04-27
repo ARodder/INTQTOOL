@@ -16,6 +16,8 @@ public class DeployedQuiz {
     private Integer id;
     @ManyToOne
     private Course deploymentCourse;
+    // TODO - a DeployedQuiz object which has a field named "deployedQuiz"? Which one is the deployed quiz then?
+    // TODO - why is a quiz having ManyToOne to this? One quiz can be deployed several times?
     @ManyToOne
     private Quiz deployedQuiz;
     private Timestamp deadline;

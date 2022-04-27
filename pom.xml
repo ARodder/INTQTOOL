@@ -23,11 +23,12 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>28.1-jre</version>
-		</dependency>
+<!--		TODO: What do you need Guava for? -->
+<!--		<dependency>-->
+<!--			<groupId>com.google.guava</groupId>-->
+<!--			<artifactId>guava</artifactId>-->
+<!--			<version>28.1-jre</version>-->
+<!--		</dependency>-->
 
 		<dependency>
 			<groupId>mysql</groupId>

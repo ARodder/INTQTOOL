@@ -16,6 +16,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // TODO - also here - the REST convention would be /users/{userId}/makestudent .
+    //  Or perhaps a single endpoint: /users/{userId}/changerole?role=student, and /users/{userId}/changerole?role=teacher
     @GetMapping(path="/makestudent/{userid}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> makeUserStudent(@PathVariable("userid") Integer userId) {

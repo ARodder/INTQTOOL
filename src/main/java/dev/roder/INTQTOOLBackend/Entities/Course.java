@@ -94,6 +94,7 @@ public class Course {
         this.users.add(user);
     }
 
+    // TODO - you can skip creating your own to-JSON conversions. You will need to add some @JsonIgnore annotations for that
     public String getDetails() {
         JSONObject details = new JSONObject();
         details.put("id", this.courseID);

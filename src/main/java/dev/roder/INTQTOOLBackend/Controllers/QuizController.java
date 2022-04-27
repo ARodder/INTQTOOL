@@ -18,6 +18,7 @@ public class QuizController {
     private QuizService quizService;
 
 
+    // TODO - ?
     public void addQuestion() {
 
     }
@@ -32,12 +33,15 @@ public class QuizController {
         return quizService.getQuiz(quizID);
     }
 
+    // TODO - the normal REST API convention would be HTTP POST /quiz?courseId=... if you use /{something}, the {something} is quiz-ID
+    // TODO - DeployedQuiz seems like a huge object - containing all the answers etc. Do you really need to pass the whole object in HTTP POST body?
     @RequestMapping(method= RequestMethod.POST, path="/new/{courseId}")
     @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
     public @ResponseBody ResponseEntity<String> createQuiz(@RequestBody DeployedQuiz quiz,@PathVariable("courseId") Integer courseId){
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        ResponseEntity<String> response;
         try{
             Integer newQuizDeployId = quizService.addQuiz(quiz,courseId);
+            // TODO - why not simply return the newQuizDeployId as the body, instead of wrapping it in JSON object?
             response = new ResponseEntity<String>("{\"deployedQuizId\":\""+newQuizDeployId+"\"}",HttpStatus.OK);
         }catch (Exception e){
             System.out.println(e.getMessage());
@@ -48,6 +52,7 @@ public class QuizController {
         return response;
     }
 
+    // TODO - in this and all other
     @RequestMapping(method= RequestMethod.GET, path="/quizdetails/{deployedquizId}")
     @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
     public @ResponseBody ResponseEntity<String> getDeployedQuizDetails(@PathVariable("deployedquizId") Integer deployedquizId){

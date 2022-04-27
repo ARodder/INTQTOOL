@@ -1,4 +1,7 @@
 #!/bin/sh
+
+# TODO - you probably don't need mvnw, mvnw.cmd files and the whole .mvn directory?
+
 # ----------------------------------------------------------------------------
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file

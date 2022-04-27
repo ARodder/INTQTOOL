@@ -1,5 +1,6 @@
 package dev.roder.INTQTOOLBackend.Controllers;
 
+// TODO - clean all unused imports
 import dev.roder.INTQTOOLBackend.Entities.User;
 import dev.roder.INTQTOOLBackend.Security.IntqtoolUserDetailService;
 import dev.roder.INTQTOOLBackend.Security.jwt.AuthenticationRequest;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.NoSuchElementException;
 
+// TODO - a comment for every class is recommended - what is the responsibility for this class? This applies to all classes
 @RestController
 public class AuthenticationController {
     @Autowired
@@ -30,6 +32,7 @@ public class AuthenticationController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // TODO - a comment for each non-trivial method - what does this method do? This applies to all methods
     @PostMapping(path="/authenticate")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest authenticationRequest){
         try {

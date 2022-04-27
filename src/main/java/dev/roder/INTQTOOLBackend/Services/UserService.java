@@ -52,16 +52,21 @@ public class UserService {
     }
 
     public void addUser(User user){
-        Role role = new Role("ROLE_STUDENT");
+        if(!userRepository.findByUsername(user.getUsername()).isPresent()){
+            Role role = new Role("ROLE_STUDENT");
 
-        user.setSettings("0,0,0,0,0");
-        user.addRole(role);
-        user.setExpirationDate(LocalDate.now().plusYears(5));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setAccountLock(false);
-        user.setUserEnabled(true);
-        roleRepository.save(role);
-        userRepository.save(user);
+            user.setSettings("0,0,0,0,0");
+            user.addRole(role);
+            user.setExpirationDate(LocalDate.now().plusYears(5));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setAccountLock(false);
+            user.setUserEnabled(true);
+            roleRepository.save(role);
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("Username already in use");
+        }
+
     }
 
     public ArrayList<String> getAllUsers(){

@@ -88,11 +88,13 @@ public class UserController {
             } else {
                 response = new ResponseEntity<>("User not valid",HttpStatus.BAD_REQUEST);
             }
+        }catch(IllegalArgumentException e){
+            response = new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+            System.out.println(e.getMessage());
         }catch(Exception e){
             response = new ResponseEntity<>("Error was thrown",HttpStatus.BAD_REQUEST);
             System.out.println("Create new user exception");
             System.out.println(e.getMessage());
-            System.out.println(e.getCause());
         }
 
 

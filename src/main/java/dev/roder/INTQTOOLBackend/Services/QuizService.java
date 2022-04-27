@@ -80,12 +80,6 @@ public class QuizService {
                 existingDeployedQuiz.setTitle(quiz.getDeployedQuiz().getTitle());
                 existingDeployedQuiz.setDescription(quiz.getDeployedQuiz().getDescription());
                 quizRepository.save(existingDeployedQuiz);
-            }else{
-                quiz.setDeploymentCourse(quizCourse);
-                quiz.getDeployedQuiz().setAuthor(currentUser);
-                quiz.getDeployedQuiz().setQuestions(new ArrayList<>());
-                quiz.setQuizAnswer(new ArrayList<>());
-                quizRepository.save(quiz.getDeployedQuiz());
             }
 
             existingQuiz.setDeploymentCourse(quizCourse);

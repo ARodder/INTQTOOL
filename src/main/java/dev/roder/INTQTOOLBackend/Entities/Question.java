@@ -74,7 +74,7 @@ public class Question {
     @Override
     public String toString(){
         JSONObject details = new JSONObject();
-        details.put("id",this.questionID);
+        details.put("questionID",this.questionID);
         details.put("questionText",this.questionText);
         details.put("type",this.type);
         JSONArray jsonAlternatives = new JSONArray();
@@ -89,7 +89,7 @@ public class Question {
 
     public String getEditDetails(){
         JSONObject details = new JSONObject();
-        details.put("id",this.questionID);
+        details.put("questionID",this.questionID);
         details.put("questionText",this.questionText);
         details.put("type",this.type);
         JSONArray jsonAlternatives = new JSONArray();

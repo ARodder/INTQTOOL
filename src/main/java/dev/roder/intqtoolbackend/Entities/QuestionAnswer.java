@@ -8,17 +8,17 @@ import javax.persistence.*;
 public class QuestionAnswer {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @Column(length=500)
+    @Column(length = 500)
     private String answer;
     private Integer questionId;
     private String status;
-    @Column(length=500)
+    @Column(length = 500)
     private String feedback;
-    private Integer grading;
+    private double grading;
 
-    public Integer getGrading() {
+    public double getGrading() {
         return grading;
     }
 
@@ -30,8 +30,14 @@ public class QuestionAnswer {
         this.questionId = questionId;
     }
 
-    public void setGrading(Integer grading) {
-        this.grading = grading;
+    public void setGrading(double grading) {
+        if(grading > 0 && grading < 1){
+            this.grading = 0.5;
+        } else if(grading > 1){
+            this.grading = 1;
+        }else if(grading < 0 ){
+            this.grading = 0;
+        }
     }
 
     public Integer getId() {
@@ -67,25 +73,25 @@ public class QuestionAnswer {
         this.feedback = feedback;
     }
 
-    public String toString(){
+    public String toString() {
         JSONObject details = new JSONObject();
-        details.put("id",this.id);
-        details.put("questionId",this.questionId);
-        details.put("answer",this.answer);
-        details.put("status",this.status);
-        details.put("feedback",this.feedback);
+        details.put("id", this.id);
+        details.put("questionId", this.questionId);
+        details.put("answer", this.answer);
+        details.put("status", this.status);
+        details.put("feedback", this.feedback);
 
         return details.toString();
     }
 
-    public String getGradingDetails(Integer userId){
+    public String getGradingDetails(Integer userId) {
         JSONObject details = new JSONObject();
-        details.put("id",this.id);
-        details.put("userId",userId);
-        details.put("questionId",this.questionId);
-        details.put("answer",this.answer);
-        details.put("status",this.status);
-        details.put("feedback",this.feedback);
+        details.put("id", this.id);
+        details.put("userId", userId);
+        details.put("questionId", this.questionId);
+        details.put("answer", this.answer);
+        details.put("status", this.status);
+        details.put("feedback", this.feedback);
 
         return details.toString();
 

@@ -31,7 +31,7 @@ public class CourseService {
 
     }
 
-    public String createNewQuiz(Course newCourse) throws ValidationException {
+    public void createNewQuiz(Course newCourse) throws ValidationException {
         try {
             newCourse.setActiveQuizzes(new ArrayList<>());
             newCourse.setJoinCode(generateJoinCode());
@@ -41,7 +41,6 @@ public class CourseService {
             throw new ValidationException("Not valid course object");
         }
 
-        return getAllCourseDetails();
     }
 
     public String getCourseDetails(Integer courseId) {

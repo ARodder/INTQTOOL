@@ -29,8 +29,9 @@ server.ssl.keyAlias= tomcat
 
 server.ssl.enabled=true
 ```
+Leave the password field empty if the keystore.p12-file has no password.
 
-Next install docker.io and run the following command
+Next install docker.io and run the following command:
 ```bash
 docker run --env-file /INTQTOOL/INTQTOOL-Backend/prod.env -it --name intqtool-backend -d -p 8443:8443 -v /INTQTOOL/INTQTOOL-Backend:/usr/src/mymaven -w /usr/src/mymaven maven mvn spring-boot:run
 ```

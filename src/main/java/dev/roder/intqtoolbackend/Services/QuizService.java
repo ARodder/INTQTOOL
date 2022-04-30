@@ -24,6 +24,8 @@ public class QuizService {
     private AlternativRepository alternativRepository;
     @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private QuestionAnswerRepository questionAnswerRepository;
 
 
     public String getQuiz(Integer deplyedQuizID){
@@ -133,6 +135,19 @@ public class QuizService {
             deployedQuizRepository.save(updatedDeployment);
         }
 
+    }
+
+    public void gradeQuizzes(List<Integer> answerIds,Double grade,String feedback){
+        answerIds.forEach((ansId)->{
+            Optional<QuestionAnswer> questionAnswerOptional = questionAnswerRepository.findById(ansId);
+            if (questionAnswerOptional.isPresent()){
+                QuestionAnswer currentQuestionAnswer = questionAnswerOptional.get();
+                currentQuestionAnswer.setGrading(grade);
+                currentQuestionAnswer.setFeedback(feedback);
+                currentQuestionAnswer.setStatus("graded");
+                questionAnswerRepository.save(currentQuestionAnswer);
+            }
+        });
     }
 
     public String getQuestionAnswers(Integer deployedQuizId){

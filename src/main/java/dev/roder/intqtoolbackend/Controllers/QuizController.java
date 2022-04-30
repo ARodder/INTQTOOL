@@ -1,6 +1,7 @@
 package dev.roder.intqtoolbackend.Controllers;
 
 import dev.roder.intqtoolbackend.Entities.DeployedQuiz;
+import dev.roder.intqtoolbackend.RequestObject.GradeAnswerRequest;
 import dev.roder.intqtoolbackend.Services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,6 +60,26 @@ public class QuizController {
             response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
+
+        return response;
+    }
+
+    @RequestMapping(method= RequestMethod.POST, path="/gradeanswers")
+    @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> gradeSingleAnswer(@RequestBody GradeAnswerRequest gradeAnswerRequest){
+        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        try{
+            if(gradeAnswerRequest.getAnswerIds() != null && gradeAnswerRequest.getGrade() != null){
+                quizService.gradeQuizzes(gradeAnswerRequest.getAnswerIds(),gradeAnswerRequest.getGrade(),gradeAnswerRequest.getFeedback());
+                response = new ResponseEntity<>(quizService.getQuestionAnswers(gradeAnswerRequest.getDeployedQuizId()),HttpStatus.OK);
+            }else{
+                throw new IllegalArgumentException("A field is missing or invalid");
+            }
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return response;
+        }
 
         return response;
     }

@@ -33,9 +33,9 @@ public class QuestionAnswer {
     public void setGrading(double grading) {
         if(grading > 0 && grading < 1){
             this.grading = 0.5;
-        } else if(grading > 1){
+        } else if(grading >= 1){
             this.grading = 1;
-        }else if(grading < 0 ){
+        }else if(grading <= 0 ){
             this.grading = 0;
         }
     }

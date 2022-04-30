@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +34,8 @@ public class UserService {
 
     @Autowired
     private QuestionAnswerRepository questionAnswerRepository;
+    @Autowired
+    private QuestionRepository questionRepository;
 
     @Autowired
     private QuizRepository quizRepository;
@@ -306,16 +305,36 @@ public class UserService {
         try{
             List<QuestionAnswer> savedQuestionAnswers = new ArrayList();
             qa.getAnswers().forEach((ans)->{
-
                 if(ans.getId() != null){
                     QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).get();
                     if(!existingAnswer.getStatus().equals("submitted")){
                         existingAnswer.setAnswer(ans.getAnswer());
                         existingAnswer.setStatus("submitted");
+
+                        Optional<Question> currentQuestionOptional = questionRepository.findById(existingAnswer.getQuestionId());
+                        if(currentQuestionOptional.isPresent()){
+                            Question currentQuestion = currentQuestionOptional.get();
+                            if(currentQuestion.getType() == 1){
+                                existingAnswer.setGrading(currentQuestion.autoGrade(existingAnswer.getAnswer()));
+                            }
+                        }
+
                         savedQuestionAnswers.add(questionAnswerRepository.save(existingAnswer));
                     }
                 }else{
                     ans.setStatus("submitted");
+
+                    Optional<Question> currentQuestionOptional = questionRepository.findById(ans.getQuestionId());
+                    if(currentQuestionOptional.isPresent()){
+                        Question currentQuestion = currentQuestionOptional.get();
+                        if(currentQuestion.getType() == 1){
+                            ans.setGrading(currentQuestion.autoGrade(ans.getAnswer()));
+                        }
+
+                        savedQuestionAnswers.add(questionAnswerRepository.save(ans));
+                    }
+
+
                     savedQuestionAnswers.add(questionAnswerRepository.save(ans));
                 }
 
@@ -328,6 +347,8 @@ public class UserService {
                 if(!existingQuizAnswer.getStatus().equals("submitted")){
                     existingQuizAnswer.setAnswers(qa.getAnswers());
                     existingQuizAnswer.setStatus("submitted");
+
+
                     quizAnswerRepository.save(existingQuizAnswer);
                 }
             } else{

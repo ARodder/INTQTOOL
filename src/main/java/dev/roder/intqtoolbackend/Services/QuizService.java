@@ -142,10 +142,12 @@ public class QuizService {
             Optional<QuestionAnswer> questionAnswerOptional = questionAnswerRepository.findById(ansId);
             if (questionAnswerOptional.isPresent()){
                 QuestionAnswer currentQuestionAnswer = questionAnswerOptional.get();
-                currentQuestionAnswer.setGrading(grade);
-                currentQuestionAnswer.setFeedback(feedback);
-                currentQuestionAnswer.setStatus("graded");
-                questionAnswerRepository.save(currentQuestionAnswer);
+                if(currentQuestionAnswer.getStatus().equals("submitted") || currentQuestionAnswer.getStatus().equals("graded")){
+                    currentQuestionAnswer.setGrading(grade);
+                    currentQuestionAnswer.setFeedback(feedback);
+                    currentQuestionAnswer.setStatus("graded");
+                    questionAnswerRepository.save(currentQuestionAnswer);
+                }
             }
         });
     }

@@ -3,7 +3,9 @@ package dev.roder.intqtoolbackend.Entities;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 
 /**
@@ -100,5 +102,17 @@ public class Question {
 
 
         return details.toString();
+    }
+
+    public Double autoGrade(String answer){
+        Double newGrade = 0.0;
+        List<Alternativ> correctAnswer = alternatives.stream().filter((alternativ -> alternativ.isRightAlternative())).collect(Collectors.toList());
+        for(Alternativ alternativ:correctAnswer){
+            if(alternativ.getAlternative().equals(answer)){
+                newGrade = 1.0;
+            }
+        }
+
+        return newGrade;
     }
 }

@@ -142,7 +142,7 @@ public class QuizService {
             Optional<QuestionAnswer> questionAnswerOptional = questionAnswerRepository.findById(ansId);
             if (questionAnswerOptional.isPresent()){
                 QuestionAnswer currentQuestionAnswer = questionAnswerOptional.get();
-                if(currentQuestionAnswer.getStatus().equals("submitted") || currentQuestionAnswer.getStatus().equals("graded")){
+                if(currentQuestionAnswer.getStatus().equals("submitted")){
                     currentQuestionAnswer.setGrading(grade);
                     currentQuestionAnswer.setFeedback(feedback);
                     currentQuestionAnswer.setStatus("graded");

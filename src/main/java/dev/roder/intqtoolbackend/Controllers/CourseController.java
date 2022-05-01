@@ -97,6 +97,17 @@ public class CourseController {
         return response;
     }
 
+
+    /**
+     * Defines an endpoint for adding users to a courses from the administrator tool.
+     * Relays the task to the appropriate courseService method.
+     * This endpoint is accessible only for users with ROLE_ADMIN.
+     *
+     * @param courseId the course id of the course to add a user to.
+     * @param json used to extract userId from the http requestbody.
+     * @return Status based on if the operation was successful or not(200 or 400)
+     */
+
     @RequestMapping(method = RequestMethod.POST, path = "/adduser/{courseId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> addUserToCourse(@PathVariable("courseId") Integer courseId, @RequestBody Map<String, Integer> json) {

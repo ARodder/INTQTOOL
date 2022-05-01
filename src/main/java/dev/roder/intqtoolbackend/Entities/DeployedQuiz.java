@@ -72,10 +72,13 @@ public class DeployedQuiz {
             JSONArray allQuestionAnswers = new JSONArray();
             for(QuizAnswer qa:quizAnswer){
                 if(qa.getStatus().equals("submitted") || qa.getStatus().equals("graded")){
-                    String currentAnswerForQuestion = qa.getAnswerForQuestion(questionId);
-                    if(currentAnswerForQuestion != null){
-                        allQuestionAnswers.put(currentAnswerForQuestion);
+                    List<String> currentAnswerForQuestion = qa.getAnswerForQuestion(questionId);
+                    for(String answerDetails:currentAnswerForQuestion){
+                        if(answerDetails != null){
+                            allQuestionAnswers.put(currentAnswerForQuestion);
+                        }
                     }
+
 
                 }
 

@@ -75,7 +75,7 @@ public class DeployedQuiz {
                     List<String> currentAnswerForQuestion = qa.getAnswerForQuestion(questionId);
                     for(String answerDetails:currentAnswerForQuestion){
                         if(answerDetails != null){
-                            allQuestionAnswers.put(currentAnswerForQuestion);
+                            allQuestionAnswers.put(answerDetails);
                         }
                     }
 

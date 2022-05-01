@@ -396,6 +396,7 @@ public class UserService {
                         details.put("title", q.getTitle());
                         details.put("status", quizAnswer.getStatus());
                         details.put("description", q.getDescription());
+                        details.put("grading",quizAnswer.getGrading());
                         details.put("quizLength", q.getQuestions().size());
                         return details.toString();
                     }catch(NullPointerException e){

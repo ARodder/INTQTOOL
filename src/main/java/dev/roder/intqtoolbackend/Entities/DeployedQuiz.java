@@ -89,6 +89,10 @@ public class DeployedQuiz {
 
     }
 
+    public void checkAllAnswersGraded(){
+        quizAnswer.forEach(qa -> qa.checkAllAnswersGraded());
+    }
+
     public String getDetails(){
         JSONObject details = new JSONObject();
         details.put("id",id);

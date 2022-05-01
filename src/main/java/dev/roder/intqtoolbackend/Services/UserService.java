@@ -362,6 +362,7 @@ public class UserService {
                         currentDeployedQuiz.addQuizAnswer(qa);
                     }
                 }
+                qa.checkAllAnswersGraded();
                 QuizAnswer savedQuizAnswer = quizAnswerRepository.save(qa);
                 deployedQuizRepository.save(currentDeployedQuiz);
                 currentUser.addQuizAnswer(savedQuizAnswer);

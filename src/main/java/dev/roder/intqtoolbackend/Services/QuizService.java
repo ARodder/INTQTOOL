@@ -137,7 +137,7 @@ public class QuizService {
 
     }
 
-    public void gradeQuizzes(List<Integer> answerIds,Double grade,String feedback){
+    public void gradeQuizzes(List<Integer> answerIds,Double grade,String feedback,Integer deployedQuizId){
         answerIds.forEach((ansId)->{
             Optional<QuestionAnswer> questionAnswerOptional = questionAnswerRepository.findById(ansId);
             if (questionAnswerOptional.isPresent()){
@@ -150,6 +150,13 @@ public class QuizService {
                 }
             }
         });
+        Optional<DeployedQuiz> deployedQuizOptional = deployedQuizRepository.findById(deployedQuizId);
+        if(deployedQuizOptional.isPresent()){
+            DeployedQuiz currentDeployedQuiz = deployedQuizOptional.get();
+            currentDeployedQuiz.checkAllAnswersGraded();
+            deployedQuizRepository.save(currentDeployedQuiz);
+        }
+
     }
 
     public String getQuestionAnswers(Integer deployedQuizId){

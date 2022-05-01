@@ -101,7 +101,7 @@ public class QuizController {
 
         try {
             if (gradeAnswerRequest.getAnswerIds() != null && gradeAnswerRequest.getGrade() != null) {
-                quizService.gradeQuizzes(gradeAnswerRequest.getAnswerIds(), gradeAnswerRequest.getGrade(), gradeAnswerRequest.getFeedback());
+                quizService.gradeQuizzes(gradeAnswerRequest.getAnswerIds(), gradeAnswerRequest.getGrade(), gradeAnswerRequest.getFeedback(),gradeAnswerRequest.getDeployedQuizId());
                 response = new ResponseEntity<>(quizService.getQuestionAnswers(gradeAnswerRequest.getDeployedQuizId()), HttpStatus.OK);
             } else {
                 throw new IllegalArgumentException("A field is missing or invalid");

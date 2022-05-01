@@ -19,7 +19,7 @@ public class QuizAnswer {
     @ManyToOne
     private User user;
     private String status;
-    private Integer grading;
+    private Double grading;
     private Timestamp submittedDate;
     @ManyToMany
     @JoinTable(name="quiz_answer_questions",
@@ -44,11 +44,11 @@ public class QuizAnswer {
         this.deployedQuiz = deployedQuiz;
     }
 
-    public Integer getGrading() {
+    public Double getGrading() {
         return grading;
     }
 
-    public void setGrading(Integer grading) {
+    public void setGrading(Double grading) {
         this.grading = grading;
     }
 
@@ -93,16 +93,24 @@ public class QuizAnswer {
         this.answers = answers;
     }
 
-//    public String getDetails(){
-//        JSONObject details = new JSONObject();
-//        details.put("id",this.id);
-//        details.put("userId",this.user.getId());
-//        details.put("courseId",this.courseID);
-//        details.put("status",this.status);
-//        details.put("quizId",this.quizId);
-//
-//        return details.toString();
-//    }
+    public void checkAllAnswersGraded(){
+        boolean allAnswersGraded = true;
+        Double tempGrade = 0.0;
+        for(QuestionAnswer ans:answers){
+            if(!ans.getStatus().equals("graded")){
+                allAnswersGraded = false;
+                break;
+            }else{
+                tempGrade = tempGrade + ans.getGrading();
+            }
+        }
+
+        if(allAnswersGraded){
+            setStatus("graded");
+            setGrading(tempGrade);
+        }
+
+    }
 
     @Override
     public String toString(){

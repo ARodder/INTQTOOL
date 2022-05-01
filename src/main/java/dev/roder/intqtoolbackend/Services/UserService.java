@@ -316,6 +316,7 @@ public class UserService {
                             Question currentQuestion = currentQuestionOptional.get();
                             if(currentQuestion.getType() == 1){
                                 existingAnswer.setGrading(currentQuestion.autoGrade(existingAnswer.getAnswer()));
+                                existingAnswer.setStatus("graded");
                             }
                         }
 
@@ -329,13 +330,12 @@ public class UserService {
                         Question currentQuestion = currentQuestionOptional.get();
                         if(currentQuestion.getType() == 1){
                             ans.setGrading(currentQuestion.autoGrade(ans.getAnswer()));
+                            ans.setStatus("graded");
                         }
 
                         savedQuestionAnswers.add(questionAnswerRepository.save(ans));
                     }
 
-
-                    savedQuestionAnswers.add(questionAnswerRepository.save(ans));
                 }
 
             });

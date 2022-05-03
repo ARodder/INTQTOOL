@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.*;
@@ -391,31 +392,41 @@ public class UserService {
 
     }
 
-    public Iterable<String> getArchivedQuizzes(){
+    private User getCurrentUser() throws AccessDeniedException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
+        Optional<User> userOptional = userRepository.findByUsername(currentPrincipalName);
+        if(userOptional.isPresent()){
+            return userOptional.get();
+        }else{
+            throw new AccessDeniedException("Unnable to find user from security context");
+        }
 
-        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
-        return currentUser.getQuizAnswers()
-                .stream()
-                .filter((quizAnswer)->!quizAnswer.getStatus().equals("in-progress"))
-                .map((quizAnswer ->{
-                    try {
-                        Quiz q = quizAnswer.getDeployedQuiz().getDeployedQuiz();
-                        JSONObject details = new JSONObject();
-                        details.put("id", quizAnswer.getId());
-                        details.put("title", q.getTitle());
-                        details.put("status", quizAnswer.getStatus());
-                        details.put("description", q.getDescription());
-                        details.put("grading",quizAnswer.getGrading());
-                        details.put("quizLength", q.getQuestions().size());
-                        return details.toString();
-                    }catch(NullPointerException e){
-                        System.out.println(e.getMessage());
+    }
 
-                        return null;
-                    }
-                })).filter((qa)->qa != null).collect(Collectors.toList());
+    public Iterable<String> getArchivedQuizzes() throws AccessDeniedException{
+            User currentUser = getCurrentUser();
+            return currentUser.getQuizAnswers()
+                    .stream()
+                    .filter((quizAnswer) -> !quizAnswer.getStatus().equals("in-progress"))
+                    .map((quizAnswer -> {
+                        try {
+                            Quiz q = quizAnswer.getDeployedQuiz().getDeployedQuiz();
+                            JSONObject details = new JSONObject();
+                            details.put("id", quizAnswer.getId());
+                            details.put("title", q.getTitle());
+                            details.put("status", quizAnswer.getStatus());
+                            details.put("description", q.getDescription());
+                            details.put("grading", quizAnswer.getGrading());
+                            details.put("quizLength", q.getQuestions().size());
+                            return details.toString();
+                        } catch (NullPointerException e) {
+                            System.out.println(e.getMessage());
+
+                            return null;
+                        }
+                    })).filter((qa) -> qa != null).collect(Collectors.toList());
+
     }
 
     public void makeUserStudent(Integer userId){

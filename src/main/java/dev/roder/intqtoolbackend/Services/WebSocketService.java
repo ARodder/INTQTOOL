@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 public class WebSocketService {
     @Autowired
     private SimpMessagingTemplate template;
-    @Autowired
-    private QuizService quizService;
 
     public void updateWebSocketSubscribers(String message,String socketPath){
         MessageContent content = new MessageContent();

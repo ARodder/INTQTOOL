@@ -13,7 +13,8 @@ public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBro
         //TODO: Find a way to handle thrown error when user is not of right role.
         messages
                 .nullDestMatcher().authenticated()
-                .simpDestMatchers("/topic/**/**").hasAnyRole("ADMIN","TEACHER")
+                .simpDestMatchers("/topic/quizanswers/**").hasAnyRole("ADMIN","TEACHER")
+                .simpDestMatchers("/topic/notifications/**").authenticated()
                 .simpTypeMatchers(SimpMessageType.MESSAGE,SimpMessageType.SUBSCRIBE).denyAll()
                 .anyMessage().denyAll();
     }

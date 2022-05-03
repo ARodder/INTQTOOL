@@ -1,6 +1,5 @@
 package dev.roder.intqtoolbackend.Controllers;
 
-import dev.roder.intqtoolbackend.Entities.QuestionAnswer;
 import dev.roder.intqtoolbackend.Entities.QuizAnswer;
 import dev.roder.intqtoolbackend.MessageWrapper.MessageContent;
 import dev.roder.intqtoolbackend.Services.QuizService;
@@ -13,7 +12,6 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,6 +34,8 @@ public class WebSocketController {
         return message;
     }
 
+
+
     @RequestMapping(method = RequestMethod.POST, path = "/user/submitanswer/{deploymentId}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
     public @ResponseBody ResponseEntity<String> submitUserQuiz(@RequestBody QuizAnswer qa, @PathVariable("deploymentId") Integer deploymentId) {
@@ -52,11 +52,6 @@ public class WebSocketController {
         }catch(Exception e){
             System.out.println(e.getMessage());
         }
-
-
-
-
-
         return response;
 
     }

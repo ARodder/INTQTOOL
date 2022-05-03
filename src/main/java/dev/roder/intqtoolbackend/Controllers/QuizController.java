@@ -3,6 +3,7 @@ package dev.roder.intqtoolbackend.Controllers;
 import dev.roder.intqtoolbackend.Entities.DeployedQuiz;
 import dev.roder.intqtoolbackend.RequestObject.GradeAnswerRequest;
 import dev.roder.intqtoolbackend.Services.QuizService;
+import dev.roder.intqtoolbackend.Services.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ public class QuizController {
 
     @Autowired
     private QuizService quizService;
+    @Autowired
+    private WebSocketService webSocketService;
 
 
     /**
@@ -102,7 +105,11 @@ public class QuizController {
         try {
             if (gradeAnswerRequest.getAnswerIds() != null && gradeAnswerRequest.getGrade() != null) {
                 quizService.gradeQuizzes(gradeAnswerRequest.getAnswerIds(), gradeAnswerRequest.getGrade(), gradeAnswerRequest.getFeedback(),gradeAnswerRequest.getDeployedQuizId());
-                response = new ResponseEntity<>(quizService.getQuestionAnswers(gradeAnswerRequest.getDeployedQuizId()), HttpStatus.OK);
+                String updatedData = quizService.getQuestionAnswers(gradeAnswerRequest.getDeployedQuizId());
+                response = new ResponseEntity<>(updatedData, HttpStatus.OK);
+
+                webSocketService.updateWebSocketSubscribers(updatedData,"topic/quizanswers/"+gradeAnswerRequest.getDeployedQuizId());
+
             } else {
                 throw new IllegalArgumentException("A field is missing or invalid");
             }
@@ -134,14 +141,13 @@ public class QuizController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/quizanswers/{deployedQuizId}")
     @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public @ResponseBody
-    ResponseEntity<String> getDeployedQuizAnswers(@PathVariable("deployedQuizId") Integer deployedQuizId) {
-        ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+    public @ResponseBody String getDeployedQuizAnswers(@PathVariable("deployedQuizId") Integer deployedQuizId) {
+        String response = "";
         try {
-            response = new ResponseEntity<String>(quizService.getQuestionAnswers(deployedQuizId), HttpStatus.OK);
+            response = quizService.getQuestionAnswers(deployedQuizId);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+            return response;
         }
 
 

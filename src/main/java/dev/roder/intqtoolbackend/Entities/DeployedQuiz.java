@@ -68,6 +68,7 @@ public class DeployedQuiz {
     public String getQuestionAnswers(){
         JSONArray allQuizAnswers = new JSONArray();
         List<Integer> questionIds = deployedQuiz.getQuestionIds();
+        int index = 1;
         for(Integer questionId: questionIds){
             JSONArray allQuestionAnswers = new JSONArray();
             for(QuizAnswer qa:quizAnswer){
@@ -84,6 +85,7 @@ public class DeployedQuiz {
 
             }
             allQuizAnswers.put(allQuestionAnswers);
+            index++;
         }
         return allQuizAnswers.toString();
 

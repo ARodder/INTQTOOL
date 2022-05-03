@@ -194,30 +194,36 @@ public class User{
     @Override
     public String toString() {
 
-        JSONObject userObject = new JSONObject();
-        userObject.put("id",id);
-        userObject.put("username",username);
-        userObject.put("firstName",firstName);
-        userObject.put("lastName",lastName);
-        JSONArray courseJsonArray = new JSONArray();
-        for(Course course:courses){
-            courseJsonArray.put(course.getCourseID());
-        }
-        userObject.put("courses",courseJsonArray);
-        userObject.put("email",email);
+        try{
+            JSONObject userObject = new JSONObject();
+            userObject.put("id",id);
+            userObject.put("username",username);
+            userObject.put("firstName",firstName);
+            userObject.put("lastName",lastName);
+            JSONArray courseJsonArray = new JSONArray();
+            for(Course course:courses){
+                courseJsonArray.put(course.getCourseID());
+            }
+            userObject.put("courses",courseJsonArray);
+            userObject.put("email",email);
 
-        JSONArray roleJsonArray = new JSONArray();
-        for(Role role:roles){
-            roleJsonArray.put(role.getName());
-        }
-        userObject.put("roles",roleJsonArray);
-        JSONArray notificationJsonArray = new JSONArray();
-        for(Notification notification:notifications){
-            notificationJsonArray.put(notification.getDetails());
-        }
-        userObject.put("notifications",notificationJsonArray);
+            JSONArray roleJsonArray = new JSONArray();
+            for(Role role:roles){
+                roleJsonArray.put(role.getName());
+            }
+            userObject.put("roles",roleJsonArray);
+            JSONArray notificationJsonArray = new JSONArray();
+            for(Notification notification:notifications){
+                notificationJsonArray.put(notification.getDetails());
+            }
+            userObject.put("notifications",notificationJsonArray);
 
-        return userObject.toString();
+            return userObject.toString();
+        }catch(Exception e){
+            return "Unavailable";
+        }
+
+
     }
 
     public String getDetails(){

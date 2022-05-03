@@ -15,6 +15,7 @@ public class Quiz {
     private Integer quizID;
 
     private String title;
+
     @OneToMany
 
     @JoinTable(name="quiz_questions",

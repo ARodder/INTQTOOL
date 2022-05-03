@@ -43,6 +43,11 @@ public class UserService {
     @Autowired
     private DeployedQuizRepository deployedQuizRepository;
 
+
+
+    @Autowired
+    private QuizService quizService;
+
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -294,7 +299,7 @@ public class UserService {
         return saveSuccess;
     }
 
-    public boolean submitUserQuizAnswer(QuizAnswer qa, Integer deployementId){
+    public QuizAnswer submitUserQuizAnswer(QuizAnswer qa, Integer deployementId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -351,6 +356,8 @@ public class UserService {
 
                     quizAnswerRepository.save(existingQuizAnswer);
                 }
+                quizService.getQuestionAnswers(deployementId);
+                return existingQuizAnswer;
             } else{
                 qa.setUser(currentUser);
                 qa.setStatus("submitted");
@@ -364,20 +371,24 @@ public class UserService {
                 }
                 qa.checkAllAnswersGraded();
                 QuizAnswer savedQuizAnswer = quizAnswerRepository.save(qa);
+
                 deployedQuizRepository.save(currentDeployedQuiz);
                 currentUser.addQuizAnswer(savedQuizAnswer);
                 userRepository.save(currentUser);
+
+                quizService.getQuestionAnswers(deployementId);
+                return savedQuizAnswer;
             }
 
 
 
-            saveSuccess = true;
+
         } catch (Exception e){
             System.out.println(e);
-            saveSuccess = false;
+            return null;
         }
 
-        return saveSuccess;
+
     }
 
     public Iterable<String> getArchivedQuizzes(){

@@ -2,7 +2,9 @@ package dev.roder.intqtoolbackend.Controllers;
 
 import dev.roder.intqtoolbackend.Entities.QuizAnswer;
 import dev.roder.intqtoolbackend.Entities.User;
+import dev.roder.intqtoolbackend.Services.QuizService;
 import dev.roder.intqtoolbackend.Services.UserService;
+import dev.roder.intqtoolbackend.Services.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,11 +12,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping(path="/user")
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private WebSocketService webSocketService;
+    @Autowired
+    private QuizService quizService;
 
     @GetMapping(path="/makestudent/{userid}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -184,19 +190,20 @@ public class UserController {
 
     }
 
-    @RequestMapping(method=RequestMethod.POST, path="/submitanswer/{deploymentId}")
-    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public @ResponseBody ResponseEntity<String> submitUserQuiz(@RequestBody QuizAnswer qa,@PathVariable("deploymentId") Integer deploymentId){
-        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
-
-        if(userService.submitUserQuizAnswer(qa,deploymentId)){
-            response = new ResponseEntity<>(HttpStatus.OK);
-        }
-
-        return response;
-
-    }
+//    @RequestMapping(method=RequestMethod.POST, path="/submitanswer/{deploymentId}")
+//    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+//    public @ResponseBody ResponseEntity<String> submitUserQuiz(@RequestBody QuizAnswer qa,@PathVariable("deploymentId") Integer deploymentId){
+//        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//
+//
+//        if(userService.submitUserQuizAnswer(qa,deploymentId)){
+//            response = new ResponseEntity<>(HttpStatus.OK);
+//        }
+//        webSocketService.updateWebSocketSubscribers(quizService.getQuestionAnswers(deploymentId),"quizanswers/"+deploymentId);
+//
+//        return response;
+//
+//    }
 
     @RequestMapping(method=RequestMethod.GET, path="/archivedquizzes")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")

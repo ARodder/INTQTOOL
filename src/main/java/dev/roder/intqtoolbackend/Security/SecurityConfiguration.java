@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
 import java.time.Duration;
 import java.util.Arrays;
 
@@ -35,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public SecurityConfiguration(PasswordEncoder passwordEncoder){
+    public SecurityConfiguration(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -50,6 +51,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable().cors().and()
                 .authorizeRequests()
                 .antMatchers("/authenticate").permitAll()
+                .antMatchers("/stomp/**").permitAll()
+                .antMatchers("/topic/**/**").hasAnyRole("ADMIN","TEACHER")
                 .antMatchers("/user/add").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement()
@@ -68,17 +71,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("https://quiz.web-tek.ninja","http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("https://quiz.web-tek.ninja", "http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "withCredentials","content-type", "x-auth-token","Access-Control-Allow-Credentials","access-control-allow-origin","Access-Control-Allow-headers"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization", "withCredentials", "content-type", "x-auth-token", "Access-Control-Allow-Credentials", "access-control-allow-origin", "Access-Control-Allow-headers"));
         configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
         configuration.setMaxAge(Duration.ofSeconds(5000));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-
 
 
 }

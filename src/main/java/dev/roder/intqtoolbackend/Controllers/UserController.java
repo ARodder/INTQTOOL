@@ -190,20 +190,7 @@ public class UserController {
 
     }
 
-//    @RequestMapping(method=RequestMethod.POST, path="/submitanswer/{deploymentId}")
-//    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-//    public @ResponseBody ResponseEntity<String> submitUserQuiz(@RequestBody QuizAnswer qa,@PathVariable("deploymentId") Integer deploymentId){
-//        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//
-//
-//        if(userService.submitUserQuizAnswer(qa,deploymentId)){
-//            response = new ResponseEntity<>(HttpStatus.OK);
-//        }
-//        webSocketService.updateWebSocketSubscribers(quizService.getQuestionAnswers(deploymentId),"quizanswers/"+deploymentId);
-//
-//        return response;
-//
-//    }
+
 
     @RequestMapping(method=RequestMethod.GET, path="/archivedquizzes")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
@@ -220,6 +207,22 @@ public class UserController {
 
         return response;
 
+    }
+
+    @RequestMapping(method=RequestMethod.GET,path="/answeredquiz/{answerid}")
+    @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<String> getAnsweredQuiz(@PathVariable("answerId") Integer answerId){
+        ResponseEntity<String> response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+        try {
+            response = new ResponseEntity<String>(userService.getAnsweredQuiz(answerId), HttpStatus.OK);
+        }catch(Exception e){
+            return response;
+        }
+
+
+        return response;
     }
 
 

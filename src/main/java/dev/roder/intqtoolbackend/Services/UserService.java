@@ -45,19 +45,18 @@ public class UserService {
     private DeployedQuizRepository deployedQuizRepository;
 
 
-
     @Autowired
     private QuizService quizService;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(PasswordEncoder passwordEncoder){
+    public UserService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void addUser(User user){
-        if(!userRepository.findByUsername(user.getUsername()).isPresent()){
+    public void addUser(User user) {
+        if (!userRepository.findByUsername(user.getUsername()).isPresent()) {
             Role role = new Role("ROLE_STUDENT");
 
             user.setSettings("0,0,0,0,0");
@@ -74,19 +73,19 @@ public class UserService {
 
     }
 
-    public ArrayList<String> getAllUsers(){
+    public ArrayList<String> getAllUsers() {
         ArrayList<String> allUsers = new ArrayList<String>();
 
         Iterator<User> it = userRepository.findAll().iterator();
 
-        while(it.hasNext()){
+        while (it.hasNext()) {
             allUsers.add(it.next().getDetails());
         }
 
         return allUsers;
     }
 
-    public String getUser(){
+    public String getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -96,15 +95,15 @@ public class UserService {
 
     }
 
-    public List<String> getUsersActiveQuizes(){
+    public List<String> getUsersActiveQuizes() {
         List<String> quizzes = new ArrayList<String>();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
         User currentUser = userRepository.findByUsername(currentPrincipalName).get();
 
-        for(Course course: currentUser.getCourses()){
-            for(DeployedQuiz quiz :course.getActiveQuizzes()){
+        for (Course course : currentUser.getCourses()) {
+            for (DeployedQuiz quiz : course.getActiveQuizzes()) {
                 quizzes.add(quiz.getDetails());
             }
         }
@@ -112,35 +111,35 @@ public class UserService {
         return quizzes;
     }
 
-    public List<String> getUsersCourses(){
+    public List<String> getUsersCourses() {
         List<String> courses = new ArrayList<String>();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
         User currentUser = userRepository.findByUsername(currentPrincipalName).get();
 
-        for(Course course: currentUser.getCourses()){
+        for (Course course : currentUser.getCourses()) {
             courses.add(course.getDetails());
         }
 
         return courses;
     }
 
-    public List<String> getNotifications(){
+    public List<String> getNotifications() {
         List<String> notifications = new ArrayList<String>();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
         User currentUser = userRepository.findByUsername(currentPrincipalName).get();
 
-        for(Notification notification:currentUser.getNotifications()){
+        for (Notification notification : currentUser.getNotifications()) {
             notifications.add(notification.getDetails());
         }
 
         return notifications;
     }
 
-    public boolean joinCourse(String joinCode){
+    public boolean joinCourse(String joinCode) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -148,15 +147,15 @@ public class UserService {
         boolean joinSuccess = false;
 
 
-        try{
+        try {
             Course newCourse = courseRepository.findByJoinCode(joinCode).get();
 
-            if(newCourse != null && !currentUser.getCourses().contains(newCourse)){
+            if (newCourse != null && !currentUser.getCourses().contains(newCourse)) {
                 currentUser.addCourse(newCourse);
                 userRepository.save(currentUser);
                 joinSuccess = true;
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             joinSuccess = false;
         }
@@ -164,7 +163,7 @@ public class UserService {
         return joinSuccess;
     }
 
-    public boolean clearNotifications(){
+    public boolean clearNotifications() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -172,7 +171,7 @@ public class UserService {
 
         boolean clearSuccess = false;
 
-        try{
+        try {
             List<Notification> currentUserNotifications = currentUser.getNotifications().stream().collect(Collectors.toList());
 
 
@@ -180,11 +179,11 @@ public class UserService {
 
             userRepository.save(currentUser);
 
-            for(Notification notification: currentUserNotifications){
+            for (Notification notification : currentUserNotifications) {
                 notificationRepository.delete(notification);
             }
             clearSuccess = true;
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             clearSuccess = false;
         }
@@ -192,7 +191,7 @@ public class UserService {
         return clearSuccess;
     }
 
-    public boolean removeNotification(Integer notificationID){
+    public boolean removeNotification(Integer notificationID) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -200,16 +199,16 @@ public class UserService {
 
         boolean delSuccess = false;
 
-        try{
+        try {
             List<Integer> notificationIDs = currentUser.getNotifications().stream().map(notification -> notification.getNotificationID()).collect(Collectors.toList());
 
-            if(notificationIDs.contains(notificationID)){
+            if (notificationIDs.contains(notificationID)) {
                 currentUser.removeNotification(notificationID);
                 notificationRepository.delete(notificationRepository.findByNotificationID(notificationID).get());
                 delSuccess = true;
             }
 
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             delSuccess = false;
         }
@@ -217,7 +216,7 @@ public class UserService {
         return delSuccess;
     }
 
-    public String getUserQuizAnswers(Integer quizID){
+    public String getUserQuizAnswers(Integer quizID) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -225,10 +224,10 @@ public class UserService {
 
         QuizAnswer qa = currentUser.getQuizAnswers(quizID);
 
-        if(qa != null){
-            if(qa.getStatus() != "submitted"){
+        if (qa != null) {
+            if (qa.getStatus() != "submitted") {
                 return qa.toString();
-            }else {
+            } else {
                 return "Answers submitted";
             }
 
@@ -239,7 +238,7 @@ public class UserService {
 
     }
 
-    public boolean saveUserQuizAnswer(QuizAnswer qa,Integer deployementId){
+    public boolean saveUserQuizAnswer(QuizAnswer qa, Integer deployementId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -247,18 +246,18 @@ public class UserService {
 
         boolean saveSuccess = false;
 
-        try{
+        try {
             List<QuestionAnswer> savedQuestionAnswers = new ArrayList();
-            qa.getAnswers().forEach((ans)->{
+            qa.getAnswers().forEach((ans) -> {
 
-                if(ans.getId() != null){
+                if (ans.getId() != null) {
                     QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).get();
-                    if(!existingAnswer.getStatus().equals("submitted")){
+                    if (!existingAnswer.getStatus().equals("submitted")) {
                         existingAnswer.setAnswer(ans.getAnswer());
                         existingAnswer.setStatus(ans.getStatus());
                         savedQuestionAnswers.add(questionAnswerRepository.save(existingAnswer));
                     }
-                }else{
+                } else {
                     savedQuestionAnswers.add(questionAnswerRepository.save(ans));
                 }
 
@@ -266,18 +265,18 @@ public class UserService {
 
             qa.setAnswers(savedQuestionAnswers);
 
-            if(qa.getId()  != null){
+            if (qa.getId() != null) {
                 QuizAnswer existingQuizAnswer = quizAnswerRepository.findById(qa.getId()).get();
-                if(!existingQuizAnswer.getStatus().equals("submitted")){
+                if (!existingQuizAnswer.getStatus().equals("submitted")) {
                     existingQuizAnswer.setAnswers(qa.getAnswers());
                     existingQuizAnswer.setStatus(qa.getStatus());
                     quizAnswerRepository.save(existingQuizAnswer);
                 }
-            } else{
+            } else {
                 qa.setUser(currentUser);
                 DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
-                if(currentDeployedQuiz.getDeadline().compareTo(new Date())>0){
-                    if(currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())){
+                if (currentDeployedQuiz.getDeadline().compareTo(new Date()) > 0) {
+                    if (currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())) {
                         qa.setDeployedQuiz(currentDeployedQuiz);
                         currentDeployedQuiz.addQuizAnswer(qa);
                     }
@@ -290,9 +289,8 @@ public class UserService {
             }
 
 
-
             saveSuccess = true;
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             saveSuccess = false;
         }
@@ -300,7 +298,7 @@ public class UserService {
         return saveSuccess;
     }
 
-    public QuizAnswer submitUserQuizAnswer(QuizAnswer qa, Integer deployementId){
+    public QuizAnswer submitUserQuizAnswer(QuizAnswer qa, Integer deployementId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
@@ -308,19 +306,19 @@ public class UserService {
 
         boolean saveSuccess = false;
 
-        try{
+        try {
             List<QuestionAnswer> savedQuestionAnswers = new ArrayList();
-            qa.getAnswers().forEach((ans)->{
-                if(ans.getId() != null){
+            qa.getAnswers().forEach((ans) -> {
+                if (ans.getId() != null) {
                     QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).get();
-                    if(!existingAnswer.getStatus().equals("submitted")){
+                    if (!existingAnswer.getStatus().equals("submitted")) {
                         existingAnswer.setAnswer(ans.getAnswer());
                         existingAnswer.setStatus("submitted");
 
                         Optional<Question> currentQuestionOptional = questionRepository.findById(existingAnswer.getQuestionId());
-                        if(currentQuestionOptional.isPresent()){
+                        if (currentQuestionOptional.isPresent()) {
                             Question currentQuestion = currentQuestionOptional.get();
-                            if(currentQuestion.getType() == 1){
+                            if (currentQuestion.getType() == 1) {
                                 existingAnswer.setGrading(currentQuestion.autoGrade(existingAnswer.getAnswer()));
                                 existingAnswer.setStatus("graded");
                             }
@@ -328,13 +326,13 @@ public class UserService {
 
                         savedQuestionAnswers.add(questionAnswerRepository.save(existingAnswer));
                     }
-                }else{
+                } else {
                     ans.setStatus("submitted");
 
                     Optional<Question> currentQuestionOptional = questionRepository.findById(ans.getQuestionId());
-                    if(currentQuestionOptional.isPresent()){
+                    if (currentQuestionOptional.isPresent()) {
                         Question currentQuestion = currentQuestionOptional.get();
-                        if(currentQuestion.getType() == 1){
+                        if (currentQuestion.getType() == 1) {
                             ans.setGrading(currentQuestion.autoGrade(ans.getAnswer()));
                             ans.setStatus("graded");
                         }
@@ -348,9 +346,9 @@ public class UserService {
 
             qa.setAnswers(savedQuestionAnswers);
 
-            if(qa.getId()  != null){
+            if (qa.getId() != null) {
                 QuizAnswer existingQuizAnswer = quizAnswerRepository.findById(qa.getId()).get();
-                if(!existingQuizAnswer.getStatus().equals("submitted")){
+                if (!existingQuizAnswer.getStatus().equals("submitted")) {
                     existingQuizAnswer.setAnswers(qa.getAnswers());
                     existingQuizAnswer.setStatus("submitted");
 
@@ -359,13 +357,13 @@ public class UserService {
                 }
                 quizService.getQuestionAnswers(deployementId);
                 return existingQuizAnswer;
-            } else{
+            } else {
                 qa.setUser(currentUser);
                 qa.setStatus("submitted");
                 qa.setSubmittedDate(new Timestamp(System.currentTimeMillis()));
                 DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
-                if(currentDeployedQuiz.getDeadline().compareTo(new Date())>0){
-                    if(currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())){
+                if (currentDeployedQuiz.getDeadline().compareTo(new Date()) > 0) {
+                    if (currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())) {
                         qa.setDeployedQuiz(currentDeployedQuiz);
                         currentDeployedQuiz.addQuizAnswer(qa);
                     }
@@ -382,9 +380,7 @@ public class UserService {
             }
 
 
-
-
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             return null;
         }
@@ -392,47 +388,47 @@ public class UserService {
 
     }
 
-    private User getCurrentUser() throws AccessDeniedException {
+    public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         Optional<User> userOptional = userRepository.findByUsername(currentPrincipalName);
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             return userOptional.get();
-        }else{
-            throw new AccessDeniedException("Unnable to find user from security context");
         }
 
-    }
-
-    public Iterable<String> getArchivedQuizzes() throws AccessDeniedException{
-            User currentUser = getCurrentUser();
-            return currentUser.getQuizAnswers()
-                    .stream()
-                    .filter((quizAnswer) -> !quizAnswer.getStatus().equals("in-progress"))
-                    .map((quizAnswer -> {
-                        try {
-                            Quiz q = quizAnswer.getDeployedQuiz().getDeployedQuiz();
-                            JSONObject details = new JSONObject();
-                            details.put("id", quizAnswer.getId());
-                            details.put("title", q.getTitle());
-                            details.put("status", quizAnswer.getStatus());
-                            details.put("description", q.getDescription());
-                            details.put("grading", quizAnswer.getGrading());
-                            details.put("quizLength", q.getQuestions().size());
-                            return details.toString();
-                        } catch (NullPointerException e) {
-                            System.out.println(e.getMessage());
-
-                            return null;
-                        }
-                    })).filter((qa) -> qa != null).collect(Collectors.toList());
+        return null;
 
     }
 
-    public void makeUserStudent(Integer userId){
+    public Iterable<String> getArchivedQuizzes() throws AccessDeniedException {
+        User currentUser = getCurrentUser();
+        return currentUser.getQuizAnswers()
+                .stream()
+                .filter((quizAnswer) -> !quizAnswer.getStatus().equals("in-progress"))
+                .map((quizAnswer -> {
+                    try {
+                        Quiz q = quizAnswer.getDeployedQuiz().getDeployedQuiz();
+                        JSONObject details = new JSONObject();
+                        details.put("id", quizAnswer.getId());
+                        details.put("title", q.getTitle());
+                        details.put("status", quizAnswer.getStatus());
+                        details.put("description", q.getDescription());
+                        details.put("grading", quizAnswer.getGrading());
+                        details.put("quizLength", q.getQuestions().size());
+                        return details.toString();
+                    } catch (NullPointerException e) {
+                        System.out.println(e.getMessage());
+
+                        return null;
+                    }
+                })).filter((qa) -> qa != null).collect(Collectors.toList());
+
+    }
+
+    public void makeUserStudent(Integer userId) {
         User userToChange = userRepository.findById(userId).get();
-        if(!userToChange.hasRole("ROLE_STUDENT")){
-            for(Role role: userToChange.getRoles()){
+        if (!userToChange.hasRole("ROLE_STUDENT")) {
+            for (Role role : userToChange.getRoles()) {
                 userToChange.removeRole(role);
                 roleRepository.delete(role);
             }
@@ -444,10 +440,10 @@ public class UserService {
 
     }
 
-    public void makeUserTeacher(Integer userId){
+    public void makeUserTeacher(Integer userId) {
         User userToChange = userRepository.findById(userId).get();
-        if(!userToChange.hasRole("ROLE_TEACHER")){
-            for(Role role: userToChange.getRoles()){
+        if (!userToChange.hasRole("ROLE_TEACHER")) {
+            for (Role role : userToChange.getRoles()) {
                 userToChange.removeRole(role);
                 roleRepository.delete(role);
             }
@@ -458,10 +454,11 @@ public class UserService {
         }
 
     }
-    public void makeUserAdmin(Integer userId){
+
+    public void makeUserAdmin(Integer userId) {
         User userToChange = userRepository.findById(userId).get();
-        if(!userToChange.hasRole("ROLE_ADMIN")){
-            for(Role role: userToChange.getRoles()){
+        if (!userToChange.hasRole("ROLE_ADMIN")) {
+            for (Role role : userToChange.getRoles()) {
                 userToChange.removeRole(role);
                 roleRepository.delete(role);
             }
@@ -470,6 +467,24 @@ public class UserService {
             userToChange.addRole(newStudentRole);
             userRepository.save(userToChange);
         }
+
+    }
+
+    public String getAnsweredQuiz(Integer answerId) {
+        User currentUser = getCurrentUser();
+        Optional<QuizAnswer> quizAnswerOptional = quizAnswerRepository.findById(answerId);
+
+        if (quizAnswerOptional.isPresent()) {
+            QuizAnswer quizAnswer = quizAnswerOptional.get();
+            if(currentUser.getQuizAnswers().contains(quizAnswer)){
+                if(quizAnswer.getStatus().equals("submitted") || quizAnswer.getStatus().equals("graded")){
+                    return quizAnswer.getAnswerDetails();
+                }
+            }
+        }
+
+        return null;
+
 
     }
 }

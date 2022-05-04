@@ -2,6 +2,8 @@ package dev.roder.intqtoolbackend.Entities;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -168,6 +170,7 @@ public class User{
         this.lastName = lastname;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     public List<Notification> getNotifications() {
         return notifications;
     }

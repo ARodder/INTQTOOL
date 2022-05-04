@@ -1,6 +1,8 @@
 package dev.roder.intqtoolbackend.Controllers;
 
+import dev.roder.intqtoolbackend.Entities.Notification;
 import dev.roder.intqtoolbackend.Entities.QuizAnswer;
+import dev.roder.intqtoolbackend.Entities.User;
 import dev.roder.intqtoolbackend.MessageWrapper.MessageContent;
 import dev.roder.intqtoolbackend.Services.QuizService;
 import dev.roder.intqtoolbackend.Services.UserService;
@@ -13,6 +15,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.nio.file.AccessDeniedException;
+import java.util.List;
 
 @RestController
 public class WebSocketController {
@@ -34,6 +39,11 @@ public class WebSocketController {
         return message;
     }
 
+
+    @SubscribeMapping("/notifications")
+    public List<Notification> subToNotifications() throws AccessDeniedException{
+        return webSocketService.getUserNotification();
+    }
 
 
     @RequestMapping(method = RequestMethod.POST, path = "/user/submitanswer/{deploymentId}")

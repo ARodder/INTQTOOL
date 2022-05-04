@@ -129,5 +129,21 @@ public class QuizAnswer {
         return details.toString();
     }
 
+    public String getAnswerDetails(){
+        JSONObject details = new JSONObject();
+        details.put("id",this.id);
+        details.put("userId",this.user.getId());
+        details.put("courseId",this.deployedQuiz.getDeploymentCourse().getCourseID());
+        details.put("status",this.status);
+        details.put("quizId",this.deployedQuiz.getDeployedQuiz().getQuizID());
+        JSONArray answerArray = new JSONArray();
+        for(QuestionAnswer answer: answers){
+            answerArray.put(answer.getGradingDetails(user.getId()));
+        }
+        details.put("answers",answerArray);
+
+        return details.toString();
+    }
+
 
 }

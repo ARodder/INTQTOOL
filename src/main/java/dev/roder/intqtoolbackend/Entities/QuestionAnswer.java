@@ -91,6 +91,7 @@ public class QuestionAnswer {
         details.put("questionId", this.questionId);
         details.put("answer", this.answer);
         details.put("status", this.status);
+        details.put("grading", this.grading);
         details.put("feedback", this.feedback);
 
         return details.toString();

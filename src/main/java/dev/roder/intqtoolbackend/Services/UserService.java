@@ -400,16 +400,17 @@ public class UserService {
 
     }
 
-    public Iterable<String> getArchivedQuizzes() throws AccessDeniedException {
+    public Iterable<String> getArchivedQuizzes() {
         User currentUser = getCurrentUser();
         return currentUser.getQuizAnswers()
                 .stream()
                 .filter((quizAnswer) -> !quizAnswer.getStatus().equals("in-progress"))
                 .map((quizAnswer -> {
                     try {
-                        Quiz q = quizAnswer.getDeployedQuiz().getDeployedQuiz();
+                        Quiz q = quizAnswer.getDeployedQuiz().getQuiz();
                         JSONObject details = new JSONObject();
                         details.put("id", quizAnswer.getId());
+                        details.put("quizId",quizAnswer.getDeployedQuiz().getQuiz().getQuizID());
                         details.put("title", q.getTitle());
                         details.put("status", quizAnswer.getStatus());
                         details.put("description", q.getDescription());

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -182,7 +181,7 @@ public class UserController {
 
 
         if(userService.saveUserQuizAnswer(qa,deploymentId)){
-            response = new ResponseEntity<String>(userService.getUserQuizAnswers(qa.getDeployedQuiz().getDeployedQuiz().getQuizID()),HttpStatus.OK);
+            response = new ResponseEntity<String>(userService.getUserQuizAnswers(qa.getDeployedQuiz().getQuiz().getQuizID()),HttpStatus.OK);
         }
 
 

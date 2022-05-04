@@ -16,7 +16,7 @@ public class DeployedQuiz {
     @ManyToOne
     private Course deploymentCourse;
     @ManyToOne
-    private Quiz deployedQuiz;
+    private Quiz quiz;
     private Timestamp deadline;
     @OneToMany
     private List<QuizAnswer> quizAnswer;
@@ -49,12 +49,12 @@ public class DeployedQuiz {
         this.deploymentCourse = deploymentCourse;
     }
 
-    public Quiz getDeployedQuiz() {
-        return deployedQuiz;
+    public Quiz getQuiz() {
+        return quiz;
     }
 
-    public void setDeployedQuiz(Quiz deployedQuiz) {
-        this.deployedQuiz = deployedQuiz;
+    public void setQuiz(Quiz deployedQuiz) {
+        this.quiz = deployedQuiz;
     }
 
     public Timestamp getDeadline() {
@@ -67,7 +67,7 @@ public class DeployedQuiz {
 
     public String getQuestionAnswers(){
         JSONArray allQuizAnswers = new JSONArray();
-        List<Integer> questionIds = deployedQuiz.getQuestionIds();
+        List<Integer> questionIds = quiz.getQuestionIds();
         int index = 1;
         for(Integer questionId: questionIds){
             JSONArray allQuestionAnswers = new JSONArray();
@@ -99,7 +99,7 @@ public class DeployedQuiz {
         JSONObject details = new JSONObject();
         details.put("id",id);
         details.put("courseId",deploymentCourse.getCourseID());
-        details.put("deployedQuiz", deployedQuiz.getDetails());
+        details.put("quiz", quiz.getDetails());
         details.put("deadline", deadline.toString());
 
         return details.toString();
@@ -108,7 +108,7 @@ public class DeployedQuiz {
         JSONObject details = new JSONObject();
         details.put("id",id);
         details.put("courseId",deploymentCourse.getCourseID());
-        details.put("deployedQuiz", deployedQuiz.toString());
+        details.put("quiz", quiz.toString());
         String tempDeadline = deadline.toString();
         tempDeadline = tempDeadline.replace(" ","T");
         tempDeadline = tempDeadline +"Z";
@@ -121,7 +121,7 @@ public class DeployedQuiz {
         JSONObject details = new JSONObject();
         details.put("id",id);
         details.put("courseId",deploymentCourse.getCourseID());
-        details.put("deployedQuiz", deployedQuiz.getEditDetails());
+        details.put("quiz", quiz.getEditDetails());
         String tempDeadline = deadline.toString();
         tempDeadline = tempDeadline.replace(" ","T");
         tempDeadline = tempDeadline +"Z";

@@ -79,10 +79,10 @@ public class QuizService {
         Course quizCourse = courseRepository.findById(courseId).get();
         if(quiz.getId() != null){
             DeployedQuiz existingQuiz = deployedQuizRepository.findById(quiz.getId()).get();
-            if(quiz.getDeployedQuiz().getQuizID() !=null){
-                Quiz existingDeployedQuiz = quizRepository.findById(quiz.getDeployedQuiz().getQuizID()).get();
-                existingDeployedQuiz.setTitle(quiz.getDeployedQuiz().getTitle());
-                existingDeployedQuiz.setDescription(quiz.getDeployedQuiz().getDescription());
+            if(quiz.getQuiz().getQuizID() !=null){
+                Quiz existingDeployedQuiz = quizRepository.findById(quiz.getQuiz().getQuizID()).get();
+                existingDeployedQuiz.setTitle(quiz.getQuiz().getTitle());
+                existingDeployedQuiz.setDescription(quiz.getQuiz().getDescription());
                 quizRepository.save(existingDeployedQuiz);
             }
 
@@ -92,10 +92,10 @@ public class QuizService {
 
         }else{
             quiz.setDeploymentCourse(quizCourse);
-            quiz.getDeployedQuiz().setAuthor(currentUser);
-            quiz.getDeployedQuiz().setQuestions(new ArrayList<>());
+            quiz.getQuiz().setAuthor(currentUser);
+            quiz.getQuiz().setQuestions(new ArrayList<>());
             quiz.setQuizAnswer(new ArrayList<>());
-            quizRepository.save(quiz.getDeployedQuiz());
+            quizRepository.save(quiz.getQuiz());
             deployedQuizRepository.save(quiz);
             quizCourse.addActiveQuiz(quiz);
             courseRepository.save(quizCourse);
@@ -114,7 +114,7 @@ public class QuizService {
     public void saveQuiz(DeployedQuiz quiz,Integer courseId){
         User currentUser = getCurrentUser();
         DeployedQuiz updatedDeployment = deployedQuizRepository.findById(quiz.getId()).get();
-        Quiz newInfo = quiz.getDeployedQuiz();
+        Quiz newInfo = quiz.getQuiz();
         newInfo.setAuthor(currentUser);
         Quiz quizToUpDate = quizRepository.findById(newInfo.getQuizID()).get();
         if(currentUser.getCourses().contains(updatedDeployment.getDeploymentCourse())){

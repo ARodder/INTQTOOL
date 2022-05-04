@@ -17,6 +17,8 @@ MYSQL_DEVELOPER_IP= (Server ip for the mysql server, with port, and full path)
 If you are using custom domain you should go into te SecurityConfig.java and in the CORSFilter add your domain to the 
 allowed origins.
 
+Under resources add a file called key.txt which should contain the key used to generate jwtTokens(This can be any sizeable random string).
+
 Depending on if you are enabling HTTPS or not you need to uncomment the following lines from the application.properties
 file and generate the required keystore.p12 file. (A tutorial for this can be found at 
 https://web-tek.ninja/cookbook/https-spring-boot/) 

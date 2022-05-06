@@ -4,6 +4,8 @@ import dev.roder.intqtoolbackend.Entities.DeployedQuiz;
 import dev.roder.intqtoolbackend.RequestObject.GradeAnswerRequest;
 import dev.roder.intqtoolbackend.Services.QuizService;
 import dev.roder.intqtoolbackend.Services.WebSocketService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,7 @@ public class QuizController {
     private QuizService quizService;
     @Autowired
     private WebSocketService webSocketService;
+    Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
 
 
     /**
@@ -57,7 +60,7 @@ public class QuizController {
             Integer newQuizDeployId = quizService.addQuiz(quiz, courseId);
             response = new ResponseEntity<String>("" + newQuizDeployId, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
@@ -81,7 +84,7 @@ public class QuizController {
 
             response = new ResponseEntity<String>(quizService.getQuizDetails(deployedquizId), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
@@ -114,30 +117,45 @@ public class QuizController {
                 throw new IllegalArgumentException("A field is missing or invalid");
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             return response;
         }
 
         return response;
     }
 
+    /**
+     * Endpoint for saving updated values for a new quiz in creation or being edited.
+     * Accessible only with roles: ROLE_TEACHER or ROLE_ADMIN
+     *
+     * @param updatedQuiz Object containing the updated details for the quiz
+     * @param courseId The courseId of the course where the quiz is to be deployed
+     * @return Returns ResponseEntity where statusCode changes based on success.
+     */
 
     @RequestMapping(method = RequestMethod.POST, path = "/save/{courseId}")
     @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
-    public @ResponseBody
-    ResponseEntity<String> saveUpdatedQuiz(@RequestBody DeployedQuiz updatedQuiz, @PathVariable("courseId") Integer courseId) {
+    public @ResponseBody ResponseEntity<String> saveUpdatedQuiz(@RequestBody DeployedQuiz updatedQuiz, @PathVariable("courseId") Integer courseId) {
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         try {
             quizService.saveQuiz(updatedQuiz, courseId);
-            response = new ResponseEntity<String>("Quiz updated", HttpStatus.OK);
+            response = new ResponseEntity<String>("Quiz updated", HttpStatus.CREATED);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
         }
 
 
         return response;
     }
+
+    /**
+     * Endpoint for retrieving all quizAnswers for a specified deployedQuiz retrieved with deployedquizId.
+     * Accessible only with roles: ROLE_TEACHER or ROLE_ADMIN.
+     *
+     * @param deployedQuizId id of the deployedQuiz to retrieve answers from
+     * @return Answers of the specified deployedQuiz.
+     */
 
     @RequestMapping(method = RequestMethod.GET, path = "/quizanswers/{deployedQuizId}")
     @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
@@ -146,7 +164,7 @@ public class QuizController {
         try {
             response = quizService.getQuestionAnswers(deployedQuizId);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             return response;
         }
 

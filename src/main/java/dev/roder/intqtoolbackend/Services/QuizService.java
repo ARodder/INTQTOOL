@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizService {
@@ -27,6 +28,10 @@ public class QuizService {
     private QuestionRepository questionRepository;
     @Autowired
     private QuestionAnswerRepository questionAnswerRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
+    @Autowired
+    private QuizAnswerRepository quizAnswerRepository;
 
 
 
@@ -140,7 +145,15 @@ public class QuizService {
     }
 
     public void gradeQuizzes(List<Integer> answerIds,Double grade,String feedback,Integer deployedQuizId){
-        answerIds.forEach((ansId)->{
+        Optional<DeployedQuiz> deployedQuizOptional = deployedQuizRepository.findById(deployedQuizId);
+        DeployedQuiz currentDeployedQuiz = null;
+        if(deployedQuizOptional.isPresent()){
+            currentDeployedQuiz = deployedQuizOptional.get();
+
+
+        }
+
+        for(Integer ansId:answerIds){
             Optional<QuestionAnswer> questionAnswerOptional = questionAnswerRepository.findById(ansId);
             if (questionAnswerOptional.isPresent()){
                 QuestionAnswer currentQuestionAnswer = questionAnswerOptional.get();
@@ -149,15 +162,27 @@ public class QuizService {
                     currentQuestionAnswer.setFeedback(feedback);
                     currentQuestionAnswer.setStatus("graded");
                     questionAnswerRepository.save(currentQuestionAnswer);
+                    for(QuizAnswer qa : currentDeployedQuiz.getQuizAnswer()){
+                        User newNotificationUser = qa.getUser();
+                        if(qa.checkAllAnswersGraded() && !qa.isNotified()){
+                            Notification newNotification = new Notification();
+                            newNotification.setType("quiz:graded");
+                            newNotification.setTitle("Quiz graded");
+                            newNotification.setQuizID(""+currentDeployedQuiz.getQuiz().getQuizID());
+                            newNotification.setMessage("Your answers to the quiz: "+currentDeployedQuiz.getQuiz().getTitle()+" has been graded");
+                            qa.setNotified(true);
+                            notificationRepository.save(newNotification);
+                            newNotificationUser.addNotification(newNotification);
+                            userRepository.save(newNotificationUser);
+                            quizAnswerRepository.save(qa);
+                        }
+
+                    }
                 }
             }
-        });
-        Optional<DeployedQuiz> deployedQuizOptional = deployedQuizRepository.findById(deployedQuizId);
-        if(deployedQuizOptional.isPresent()){
-            DeployedQuiz currentDeployedQuiz = deployedQuizOptional.get();
-            currentDeployedQuiz.checkAllAnswersGraded();
-            deployedQuizRepository.save(currentDeployedQuiz);
         }
+
+        deployedQuizRepository.save(currentDeployedQuiz);
 
     }
 

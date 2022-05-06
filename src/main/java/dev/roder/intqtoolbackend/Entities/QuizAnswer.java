@@ -20,6 +20,7 @@ public class QuizAnswer {
     private User user;
     private String status;
     private Double grading;
+    private boolean notified;
     private Timestamp submittedDate;
     @ManyToMany
     @JoinTable(name="quiz_answer_questions",
@@ -93,7 +94,7 @@ public class QuizAnswer {
         this.answers = answers;
     }
 
-    public void checkAllAnswersGraded(){
+    public boolean checkAllAnswersGraded(){
         boolean allAnswersGraded = true;
         Double tempGrade = 0.0;
         for(QuestionAnswer ans:answers){
@@ -110,6 +111,16 @@ public class QuizAnswer {
             setGrading(tempGrade);
         }
 
+        return allAnswersGraded;
+
+    }
+
+    public boolean isNotified() {
+        return notified;
+    }
+
+    public void setNotified(boolean notified) {
+        this.notified = notified;
     }
 
     @Override

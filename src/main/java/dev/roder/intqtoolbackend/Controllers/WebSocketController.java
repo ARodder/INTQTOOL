@@ -2,11 +2,12 @@ package dev.roder.intqtoolbackend.Controllers;
 
 import dev.roder.intqtoolbackend.Entities.Notification;
 import dev.roder.intqtoolbackend.Entities.QuizAnswer;
-import dev.roder.intqtoolbackend.Entities.User;
 import dev.roder.intqtoolbackend.MessageWrapper.MessageContent;
 import dev.roder.intqtoolbackend.Services.QuizService;
 import dev.roder.intqtoolbackend.Services.UserService;
 import dev.roder.intqtoolbackend.Services.WebSocketService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ public class WebSocketController {
     private UserService userService;
     @Autowired
     private SimpMessagingTemplate template;
+    Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
 
 
     @SubscribeMapping("/quizanswers/{id}")
@@ -60,7 +62,7 @@ public class WebSocketController {
 
             response = new ResponseEntity<>(HttpStatus.OK);
         }catch(Exception e){
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
         }
         return response;
 

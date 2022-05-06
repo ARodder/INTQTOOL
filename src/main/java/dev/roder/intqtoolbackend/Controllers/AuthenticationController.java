@@ -28,6 +28,7 @@ public class AuthenticationController {
     @Autowired
     private JwtUtil jwtUtil;
 
+
     /**
      * This is the specific endpoint used to verify a users credentials, and generate a jwt token
      * the user can use in later requests.

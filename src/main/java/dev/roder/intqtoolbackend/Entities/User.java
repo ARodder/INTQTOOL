@@ -180,7 +180,10 @@ public class User{
     }
 
     public void addNotification(Notification notification){
-        this.notifications.add(notification);
+        if(!notifications.contains(notification)){
+            this.notifications.add(notification);
+        }
+
     }
     public void removeNotification(Notification notification){
         this.notifications.remove(notification);

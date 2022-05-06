@@ -2,6 +2,8 @@ package dev.roder.intqtoolbackend.Controllers;
 
 import dev.roder.intqtoolbackend.Entities.Course;
 import dev.roder.intqtoolbackend.Services.CourseService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ public class CourseController {
 
     @Autowired
     private CourseService courseService;
+    private Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
 
     /**
      * Defines the endpoint for retrieving the details of a single course given the courseId.
@@ -43,7 +46,7 @@ public class CourseController {
             String foundCourse = courseService.getCourseDetails(courseId);
             response = new ResponseEntity<String>(foundCourse, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             return response;
         }
         return response;
@@ -66,7 +69,7 @@ public class CourseController {
             String foundCourses = courseService.getAllCourseDetails();
             response = new ResponseEntity<String>(foundCourses, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             return response;
         }
         return response;
@@ -91,7 +94,7 @@ public class CourseController {
             String foundCourses = courseService.getAllCourseDetails();
             response = new ResponseEntity<String>(foundCourses, HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             return response;
         }
         return response;
@@ -116,7 +119,7 @@ public class CourseController {
             courseService.addUserToCourse(courseId, json.get("userId"));
             response = new ResponseEntity<String>(HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             return response;
         }
         return response;

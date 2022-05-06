@@ -16,6 +16,7 @@ public class Notification {
     private String title;
     private String quizID;
     private String type;
+    private Integer quizAnswerId;
     private String message;
 
     public String getMessage() {
@@ -60,12 +61,22 @@ public class Notification {
         this.type=type;
     }
 
+    public Integer getQuizAnswerId() {
+        return quizAnswerId;
+    }
+
+    public void setQuizAnswerId(Integer quizAnswerId) {
+        this.quizAnswerId = quizAnswerId;
+    }
+
+
     public String getDetails(){
         JSONObject details = new JSONObject();
         details.put("id",notificationID);
         details.put("title",this.title);
         details.put("message",this.message);
         details.put("type",this.type);
+        details.put("quizAnswerId",this.quizAnswerId);
 
         return details.toString();
     }

@@ -226,7 +226,7 @@ public class UserService {
 
         if (qa != null) {
             if (qa.getStatus() != "submitted") {
-                return qa.toString();
+                return "Saved";
             } else {
                 return "Answers submitted";
             }

@@ -22,6 +22,9 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 import java.util.List;
 
+/**
+ * Configures the security of the websocket connection.
+ */
 @Configuration
 @EnableWebSocketMessageBroker
 @Order(Ordered.HIGHEST_PRECEDENCE+99)
@@ -33,6 +36,12 @@ public class WebSocketAutehnticationConfig implements WebSocketMessageBrokerConf
     @Autowired
     private IntqtoolUserDetailService userDetailsService;
 
+    /**
+     * Intercepts a request sent through the websockets
+     * and verifies it using jwtToken.
+     *
+     * @param registration webSocket channel
+     */
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(new ChannelInterceptor(){

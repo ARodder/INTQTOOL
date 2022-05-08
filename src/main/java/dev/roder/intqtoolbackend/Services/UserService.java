@@ -15,36 +15,29 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Service class containing most of the functionality
+ * for any endpoint with the "/user/" prefix
+ */
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private CourseRepository courseRepository;
-
     @Autowired
     private NotificationRepository notificationRepository;
-
     @Autowired
     private QuizAnswerRepository quizAnswerRepository;
-
     @Autowired
     private QuestionAnswerRepository questionAnswerRepository;
     @Autowired
     private QuestionRepository questionRepository;
-
-    @Autowired
-    private QuizRepository quizRepository;
-
     @Autowired
     private DeployedQuizRepository deployedQuizRepository;
-
-
     @Autowired
     private QuizService quizService;
 
@@ -55,6 +48,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Adds a new user to the database
+     * with certain pre-determined values.
+     *
+     * @param user new user to add
+     */
     public void addUser(User user) {
         if (!userRepository.findByUsername(user.getUsername()).isPresent()) {
             Role role = new Role("ROLE_STUDENT");
@@ -73,6 +72,11 @@ public class UserService {
 
     }
 
+    /**
+     * Retrieves a list of all users in the database
+     *
+     * @return Returns list of users
+     */
     public ArrayList<String> getAllUsers() {
         ArrayList<String> allUsers = new ArrayList<String>();
 
@@ -85,22 +89,23 @@ public class UserService {
         return allUsers;
     }
 
+    /**
+     * Retrieves the current user based on the security context.
+     *
+     * @return Returns current user.
+     */
     public String getUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-
-        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
-
-        return currentUser.toString();
-
+        return getCurrentUser().toString();
     }
 
+    /**
+     * Retrieves the active quizzes of a user
+     *
+     * @return Returns a list of deployedQuizzes in the form of strings
+     */
     public List<String> getUsersActiveQuizes() {
         List<String> quizzes = new ArrayList<String>();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-
-        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+        User currentUser = getCurrentUser();
 
         for (Course course : currentUser.getCourses()) {
             for (DeployedQuiz quiz : course.getActiveQuizzes()) {
@@ -111,12 +116,15 @@ public class UserService {
         return quizzes;
     }
 
+    /**
+     * Retrieves a list of the courses the user is in.
+     *
+     * @return Returns a list of course details in the form of a string
+     */
     public List<String> getUsersCourses() {
         List<String> courses = new ArrayList<String>();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
 
-        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+        User currentUser = getCurrentUser();
 
         for (Course course : currentUser.getCourses()) {
             courses.add(course.getDetails());
@@ -125,12 +133,15 @@ public class UserService {
         return courses;
     }
 
+    /**
+     * Retrieves a list of notifications for the current user.
+     *
+     * @return Returns list of notification details in the form of a string.
+     */
     public List<String> getNotifications() {
         List<String> notifications = new ArrayList<String>();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
 
-        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+        User currentUser = getCurrentUser();
 
         for (Notification notification : currentUser.getNotifications()) {
             notifications.add(notification.getDetails());
@@ -139,11 +150,15 @@ public class UserService {
         return notifications;
     }
 
+    /**
+     * Join course using randomly generated joinCode.
+     *
+     * @param joinCode Code used to join the course.
+     * @return return boolean based on if the join was successful.
+     */
     public boolean joinCourse(String joinCode) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
 
-        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+        User currentUser = getCurrentUser();
         boolean joinSuccess = false;
 
 
@@ -163,16 +178,18 @@ public class UserService {
         return joinSuccess;
     }
 
+    /**
+     * Clears a users notification list.
+     *
+     * @return Returns boolean  depending on if the clearing was successful
+     */
     public boolean clearNotifications() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-
-        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+        User currentUser = getCurrentUser();
 
         boolean clearSuccess = false;
 
         try {
-            List<Notification> currentUserNotifications = currentUser.getNotifications().stream().collect(Collectors.toList());
+            List<Notification> currentUserNotifications = new ArrayList<>(currentUser.getNotifications());
 
 
             currentUser.setNotifications(new ArrayList<>());
@@ -185,22 +202,26 @@ public class UserService {
             clearSuccess = true;
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            clearSuccess = false;
+            return clearSuccess;
         }
 
         return clearSuccess;
     }
 
+    /**
+     * Removes a specific notification from a users notification list.
+     *
+     * @param notificationID id of the notification to remove
+     * @return returns boolean depending on if the deletion was a success.
+     */
     public boolean removeNotification(Integer notificationID) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
 
-        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+        User currentUser = getCurrentUser();
 
         boolean delSuccess = false;
 
         try {
-            List<Integer> notificationIDs = currentUser.getNotifications().stream().map(notification -> notification.getNotificationID()).collect(Collectors.toList());
+            List<Integer> notificationIDs = currentUser.getNotifications().stream().map(Notification::getNotificationID).collect(Collectors.toList());
 
             if (notificationIDs.contains(notificationID)) {
                 currentUser.removeNotification(notificationID);
@@ -216,11 +237,15 @@ public class UserService {
         return delSuccess;
     }
 
+    /**
+     * Retrieves the currentUsers quizAnswers for a specified quizID
+     * if the quiz-answer status is "in-progress".
+     *
+     * @param quizID id of the quiz to retrieve answers for.
+     * @return Returns the QuizAnswer Object in the form of a string
+     */
     public String getUserQuizAnswers(Integer quizID) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-
-        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+        User currentUser = getCurrentUser();
 
         QuizAnswer qa = currentUser.getQuizAnswers(quizID);
 
@@ -238,11 +263,16 @@ public class UserService {
 
     }
 
+    /**
+     * Saves the current users answer to a quiz without submitting the answers
+     *
+     * @param qa quizAnswers to save
+     * @param deployementId id of the deploymentQuiz to save them to
+     * @return Returns boolean depending on if the save was a success.
+     */
     public boolean saveUserQuizAnswer(QuizAnswer qa, Integer deployementId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
 
-        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+        User currentUser = getCurrentUser();
 
         boolean saveSuccess = false;
 
@@ -251,8 +281,8 @@ public class UserService {
             qa.getAnswers().forEach((ans) -> {
 
                 if (ans.getId() != null) {
-                    QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).get();
-                    if (!existingAnswer.getStatus().equals("submitted")) {
+                    QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).orElse(null);
+                    if (existingAnswer != null && !existingAnswer.getStatus().equals("submitted")) {
                         existingAnswer.setAnswer(ans.getAnswer());
                         existingAnswer.setStatus(ans.getStatus());
                         savedQuestionAnswers.add(questionAnswerRepository.save(existingAnswer));
@@ -266,16 +296,16 @@ public class UserService {
             qa.setAnswers(savedQuestionAnswers);
 
             if (qa.getId() != null) {
-                QuizAnswer existingQuizAnswer = quizAnswerRepository.findById(qa.getId()).get();
-                if (!existingQuizAnswer.getStatus().equals("submitted")) {
+                QuizAnswer existingQuizAnswer = quizAnswerRepository.findById(qa.getId()).orElse(null);
+                if (existingQuizAnswer != null &&!existingQuizAnswer.getStatus().equals("submitted")) {
                     existingQuizAnswer.setAnswers(qa.getAnswers());
                     existingQuizAnswer.setStatus(qa.getStatus());
                     quizAnswerRepository.save(existingQuizAnswer);
                 }
             } else {
                 qa.setUser(currentUser);
-                DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
-                if (currentDeployedQuiz.getDeadline().compareTo(new Date()) > 0) {
+                DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).orElse(null);
+                if (currentDeployedQuiz != null && currentDeployedQuiz.getDeadline().compareTo(new Date()) > 0) {
                     if (currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())) {
                         qa.setDeployedQuiz(currentDeployedQuiz);
                         currentDeployedQuiz.addQuizAnswer(qa);
@@ -298,11 +328,15 @@ public class UserService {
         return saveSuccess;
     }
 
+    /**
+     * Submits a users answer to a quiz.
+     *
+     * @param qa quizAnswers to save
+     * @param deployementId id of the deployment to save the quizAnswer to
+     * @return Returns the saved quizAnswer
+     */
     public QuizAnswer submitUserQuizAnswer(QuizAnswer qa, Integer deployementId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentPrincipalName = authentication.getName();
-
-        User currentUser = userRepository.findByUsername(currentPrincipalName).get();
+        User currentUser = getCurrentUser();
 
         boolean saveSuccess = false;
 
@@ -310,8 +344,8 @@ public class UserService {
             List<QuestionAnswer> savedQuestionAnswers = new ArrayList();
             qa.getAnswers().forEach((ans) -> {
                 if (ans.getId() != null) {
-                    QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).get();
-                    if (!existingAnswer.getStatus().equals("submitted")) {
+                    QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).orElse(null);
+                    if (existingAnswer != null && !existingAnswer.getStatus().equals("submitted")) {
                         existingAnswer.setAnswer(ans.getAnswer());
                         existingAnswer.setStatus("submitted");
 
@@ -347,8 +381,8 @@ public class UserService {
             qa.setAnswers(savedQuestionAnswers);
 
             if (qa.getId() != null) {
-                QuizAnswer existingQuizAnswer = quizAnswerRepository.findById(qa.getId()).get();
-                if (!existingQuizAnswer.getStatus().equals("submitted")) {
+                QuizAnswer existingQuizAnswer = quizAnswerRepository.findById(qa.getId()).orElse(null);
+                if (existingQuizAnswer != null && !existingQuizAnswer.getStatus().equals("submitted")) {
                     existingQuizAnswer.setAnswers(qa.getAnswers());
                     existingQuizAnswer.setStatus("submitted");
 
@@ -361,8 +395,8 @@ public class UserService {
                 qa.setUser(currentUser);
                 qa.setStatus("submitted");
                 qa.setSubmittedDate(new Timestamp(System.currentTimeMillis()));
-                DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).get();
-                if (currentDeployedQuiz.getDeadline().compareTo(new Date()) > 0) {
+                DeployedQuiz currentDeployedQuiz = deployedQuizRepository.findById(deployementId).orElse(null);
+                if (currentDeployedQuiz != null && currentDeployedQuiz.getDeadline().compareTo(new Date()) > 0) {
                     if (currentUser.getCourses().contains(currentDeployedQuiz.getDeploymentCourse())) {
                         qa.setDeployedQuiz(currentDeployedQuiz);
                         currentDeployedQuiz.addQuizAnswer(qa);
@@ -388,18 +422,24 @@ public class UserService {
 
     }
 
+    /**
+     * Retrieves the current user based on the security context
+     *
+     * @return Returns user
+     */
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         Optional<User> userOptional = userRepository.findByUsername(currentPrincipalName);
-        if (userOptional.isPresent()) {
-            return userOptional.get();
-        }
-
-        return null;
+        return userOptional.orElse(null);
 
     }
 
+    /**
+     * Retrieves a list of the archived quizzes of the current user
+     *
+     * @return Returns list of submitted or graded QuizAnswers.
+     */
     public Iterable<String> getArchivedQuizzes() {
         User currentUser = getCurrentUser();
         return currentUser.getQuizAnswers()
@@ -410,7 +450,7 @@ public class UserService {
                         Quiz q = quizAnswer.getDeployedQuiz().getQuiz();
                         JSONObject details = new JSONObject();
                         details.put("id", quizAnswer.getId());
-                        details.put("quizId",quizAnswer.getDeployedQuiz().getQuiz().getQuizID());
+                        details.put("quizId", quizAnswer.getDeployedQuiz().getQuiz().getQuizID());
                         details.put("title", q.getTitle());
                         details.put("status", quizAnswer.getStatus());
                         details.put("description", q.getDescription());
@@ -426,9 +466,14 @@ public class UserService {
 
     }
 
+    /**
+     * Changes the role of a user to a student.
+     *
+     * @param userId id of the user to change role
+     */
     public void makeUserStudent(Integer userId) {
-        User userToChange = userRepository.findById(userId).get();
-        if (!userToChange.hasRole("ROLE_STUDENT")) {
+        User userToChange = userRepository.findById(userId).orElse(null);
+        if (userToChange != null && !userToChange.hasRole("ROLE_STUDENT")) {
             for (Role role : userToChange.getRoles()) {
                 userToChange.removeRole(role);
                 roleRepository.delete(role);
@@ -441,9 +486,14 @@ public class UserService {
 
     }
 
+    /**
+     * Changes the role of a user to a teacher.
+     *
+     * @param userId id of the user to change role
+     */
     public void makeUserTeacher(Integer userId) {
-        User userToChange = userRepository.findById(userId).get();
-        if (!userToChange.hasRole("ROLE_TEACHER")) {
+        User userToChange = userRepository.findById(userId).orElse(null);
+        if (userToChange != null && !userToChange.hasRole("ROLE_TEACHER")) {
             for (Role role : userToChange.getRoles()) {
                 userToChange.removeRole(role);
                 roleRepository.delete(role);
@@ -456,9 +506,14 @@ public class UserService {
 
     }
 
+    /**
+     * Changes the role of a user to a admin.
+     *
+     * @param userId id of the user to change role
+     */
     public void makeUserAdmin(Integer userId) {
-        User userToChange = userRepository.findById(userId).get();
-        if (!userToChange.hasRole("ROLE_ADMIN")) {
+        User userToChange = userRepository.findById(userId).orElse(null);
+        if (userToChange != null && !userToChange.hasRole("ROLE_ADMIN")) {
             for (Role role : userToChange.getRoles()) {
                 userToChange.removeRole(role);
                 roleRepository.delete(role);
@@ -471,14 +526,21 @@ public class UserService {
 
     }
 
+    /**
+     * Retrieves one of the current user's QuizAnswers
+     * based on the answerId.
+     *
+     * @param answerId id of the answer to retrieve.
+     * @return Returns the answer in the form of a string.
+     */
     public String getAnsweredQuiz(Integer answerId) {
         User currentUser = getCurrentUser();
         Optional<QuizAnswer> quizAnswerOptional = quizAnswerRepository.findById(answerId);
 
         if (quizAnswerOptional.isPresent()) {
             QuizAnswer quizAnswer = quizAnswerOptional.get();
-            if(currentUser.getQuizAnswers().contains(quizAnswer)){
-                if(quizAnswer.getStatus().equals("submitted") || quizAnswer.getStatus().equals("graded")){
+            if (currentUser.getQuizAnswers().contains(quizAnswer)) {
+                if (quizAnswer.getStatus().equals("submitted") || quizAnswer.getStatus().equals("graded")) {
                     return quizAnswer.getAnswerDetails();
                 }
             }

@@ -15,6 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Component filter used by spring to check for jwt token for
+ * authentication in requests
+ */
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
@@ -23,6 +27,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
 
+    /**
+     * Retrieves jwt token from request if it exists,
+     * and generates usernameAndPasswordAuthenticationToken to set securityContextHolder for continuing the request.
+     *
+     * @param request request sent by frontend
+     * @param response response from the server
+     * @param filterChain chain of filters used by spring
+     * @throws ServletException Exception thrown by doFilter in filterChain
+     * @throws IOException Exception thrown by doFilter in filterChain
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {

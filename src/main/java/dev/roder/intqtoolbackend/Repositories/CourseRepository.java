@@ -6,9 +6,18 @@ import dev.roder.intqtoolbackend.Entities.Course;
 
 import java.util.Optional;
 
-// This will be AUTO IMPLEMENTED by Spring into a Bean called userRepository
-// CRUD refers Create, Read, Update, Delete
-
+/**
+ * Repository for the courses.
+ * Serves as interface between database and application.
+ * Is auto-implemented into a Bean by Spring
+ */
 public interface CourseRepository extends CrudRepository<Course, Integer> {
+
+    /**
+     * Finds a course based on the randomly generated joinCode
+     *
+     * @param joinCode randomly generated joinCode
+     * @return Returns optional containing the course if found.
+     */
     Optional<Course> findByJoinCode(String joinCode);
 }

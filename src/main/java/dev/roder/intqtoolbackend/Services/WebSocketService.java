@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
+/**
+ * Service class containing most of the functionality
+ * for any connection over websockets
+ */
 @Service
 public class WebSocketService {
     @Autowired
@@ -19,13 +23,24 @@ public class WebSocketService {
     @Autowired
     private UserService userservice;
 
+    /**
+     * Sends message to specified subscription path
+     *
+     * @param message message to send to the socket subscribers
+     * @param socketPath path of the socket.
+     */
     public void updateWebSocketSubscribers(String message,String socketPath){
         MessageContent content = new MessageContent();
         content.setContent(message);
         template.convertAndSend(socketPath,content);
     }
 
-    public List<Notification> getUserNotification() throws AccessDeniedException {
+    /**
+     * Retrieves the notifications of the current user.
+     *
+     * @return list of notifications for the user.
+     */
+    public List<Notification> getUserNotification() {
 
         return notificationRepository.findNotificationsByUserId(userservice.getCurrentUser().getId());
     }

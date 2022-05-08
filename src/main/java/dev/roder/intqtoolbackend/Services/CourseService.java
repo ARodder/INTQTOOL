@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import javax.xml.bind.ValidationException;
 import java.util.*;
 
+/**
+ * Service class containing most of the functionality
+ * for any endpoint with the "/course/" prefix
+ */
 @Service
 public class CourseService {
     @Autowired
@@ -18,6 +22,12 @@ public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
+    /**
+     * Adds a user to a course where user is based on the
+     * userId and course is based on the courseId
+     * @param courseId id of the course to add the user to.
+     * @param userId id of the user to add to a courses.
+     */
     public void addUserToCourse(Integer courseId, Integer userId) {
         User userToEdit = userRepository.findById(userId).get();
         Course courseToJoin = courseRepository.findById(courseId).get();
@@ -31,6 +41,12 @@ public class CourseService {
 
     }
 
+    /**
+     * Creates a new course
+     *
+     * @param newCourse Course object containing details of the new course
+     * @throws ValidationException Exception thrown if the course is not valid
+     */
     public void createNewQuiz(Course newCourse) throws ValidationException {
         try {
             newCourse.setActiveQuizzes(new ArrayList<>());
@@ -43,6 +59,12 @@ public class CourseService {
 
     }
 
+    /**
+     * Retrieves details of a course specified by it's id
+     *
+     * @param courseId id of the course to find
+     * @return Returns the details of the found course
+     */
     public String getCourseDetails(Integer courseId) {
         Optional<Course> foundCourse = courseRepository.findById(courseId);
         if (foundCourse.isPresent()) {
@@ -53,6 +75,11 @@ public class CourseService {
 
     }
 
+    /**
+     * Retrieves the details of all courses in the database
+     *
+     * @return Returns a list of all courses
+     */
     public String getAllCourseDetails() {
         JSONArray allCourses = new JSONArray();
         Iterator<Course> it = courseRepository.findAll().iterator();
@@ -63,6 +90,13 @@ public class CourseService {
         return allCourses.toString();
     }
 
+    /**
+     * Generates a pseudo-random joinCode for a new course
+     * with all upperCase letters or numbers(excluding certain special characters from utf-8
+     * with index greater than 57 but less than 65, and index greater than 90 but less than 97).
+     *
+     * @return Returns the pseudo-randomly generated string
+     */
     private String generateJoinCode() {
         String newJoinCode = "";
         Random random = new Random();

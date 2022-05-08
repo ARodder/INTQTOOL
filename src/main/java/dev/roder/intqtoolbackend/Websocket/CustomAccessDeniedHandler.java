@@ -21,12 +21,19 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Qualifier("clientOutboundChannel")
     private MessageChannel clientOutboundChannel;
 
+    /**
+     * Sends access denied error to the socket subscriber.
+     *
+     * @param request socket request.
+     * @param response socket response.
+     * @param accessDeniedException Exception to send to the socket.
+     */
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) {
         Message<String> message = new Message<String>() {
             @Override
             public String getPayload() {
-                return "Access denied.";
+                return "Access denied";
             }
 
             @Override

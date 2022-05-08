@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class QuizService {
@@ -129,7 +128,7 @@ public class QuizService {
             for(Question question: newInfo.getQuestions()){
                 question.setQuizID(quizToUpDate.getQuizID());
                 if(question.getType() == 1){
-                    for(Alternativ alternative: question.getAlternatives()){
+                    for(Alternative alternative: question.getAlternatives()){
                         alternativRepository.save(alternative);
                     }
                 }else{
@@ -143,6 +142,7 @@ public class QuizService {
         }
 
     }
+
 
     public void gradeQuizzes(List<Integer> answerIds,Double grade,String feedback,Integer deployedQuizId){
         Optional<DeployedQuiz> deployedQuizOptional = deployedQuizRepository.findById(deployedQuizId);

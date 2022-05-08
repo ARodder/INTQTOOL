@@ -20,6 +20,11 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
+/**
+ * class to serve endpoints for subscriptions for websockets, and
+ * all endpoints that interact with the subscriptions.
+ *
+ */
 @RestController
 public class WebSocketController {
 
@@ -34,6 +39,13 @@ public class WebSocketController {
     Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
 
 
+    /**
+     * Serves as a subscription-path for sockets, and retrieves a list of the quizAnswers on subscribe.
+     * Accessible for users with the role ROLE_ADMIN or ROLE_TEACHER
+     *
+     * @param id Id of the deployedQuiz to subscribe to its answers.
+     * @return Returns a message containing a list of all answers that are kept in the deployed quiz and has the status of either submitted or graded.
+     */
     @SubscribeMapping("/quizanswers/{id}")
     public MessageContent findAllQuizAnswers(@DestinationVariable Long id) {
         MessageContent message = new MessageContent();
@@ -41,12 +53,25 @@ public class WebSocketController {
         return message;
     }
 
-
+    /**
+     * Serves as subscription-path for sockets, nd retrieves a list of a users notifications on subscribe.
+     *
+     * @return Returns a users list of notifications
+     * @throws AccessDeniedException if the user is not verified the AccessDeniedException error is thrown
+     */
     @SubscribeMapping("/notifications")
     public List<Notification> subToNotifications() throws AccessDeniedException{
         return webSocketService.getUserNotification();
     }
 
+    /**
+     * Endpoint to submit a users answers to a deployedQuiz. Also sends update to sockets subscribed to the answers of the specified deployment.
+     * Accessible for users with any role.
+     *
+     * @param qa The answers to submit to the deployedQuiz.
+     * @param deploymentId Id of the deployedQuiz to submit the answers to
+     * @return Returns a response entity with StatusCode 200 or 400 based on the success of the submitting.
+     */
 
     @RequestMapping(method = RequestMethod.POST, path = "/user/submitanswer/{deploymentId}")
     @PreAuthorize("hasRole('ROLE_STUDENT') or hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")

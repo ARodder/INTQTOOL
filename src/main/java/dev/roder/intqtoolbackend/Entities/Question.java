@@ -179,11 +179,16 @@ public class Question {
     public Double autoGrade(String answer){
         Double newGrade = 0.0;
         List<Alternative> correctAnswer = alternatives.stream().filter((Alternative::isRightAlternative)).collect(Collectors.toList());
-        for(Alternative alternative :correctAnswer){
-            if(alternative.getAlternative().equals(answer)){
-                newGrade = 1.0;
+        if(this.type == 1){
+            for(Alternative alternative :correctAnswer){
+                if(alternative.getAlternative().equals(answer)){
+                    newGrade = 1.0;
+                }
             }
+        }else if(this.type == 3){
+
         }
+
 
         return newGrade;
     }

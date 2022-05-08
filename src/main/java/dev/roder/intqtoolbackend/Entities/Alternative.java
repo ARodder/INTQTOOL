@@ -88,7 +88,7 @@ public class Alternative {
     @Override
     public String toString(){
         JSONObject details = new JSONObject();
-        details.put("id",alternativeID);
+        details.put("alternativeID",alternativeID);
         details.put("alternative",alternative);
 
         return details.toString();
@@ -102,7 +102,7 @@ public class Alternative {
      */
     public String getDetailsForEdit(){
         JSONObject details = new JSONObject();
-        details.put("id",alternativeID);
+        details.put("alternativeID",alternativeID);
         details.put("alternative",alternative);
         details.put("rightAlternative",rightAlternative);
 

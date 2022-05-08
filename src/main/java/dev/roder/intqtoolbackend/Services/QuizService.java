@@ -158,7 +158,15 @@ public class QuizService {
                 question.setQuizID(quizToUpDate.getQuizID());
                 if(question.getType() == 1){
                     for(Alternative alternative: question.getAlternatives()){
-                        alternativRepository.save(alternative);
+                        Alternative existingAlternative = alternativRepository.findById(alternative.getAlternativeID()).orElse(null);
+                        if(existingAlternative != null){
+                            existingAlternative.setAlternative(alternative.getAlternative());
+                            existingAlternative.setRightAlternative(alternative.isRightAlternative());
+                            alternativRepository.save(existingAlternative);
+                        }else{
+                            alternativRepository.save(alternative);
+                        }
+
                     }
                 }else{
                     question.setAlternatives(new HashSet<>());

@@ -18,17 +18,17 @@ import javax.persistence.*;
 public class Question {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer questionId;
     private Integer quizID;
 
-    @Column(length=2000)
+    @Column(length = 2000)
     private String questionText;
     private Integer type;
     @OneToMany
-    @JoinTable(name="question_alternatives",
-            joinColumns = @JoinColumn(name="question_id"),
-            inverseJoinColumns = @JoinColumn(name="alternative_id")
+    @JoinTable(name = "question_alternatives",
+            joinColumns = @JoinColumn(name = "question_id"),
+            inverseJoinColumns = @JoinColumn(name = "alternative_id")
     )
     private Set<Alternative> alternatives;
 
@@ -38,7 +38,7 @@ public class Question {
      *
      * @return Returns the id of the quiz.
      */
-    public Integer getQuizID () {
+    public Integer getQuizID() {
         return quizID;
     }
 
@@ -47,8 +47,8 @@ public class Question {
      *
      * @param quizID new value of the quizId
      */
-    public void setQuizID (Integer quizID) {
-        this.quizID=quizID;
+    public void setQuizID(Integer quizID) {
+        this.quizID = quizID;
     }
 
 
@@ -57,7 +57,7 @@ public class Question {
      *
      * @return Returns the text of the question
      */
-    public String getQuestionText () {
+    public String getQuestionText() {
         return questionText;
     }
 
@@ -66,8 +66,8 @@ public class Question {
      *
      * @param questionText new value of the questionText
      */
-    public void setQuestionText (String questionText) {
-        this.questionText=questionText;
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
     }
 
     /**
@@ -75,7 +75,7 @@ public class Question {
      *
      * @return Returns the type of the question.
      */
-    public Integer getType () {
+    public Integer getType() {
         return type;
     }
 
@@ -84,17 +84,17 @@ public class Question {
      *
      * @param type new value of type
      */
-    public void setType (Integer type) {
-        this.type=type;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     /**
      * Retrieves the questions set of alternatives.
-     *If the question is of type 2 alternatives are irrelevant.
+     * If the question is of type 2 alternatives are irrelevant.
      *
      * @return Returns a set of alternatives.
      */
-    public Set<Alternative> getAlternatives () {
+    public Set<Alternative> getAlternatives() {
         return alternatives;
     }
 
@@ -103,8 +103,8 @@ public class Question {
      *
      * @param alternatives new value of the alternatives.
      */
-    public void setAlternatives (Set<Alternative> alternatives) {
-        this.alternatives=alternatives;
+    public void setAlternatives(Set<Alternative> alternatives) {
+        this.alternatives = alternatives;
     }
 
     /**
@@ -122,7 +122,7 @@ public class Question {
      * @param questionId new value of the question Id
      */
     public void setQuestionId(Integer questionId) {
-        this.questionId =questionId;
+        this.questionId = questionId;
     }
 
     /**
@@ -133,16 +133,16 @@ public class Question {
      * @return Returns string version of the details JSONObject.
      */
     @Override
-    public String toString(){
+    public String toString() {
         JSONObject details = new JSONObject();
-        details.put("questionId",this.questionId);
-        details.put("questionText",this.questionText);
-        details.put("type",this.type);
+        details.put("questionId", this.questionId);
+        details.put("questionText", this.questionText);
+        details.put("type", this.type);
         JSONArray jsonAlternatives = new JSONArray();
-        for(Alternative alternative :alternatives){
+        for (Alternative alternative : alternatives) {
             jsonAlternatives.put(alternative.toString());
         }
-        details.put("alternatives",jsonAlternatives);
+        details.put("alternatives", jsonAlternatives);
 
 
         return details.toString();
@@ -155,16 +155,16 @@ public class Question {
      *
      * @return String version of the JSON object containing details.
      */
-    public String getEditDetails(){
+    public String getEditDetails() {
         JSONObject details = new JSONObject();
-        details.put("questionId",this.questionId);
-        details.put("questionText",this.questionText);
-        details.put("type",this.type);
+        details.put("questionId", this.questionId);
+        details.put("questionText", this.questionText);
+        details.put("type", this.type);
         JSONArray jsonAlternatives = new JSONArray();
-        for(Alternative alternative :alternatives){
+        for (Alternative alternative : alternatives) {
             jsonAlternatives.put(alternative.getDetailsForEdit());
         }
-        details.put("alternatives",jsonAlternatives);
+        details.put("alternatives", jsonAlternatives);
 
 
         return details.toString();
@@ -176,16 +176,16 @@ public class Question {
      * @param answer answer to compare to the correct answer of the question.
      * @return Returns the grade of the answer(1 if the answer was correct, otherwise 0)
      */
-    public Double autoGrade(String answer){
+    public Double autoGrade(String answer) {
         Double newGrade = 0.0;
         List<Alternative> correctAnswer = alternatives.stream().filter((Alternative::isRightAlternative)).collect(Collectors.toList());
-        if(this.type == 1){
-            for(Alternative alternative :correctAnswer){
-                if(alternative.getAlternative().equals(answer)){
+        if (this.type == 1) {
+            for (Alternative alternative : correctAnswer) {
+                if (alternative.getAlternative().equals(answer)) {
                     newGrade = 1.0;
                 }
             }
-        }else if(this.type == 3){
+        } else if (this.type == 3) {
 
         }
 

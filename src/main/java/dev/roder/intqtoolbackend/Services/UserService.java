@@ -3,6 +3,8 @@ package dev.roder.intqtoolbackend.Services;
 import dev.roder.intqtoolbackend.Entities.*;
 import dev.roder.intqtoolbackend.Repositories.*;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,6 +42,7 @@ public class UserService {
     private DeployedQuizRepository deployedQuizRepository;
     @Autowired
     private QuizService quizService;
+    private Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
 
     private final PasswordEncoder passwordEncoder;
 
@@ -171,7 +174,7 @@ public class UserService {
                 joinSuccess = true;
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             joinSuccess = false;
         }
 
@@ -201,7 +204,7 @@ public class UserService {
             }
             clearSuccess = true;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             return clearSuccess;
         }
 
@@ -230,7 +233,7 @@ public class UserService {
             }
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             delSuccess = false;
         }
 
@@ -321,7 +324,7 @@ public class UserService {
 
             saveSuccess = true;
         } catch (Exception e) {
-            System.out.println(e);
+            logger.warn(e.getMessage());
             saveSuccess = false;
         }
 
@@ -415,7 +418,7 @@ public class UserService {
 
 
         } catch (Exception e) {
-            System.out.println(e);
+            logger.warn(e.getMessage());
             return null;
         }
 
@@ -458,7 +461,7 @@ public class UserService {
                         details.put("quizLength", q.getQuestions().size());
                         return details.toString();
                     } catch (NullPointerException e) {
-                        System.out.println(e.getMessage());
+                        logger.warn(e.getMessage());
 
                         return null;
                     }

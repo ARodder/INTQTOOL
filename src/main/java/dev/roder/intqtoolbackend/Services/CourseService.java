@@ -4,6 +4,8 @@ import dev.roder.intqtoolbackend.Entities.Course;
 import dev.roder.intqtoolbackend.Entities.User;
 import dev.roder.intqtoolbackend.Repositories.*;
 import org.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,7 @@ public class CourseService {
 
     @Autowired
     private CourseRepository courseRepository;
+    private Logger logger = LoggerFactory.getLogger(getClass().getSimpleName());
 
     /**
      * Adds a user to a course where user is based on the
@@ -53,7 +56,7 @@ public class CourseService {
             newCourse.setJoinCode(generateJoinCode());
             courseRepository.save(newCourse);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.warn(e.getMessage());
             throw new ValidationException("Not valid course object");
         }
 

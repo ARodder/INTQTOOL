@@ -234,7 +234,7 @@ public class QuizAnswer {
         details.put("userId",this.user.getId());
         details.put("courseId",this.deployedQuiz.getDeploymentCourse().getCourseID());
         details.put("status",this.status);
-        details.put("quizId",this.deployedQuiz.getQuiz().getQuizID());
+        details.put("deployedQuizId",this.deployedQuiz.getId());
         JSONArray answerArray = new JSONArray();
         for(QuestionAnswer answer: answers){
             answerArray.put(answer.toString());
@@ -256,7 +256,7 @@ public class QuizAnswer {
         details.put("userId",this.user.getId());
         details.put("courseId",this.deployedQuiz.getDeploymentCourse().getCourseID());
         details.put("status",this.status);
-        details.put("quizId",this.deployedQuiz.getQuiz().getQuizID());
+        details.put("deployedQuizId",this.deployedQuiz.getId());
         JSONArray answerArray = new JSONArray();
         for(QuestionAnswer answer: answers){
             answerArray.put(answer.getGradingDetails(user.getId()));

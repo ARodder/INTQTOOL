@@ -180,7 +180,9 @@ public class DeployedQuiz {
     public String toString(){
         JSONObject details = new JSONObject();
         details.put("id",id);
-        details.put("courseId",deploymentCourse.getCourseID());
+        if(deploymentCourse != null){
+            details.put("courseId",deploymentCourse.getCourseID());
+        }
         details.put("quiz", quiz.toString());
         String tempDeadline = deadline.toString();
         tempDeadline = tempDeadline.replace(" ","T");

@@ -46,7 +46,7 @@ public class QuizService {
     public String getQuiz(Integer deplyedQuizID){
         User currentUser = getCurrentUser();
 
-        DeployedQuiz foundQuiz = deployedQuizRepository.findById(deplyedQuizID).get();
+        DeployedQuiz foundQuiz = deployedQuizRepository.findById(deplyedQuizID).orElse(null);
 
         List<Course> userCourses= currentUser.getCourses();
 
@@ -57,7 +57,7 @@ public class QuizService {
             }
         }
 
-        if(userInCourse){
+        if(foundQuiz != null &&userInCourse){
             return foundQuiz.toString();
         }else{
             return "";

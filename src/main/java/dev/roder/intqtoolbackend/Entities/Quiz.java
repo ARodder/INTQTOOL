@@ -167,7 +167,9 @@ public class Quiz {
         details.put("title",this.title);
         details.put("description",this.description);
         details.put("quizLength",this.questions.size());
-        details.put("author",this.author.getLastName()+", "+this.author.getFirstName());
+        if(author != null){
+            details.put("author",this.author.getLastName()+", "+this.author.getFirstName());
+        }
         JSONArray jsonQuestions = new JSONArray();
         for(Question question:questions){
             jsonQuestions.put(question.toString());

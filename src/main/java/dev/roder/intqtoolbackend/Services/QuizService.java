@@ -156,14 +156,17 @@ public class QuizService {
             }
             for (Question question : newInfo.getQuestions()) {
                 question.setQuizID(quizToUpDate.getQuizID());
-                if (question.getType() == 1) {
+                if (question.getType() == 1 || question.getType() == 3) {
                     HashSet<Alternative> questionAlternativeSet = new HashSet<>();
                     for (Alternative alternative : question.getAlternatives()) {
-                        Alternative existingAlternative = alternativeRepository.findById(alternative.getAlternativeID()).orElse(null);
-                        if (existingAlternative != null) {
-                            existingAlternative.setAlternative(alternative.getAlternative());
-                            existingAlternative.setRightAlternative(alternative.isRightAlternative());
-                            questionAlternativeSet.add(alternativeRepository.save(existingAlternative));
+
+                        if (alternative.getAlternativeID() != null) {
+                            Alternative existingAlternative = alternativeRepository.findById(alternative.getAlternativeID()).orElse(null);
+                            if(existingAlternative != null){
+                                existingAlternative.setAlternative(alternative.getAlternative());
+                                existingAlternative.setRightAlternative(alternative.isRightAlternative());
+                                questionAlternativeSet.add(alternativeRepository.save(existingAlternative));
+                            }
                         } else {
                             questionAlternativeSet.add(alternativeRepository.save(alternative));
                         }

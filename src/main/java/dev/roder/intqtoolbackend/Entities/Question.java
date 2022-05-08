@@ -28,7 +28,7 @@ public class Question {
     @OneToMany
     @JoinTable(name = "question_alternatives",
             joinColumns = @JoinColumn(name = "question_id"),
-            inverseJoinColumns = @JoinColumn(name = "alternative_id")
+            inverseJoinColumns = @JoinColumn(name = "alternativeid")
     )
     private Set<Alternative> alternatives;
 

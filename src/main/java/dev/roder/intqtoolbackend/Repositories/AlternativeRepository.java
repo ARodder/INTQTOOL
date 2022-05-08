@@ -8,5 +8,5 @@ import org.springframework.data.repository.CrudRepository;
  * Serves as interface between database and application.
  * Is auto-implemented into a Bean by Spring
  */
-public interface AlternativRepository extends CrudRepository<Alternative, Integer> {
+public interface AlternativeRepository extends CrudRepository<Alternative, Integer> {
 }

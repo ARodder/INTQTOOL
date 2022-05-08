@@ -26,7 +26,7 @@ public class QuizService {
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
-    private AlternativRepository alternativRepository;
+    private AlternativeRepository alternativeRepository;
     @Autowired
     private QuestionRepository questionRepository;
     @Autowired
@@ -159,13 +159,13 @@ public class QuizService {
                 if (question.getType() == 1) {
                     HashSet<Alternative> questionAlternativeSet = new HashSet<>();
                     for (Alternative alternative : question.getAlternatives()) {
-                        Alternative existingAlternative = alternativRepository.findById(alternative.getAlternativeID()).orElse(null);
+                        Alternative existingAlternative = alternativeRepository.findById(alternative.getAlternativeID()).orElse(null);
                         if (existingAlternative != null) {
                             existingAlternative.setAlternative(alternative.getAlternative());
                             existingAlternative.setRightAlternative(alternative.isRightAlternative());
-                            questionAlternativeSet.add(alternativRepository.save(existingAlternative));
+                            questionAlternativeSet.add(alternativeRepository.save(existingAlternative));
                         } else {
-                            questionAlternativeSet.add(alternativRepository.save(alternative));
+                            questionAlternativeSet.add(alternativeRepository.save(alternative));
                         }
 
                     }

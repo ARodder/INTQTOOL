@@ -131,7 +131,7 @@ public class UserController {
             response = new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
             logger.warn(e.getMessage());
         }catch(Exception e){
-            response = new ResponseEntity<>("Error was thrown",HttpStatus.BAD_REQUEST);
+            response = new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
             logger.warn("Create new user exception");
             logger.warn(e.getMessage());
         }

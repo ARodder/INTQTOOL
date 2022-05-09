@@ -1,5 +1,6 @@
 package dev.roder.intqtoolbackend.Repositories;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import dev.roder.intqtoolbackend.Entities.User;
@@ -23,4 +24,13 @@ public interface UserRepository extends CrudRepository<User, Integer> {
      * @return Returns optional containing the user if it exists in the database.
      */
     Optional<User> findByUsername(String username);
+
+    /**
+     * Retrieves a user based on a given email.
+     *
+     * @param email username of the user to find.
+     * @return Returns optional containing the user if it exists in the database.
+     */
+    @Query(value="SELECT u FROM User u WHERE u.email= ?1")
+    Optional<User> findByEmail(String email);
 }

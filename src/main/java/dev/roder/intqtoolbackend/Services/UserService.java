@@ -58,7 +58,7 @@ public class UserService {
      * @param user new user to add
      */
     public void addUser(User user) {
-        if (!userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(user.getUsername()).isEmpty() && userRepository.findByEmail(user.getEmail()).isEmpty()) {
             Role role = new Role("ROLE_STUDENT");
 
             user.setSettings("0,0,0,0,0");

@@ -189,8 +189,10 @@ public class Question {
         } else if (this.type == 3) {
             String[] alternativeIdsString = answer.replace(" ", "").split(",");
             List<Integer> alternativeIds = Arrays.stream(alternativeIdsString).map(id -> Integer.parseInt(id)).collect(Collectors.toList());
-            for (Alternative alternative : correctAnswer) {
-                if (alternativeIds.contains(alternative.getAlternativeID())) {
+
+            List<Integer> correctAnswerIds = correctAnswer.stream().map(Alternative::getAlternativeID).collect(Collectors.toList());
+            for (Integer remoteId : alternativeIds) {
+                if (correctAnswerIds.contains(remoteId)) {
                     newGrade = newGrade + 1;
                 } else {
                     newGrade = newGrade - 1;

@@ -369,7 +369,7 @@ public class UserService {
                     Optional<Question> currentQuestionOptional = questionRepository.findById(ans.getQuestionId());
                     if (currentQuestionOptional.isPresent()) {
                         Question currentQuestion = currentQuestionOptional.get();
-                        if (currentQuestion.getType() == 1) {
+                        if (currentQuestion.getType() == 1 || currentQuestion.getType() == 3 ) {
                             ans.setGrading(currentQuestion.autoGrade(ans.getAnswer()));
                             ans.setStatus("graded");
                         }
@@ -412,7 +412,7 @@ public class UserService {
                 currentUser.addQuizAnswer(savedQuizAnswer);
                 userRepository.save(currentUser);
 
-                quizService.getQuestionAnswers(deployementId);
+                //quizService.getQuestionAnswers(deployementId);
                 return savedQuizAnswer;
             }
 

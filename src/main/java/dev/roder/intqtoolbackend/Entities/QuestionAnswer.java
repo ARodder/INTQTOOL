@@ -33,7 +33,7 @@ public class QuestionAnswer {
     }
 
     /**
-     *  Retrieves the questionId of the answer
+     * Retrieves the questionId of the answer
      *
      * @return Returns the questionId
      */
@@ -57,12 +57,12 @@ public class QuestionAnswer {
      * @param grading new value of the grading.
      */
     public void setGrading(double grading) {
-        if(grading > 0 && grading < 1){
-            this.grading = 0.5;
-        } else if(grading >= 1){
+        if (grading >= 1) {
             this.grading = 1;
-        }else if(grading <= 0 ){
+        } else if (grading <= 0) {
             this.grading = 0;
+        } else {
+            this.grading = grading;
         }
     }
 

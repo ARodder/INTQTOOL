@@ -3,6 +3,7 @@ package dev.roder.intqtoolbackend.Entities;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -181,11 +182,20 @@ public class Question {
         List<Alternative> correctAnswer = alternatives.stream().filter((Alternative::isRightAlternative)).collect(Collectors.toList());
         if (this.type == 1) {
             for (Alternative alternative : correctAnswer) {
-                if (alternative.getAlternative().equals(answer)) {
+                if (alternative.getAlternativeID() == Integer.parseInt(answer)) {
                     newGrade = 1.0;
                 }
             }
         } else if (this.type == 3) {
+            String[] alternativeIdsString = answer.replace(" ","").split(",");
+            List<Integer> alternativeIds = Arrays.stream(alternativeIdsString).map(id->Integer.parseInt(id)).collect(Collectors.toList());
+            for(Alternative alternative : correctAnswer){
+                if(alternativeIds.contains(alternative.getAlternativeID())){
+                    newGrade = newGrade +1;
+                }
+            }
+            Long tempLong = Math.round(newGrade/correctAnswer.size()*100);
+            newGrade = tempLong.doubleValue()/100;
 
         }
 

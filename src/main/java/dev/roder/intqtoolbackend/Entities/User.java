@@ -72,8 +72,7 @@ public class User{
             return quizAnswers.stream()
                     .filter((quizAnswer)->(quizAnswer
                             .getDeployedQuiz()
-                            .getQuiz()
-                            .getQuizID() == quizID
+                            .getId() == quizID
                             && quizAnswer
                             .getStatus()
                             .equals("in-progress")))

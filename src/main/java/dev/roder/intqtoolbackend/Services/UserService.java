@@ -253,8 +253,8 @@ public class UserService {
         QuizAnswer qa = currentUser.getQuizAnswers(quizID);
 
         if (qa != null) {
-            if (qa.getStatus() != "submitted") {
-                return "Saved";
+            if (qa.getStatus().equals("in-progress")) {
+                return qa.toString();
             } else {
                 return "Answers submitted";
             }

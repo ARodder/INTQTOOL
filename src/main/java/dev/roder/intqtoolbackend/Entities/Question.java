@@ -172,7 +172,7 @@ public class Question {
     }
 
     /**
-     * Grades answers for questions of type 1(multiple choice) automatically.
+     * Grades answers for questions of type 1 or type 3(multiple choice) automatically.
      *
      * @param answer answer to compare to the correct answer of the question.
      * @return Returns the grade of the answer(1 if the answer was correct, otherwise 0)
@@ -187,15 +187,21 @@ public class Question {
                 }
             }
         } else if (this.type == 3) {
-            String[] alternativeIdsString = answer.replace(" ","").split(",");
-            List<Integer> alternativeIds = Arrays.stream(alternativeIdsString).map(id->Integer.parseInt(id)).collect(Collectors.toList());
-            for(Alternative alternative : correctAnswer){
-                if(alternativeIds.contains(alternative.getAlternativeID())){
-                    newGrade = newGrade +1;
+            String[] alternativeIdsString = answer.replace(" ", "").split(",");
+            List<Integer> alternativeIds = Arrays.stream(alternativeIdsString).map(id -> Integer.parseInt(id)).collect(Collectors.toList());
+            for (Alternative alternative : correctAnswer) {
+                if (alternativeIds.contains(alternative.getAlternativeID())) {
+                    newGrade = newGrade + 1;
+                } else {
+                    newGrade = newGrade - 1;
                 }
             }
-            Long tempLong = Math.round(newGrade/correctAnswer.size()*100);
-            newGrade = tempLong.doubleValue()/100;
+            Long tempLong = Math.round(newGrade / correctAnswer.size() * 100);
+            newGrade = tempLong.doubleValue() / 100;
+
+            if (newGrade < 0) {
+                newGrade = 0.0;
+            }
 
         }
 

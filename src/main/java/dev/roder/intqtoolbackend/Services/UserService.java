@@ -285,7 +285,7 @@ public class UserService {
 
                 if (ans.getId() != null) {
                     QuestionAnswer existingAnswer = questionAnswerRepository.findById(ans.getId()).orElse(null);
-                    if (existingAnswer != null && !existingAnswer.getStatus().equals("submitted")) {
+                    if (existingAnswer != null && existingAnswer.getStatus().equals("in-progress")) {
                         existingAnswer.setAnswer(ans.getAnswer());
                         existingAnswer.setStatus(ans.getStatus());
                         savedQuestionAnswers.add(questionAnswerRepository.save(existingAnswer));
@@ -300,7 +300,7 @@ public class UserService {
 
             if (qa.getId() != null) {
                 QuizAnswer existingQuizAnswer = quizAnswerRepository.findById(qa.getId()).orElse(null);
-                if (existingQuizAnswer != null &&!existingQuizAnswer.getStatus().equals("submitted")) {
+                if (existingQuizAnswer != null && existingQuizAnswer.getStatus().equals("in-progress")) {
                     existingQuizAnswer.setAnswers(qa.getAnswers());
                     existingQuizAnswer.setStatus(qa.getStatus());
                     quizAnswerRepository.save(existingQuizAnswer);

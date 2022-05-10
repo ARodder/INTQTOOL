@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -136,7 +137,7 @@ public class QuizAnswer {
         if(answer.size() >= 1){
             return answer.stream().map((ans)->ans.getGradingDetails(user.getId())).collect(Collectors.toList());
         }else{
-            return null;
+            return new ArrayList<>();
         }
     }
 

@@ -273,7 +273,7 @@ public class UserController {
 
 
         if(userService.saveUserQuizAnswer(qa,deploymentId)){
-            response = new ResponseEntity<String>(userService.getUserQuizAnswers(qa.getDeployedQuiz().getQuiz().getQuizID()),HttpStatus.OK);
+            response = new ResponseEntity<String>(HttpStatus.OK);
         }
 
 

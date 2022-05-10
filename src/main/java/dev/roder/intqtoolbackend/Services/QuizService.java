@@ -160,17 +160,18 @@ public class QuizService {
                     HashSet<Alternative> questionAlternativeSet = new HashSet<>();
                     for (Alternative alternative : question.getAlternatives()) {
 
-                        if (alternative.getAlternativeID() != null) {
+                        if (alternative.getAlternativeID() != null && !alternative.getAlternative().isBlank()) {
                             Alternative existingAlternative = alternativeRepository.findById(alternative.getAlternativeID()).orElse(null);
-                            if(existingAlternative != null){
+                            if (existingAlternative != null) {
                                 existingAlternative.setAlternative(alternative.getAlternative());
                                 existingAlternative.setRightAlternative(alternative.isRightAlternative());
                                 questionAlternativeSet.add(alternativeRepository.save(existingAlternative));
                             }
                         } else {
-                            questionAlternativeSet.add(alternativeRepository.save(alternative));
+                            if (!alternative.getAlternative().isBlank()) {
+                                questionAlternativeSet.add(alternativeRepository.save(alternative));
+                            }
                         }
-
                     }
                     question.setAlternatives(questionAlternativeSet);
                 } else {

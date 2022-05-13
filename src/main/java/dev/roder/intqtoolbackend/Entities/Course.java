@@ -126,6 +126,18 @@ public class Course {
                 .collect(Collectors.toList());
     }
 
+    public List<DeployedQuiz> getArchivedQuizzes() {
+        return activeQuizzes.stream().map((deployedQuiz) -> {
+            if (deployedQuiz.getDeadline().compareTo(new Date())<0 && deployedQuiz.getQuiz().getQuestions().size()>0) {
+                return deployedQuiz;
+            } else {
+                return null;
+            }
+        })
+                .filter((deployedQuiz) -> deployedQuiz != null)
+                .collect(Collectors.toList());
+    }
+
     /**
      * Sets the active quizzes to a new value
      *

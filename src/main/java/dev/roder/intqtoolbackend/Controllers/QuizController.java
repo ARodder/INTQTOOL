@@ -172,5 +172,18 @@ public class QuizController {
         return response;
     }
 
+    /**
+     * Endpoint to retrieve the expired quizzes for a teacher.
+     * Accessible from users with any role.
+     *
+     * @return Returns a list of all the expired quizzes the user has.
+     */
+    @RequestMapping(method=RequestMethod.GET, path="/expiredquizzes")
+    @PreAuthorize("hasRole('ROLE_TEACHER') or hasRole('ROLE_ADMIN')")
+    public @ResponseBody Iterable<String> getUsersExpiredQuizzes(){
+        return quizService.getUsersExpiredQuizzes();
+
+    }
+
 
 }

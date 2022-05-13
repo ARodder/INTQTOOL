@@ -52,7 +52,7 @@ public class QuizService {
 
         boolean userInCourse = false;
         for (Course course : userCourses) {
-            if (course.getActiveQuizzes().contains(foundQuiz)) {
+            if (course.getArchivedQuizzes().contains(foundQuiz) || course.getActiveQuizzes().contains(foundQuiz)) {
                 userInCourse = true;
             }
         }
@@ -254,5 +254,18 @@ public class QuizService {
             throw new NoSuchElementException("That quiz is not found in deployment");
         }
 
+    }
+
+    public List<String> getUsersExpiredQuizzes(){
+        User currentUser = getCurrentUser();
+        List<String> quizzes = new ArrayList<String>();
+
+        for (Course course : currentUser.getCourses()) {
+            for (DeployedQuiz quiz : course.getArchivedQuizzes()) {
+                quizzes.add(quiz.getDetails());
+            }
+        }
+
+        return quizzes;
     }
 }

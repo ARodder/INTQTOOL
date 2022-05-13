@@ -133,7 +133,19 @@ public class QuizAnswer {
      * @return returns list of questionAnswers to the corresponding question.
      */
     public List<String> getAnswerForQuestion(Integer questionId){
-        List<QuestionAnswer> answer = answers.stream().filter((ans)->ans.getQuestionId()==questionId).collect(Collectors.toList());
+        List<QuestionAnswer> answer = answers.stream()
+                .filter((ans)->{
+                    if(ans.getQuestionId().equals(questionId)){
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }).collect(Collectors.toList());
+
+
+
         if(answer.size() >= 1){
             return answer.stream().map((ans)->ans.getGradingDetails(user.getId())).collect(Collectors.toList());
         }else{

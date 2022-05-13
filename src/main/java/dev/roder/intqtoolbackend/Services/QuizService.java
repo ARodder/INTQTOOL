@@ -80,11 +80,11 @@ public class QuizService {
         List<Course> userCourses = currentUser.getCourses();
 
         boolean userInCourse = false;
-        for (Course course : userCourses) {
-            if (course.getActiveQuizzes().contains(foundQuiz)) {
+
+            if (userCourses.contains(foundQuiz.getDeploymentCourse())) {
                 userInCourse = true;
             }
-        }
+
 
         if (userInCourse) {
             return foundQuiz.getDetailsForEdit();

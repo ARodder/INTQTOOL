@@ -24,6 +24,8 @@ public class UserController {
     /**
      * Endpoint to change a users Role to student.
      * Only Accessible from user with ROLE_ADMIN.
+     * Path /user/makestudent/{userid}
+     * Method GET
      *
      * @param userId id of the user to give the role of student.
      * @return Returns empty responseEntity stating if the change was successful
@@ -44,6 +46,8 @@ public class UserController {
     /**
      * Endpoint to change a users Role to teacher.
      * Only Accessible from user with ROLE_ADMIN.
+     * Path /user/maketeacher/{userid}
+     * Method GET
      *
      * @param userId id of the user to give the role of teacher.
      * @return Returns empty responseEntity stating if the change was successful
@@ -64,6 +68,8 @@ public class UserController {
     /**
      * Endpoint to change a users Role to admin.
      * Only Accessible from user with ROLE_ADMIN.
+     * Path /user/makeadmin/{userid}
+     * Method GET
      *
      * @param userId id of the user to give the role of admin.
      * @return Returns empty responseEntity stating if the change was successful
@@ -85,6 +91,8 @@ public class UserController {
     /**
      * Endpoint to retrieve user information based on security context.
      * Accessible to any role.
+     * Path /user/myuser
+     * Method GET
      *
      * @return the user information of the retrieved user
      */
@@ -97,6 +105,8 @@ public class UserController {
     /**
      * Endpoint for retrieving a users notifications based on the security context.
      * Accessible to users of any role
+     * Path /user/notification
+     * Method GET
      *
      * @return Returns notifications of the current security contest user.
      */
@@ -110,6 +120,8 @@ public class UserController {
     /**
      * Endpoint for creating a new user.
      * Accessible without authentication to allow anyone to create an account
+     * Path /user/add
+     * Method POST
      *
      * @param user Object containing the details of the new user
      * @return Returns empty responseEntity with statusCode changing based on the success of the creation.
@@ -144,6 +156,8 @@ public class UserController {
     /**
      * Endpoint for retrieving all users in the database.
      * Accessible only for users with ROLE_ADMIN
+     * Path /user/all
+     * Method GET
      *
      * @return List of all users in the database.
      */
@@ -159,6 +173,8 @@ public class UserController {
     /**
      * Endpoint to retrieve the active quizzes of a user using the security context
      * Accessible from users with any role.
+     * Path /user/quizzes
+     * Method GET
      *
      * @return Returns a list of all the active quizzes the user has.
      */
@@ -172,6 +188,8 @@ public class UserController {
     /**
      * Endpoint used to retrieve a list of the courses a user is a part of.
      * Accessible from users with any role.
+     * Path /user/courses
+     * Method GET
      *
      * @return Returns a list of all courses the user is a part of.
      */
@@ -185,6 +203,8 @@ public class UserController {
     /**
      * Endpoint used by user to join a new course based on a randomly generated join-code.
      * Accessible for users with any role.
+     * Path /user/joincourse/{joinCode}
+     * Method GET
      *
      * @param joinCode Random string input by the user to join a course.
      * @return Returns a users updated courses after joining a new course.
@@ -206,6 +226,8 @@ public class UserController {
     /**
      * Endpoint used to clear a users notifications based on the user in the security context.
      * Accessible for users with any role.
+     * Path /user/clearnotifications
+     * Method GET
      *
      * @return Return response entity with statusCode based on the success of the clearing.
      */
@@ -225,6 +247,8 @@ public class UserController {
     /**
      * Endpoint used to remove a users specific notification based on the notificationId
      * Accessible for users with any role.
+     * Path /user/removenotification/{notificationId}
+     * Method GET
      *
      * @param notificationID Id of the notification to remove.
      * @return Return response entity with statusCode based on the success of the removing.
@@ -244,6 +268,8 @@ public class UserController {
     /**
      * Endpoint to retrieve answers for a specific quiz that is not yet submitted.
      * Accessible for users with any role.
+     * Path /user/quizanswers/{quizID}
+     * Method GET
      *
      * @param quizID id of the quiz to find answers for.
      * @return un-submitted answers to of the quiz with the corresponding id.
@@ -260,6 +286,8 @@ public class UserController {
     /**
      * Endpoint to save answers for a quiz in-progress without submitting it.
      * Accessible for users of any role.
+     * Path /user/saveanswer/{deploymentId}
+     * Method POST
      *
      * @param qa The instance of quizAnswer to save.
      * @param deploymentId which deployment of the quiz to save the answer to.
@@ -285,6 +313,8 @@ public class UserController {
     /**
      * Endpoint to retrieve all archived quizzes of the user sending the request
      * Accessible for users with any role.
+     * Path /user/archivedquizzes
+     * Method GET
      *
      * @return Returns a ist of archived quizzes
      */
@@ -308,6 +338,8 @@ public class UserController {
     /**
      * Endpoint to retrieve details of a users quiz answer
      * Accessible for users with any role
+     * Path /user/answeredquiz/{answerId}
+     * Method GET
      *
      * @param answerId Id of the quizAnswer to retrieve
      * @return Returns the answerQuiz object

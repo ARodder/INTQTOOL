@@ -33,6 +33,8 @@ public class CourseController {
      * Defines the endpoint for retrieving the details of a single course given the courseId.
      * Relays the task to the appropriate courseService method.
      * This endpoint is accessible for any of the three roles.
+     * Path /course/{courseId}
+     * Method GET
      *
      * @param courseId Id of the course to retrieve details from
      * @return details retrieved for the course id
@@ -56,6 +58,8 @@ public class CourseController {
      * Defines the endpoint for retrieving the details of all courses currently in the database.
      * Relays the task to the appropriate courseService method.
      * This endpoint is accessible for only for users with ROLE_ADMIN
+     * Path /course/all
+     * Method GET
      *
      * @return details for every course in the database.
      */
@@ -79,6 +83,8 @@ public class CourseController {
      * Defines the endpoint for creating a new course given the required details.
      * Relays the task to the appropriate courseService method.
      * This endpoint is accessible only for users with ROLE_ADMIN.
+     * Path /course/new
+     * Method POST
      *
      * @param newCourse contains details required for creating a new course.
      * @return updated list of all courses in the database after the new course was inserted.
@@ -90,7 +96,7 @@ public class CourseController {
         ResponseEntity<String> response = new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
 
         try {
-            courseService.createNewQuiz(newCourse);
+            courseService.createNewCourse(newCourse);
             String foundCourses = courseService.getAllCourseDetails();
             response = new ResponseEntity<String>(foundCourses, HttpStatus.OK);
         } catch (Exception e) {
@@ -105,6 +111,8 @@ public class CourseController {
      * Defines an endpoint for adding users to a courses from the administrator tool.
      * Relays the task to the appropriate courseService method.
      * This endpoint is accessible only for users with ROLE_ADMIN.
+     * Path /course/adduser/{courseId}
+     * Method POST
      *
      * @param courseId the course id of the course to add a user to.
      * @param json used to extract userId from the http requestbody.

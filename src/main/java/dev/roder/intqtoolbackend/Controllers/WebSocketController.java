@@ -42,6 +42,8 @@ public class WebSocketController {
     /**
      * Serves as a subscription-path for sockets, and retrieves a list of the quizAnswers on subscribe.
      * Accessible for users with the role ROLE_ADMIN or ROLE_TEACHER
+     * Path /quizanswers/{id}
+     * Method SUBSCRIBE
      *
      * @param id Id of the deployedQuiz to subscribe to its answers.
      * @return Returns a message containing a list of all answers that are kept in the deployed quiz and has the status of either submitted or graded.
@@ -55,6 +57,8 @@ public class WebSocketController {
 
     /**
      * Serves as subscription-path for sockets, nd retrieves a list of a users notifications on subscribe.
+     * Path /notifications
+     * Method SUBSCRIBE
      *
      * @return Returns a users list of notifications
      * @throws AccessDeniedException if the user is not verified the AccessDeniedException error is thrown
@@ -67,6 +71,8 @@ public class WebSocketController {
     /**
      * Endpoint to submit a users answers to a deployedQuiz. Also sends update to sockets subscribed to the answers of the specified deployment.
      * Accessible for users with any role.
+     * Path /user/submitanswer/{deploymentId}
+     * Method POST
      *
      * @param qa The answers to submit to the deployedQuiz.
      * @param deploymentId Id of the deployedQuiz to submit the answers to

@@ -50,7 +50,7 @@ public class CourseService {
      * @param newCourse Course object containing details of the new course
      * @throws ValidationException Exception thrown if the course is not valid
      */
-    public void createNewQuiz(Course newCourse) throws ValidationException {
+    public void createNewCourse(Course newCourse) throws ValidationException {
         try {
             newCourse.setActiveQuizzes(new ArrayList<>());
             newCourse.setJoinCode(generateJoinCode());

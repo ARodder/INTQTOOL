@@ -32,7 +32,8 @@ public class AuthenticationController {
     /**
      * This is the specific endpoint used to verify a users credentials, and generate a jwt token
      * the user can use in later requests.
-     * Accessible on http://localhost:8080/authenticate.
+     * Path /authenticate
+     * Method post.
      *
      * @param authenticationRequest a request object containing password and username from the request body.
      * @return jwt-token for the specific user.

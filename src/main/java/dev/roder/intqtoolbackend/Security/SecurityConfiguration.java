@@ -37,6 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
+
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -68,6 +69,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable().cors().and()
                 .authorizeRequests()
                 .antMatchers("/authenticate").permitAll()
+                .antMatchers("/swagger/**").permitAll()
+                .antMatchers("/v3/api-docs/**").permitAll()
                 .antMatchers("/stomp/**").permitAll()
                 .antMatchers("/topic/quizanswers/**").hasAnyRole("ADMIN","TEACHER")
                 .antMatchers("/topic/notifications/**").authenticated()
@@ -100,9 +103,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("https://quiz.web-tek.ninja", "http://localhost:3000"));
+        configuration.setAllowedOrigins(Arrays.asList("https://quiz.web-tek.ninja", "http://localhost:3000","http://localhost:8080"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "withCredentials", "content-type", "x-auth-token", "Access-Control-Allow-Credentials", "access-control-allow-origin", "Access-Control-Allow-headers"));
+        configuration.setAllowedHeaders(Arrays.asList("authorization","content-type", "Access-Control-Allow-Credentials", "access-control-allow-origin", "Access-Control-Allow-headers"));
         configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
         configuration.setMaxAge(Duration.ofSeconds(5000));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

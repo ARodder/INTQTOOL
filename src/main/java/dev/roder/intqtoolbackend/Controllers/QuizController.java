@@ -32,6 +32,8 @@ public class QuizController {
     /**
      * Defines endpoint to retrieve details for a specific quiz.
      * Accessible for any of the three roles.
+     * Path /quiz/{quizID}
+     * Method GET
      *
      * @param quizID id of the quiz to retrieve details from.
      * @return retrieved details.
@@ -46,6 +48,8 @@ public class QuizController {
     /**
      * Defines endpoint for creating a new quiz and new deployment of a quiz.
      * Accessible only with roles: ROLE_TEACHER or ROLE_ADMIN
+     * Path /quiz/new/{courseId}
+     * Method POST
      *
      * @param quiz     deployment of the new quiz, also containing the new quiz itself.
      * @param courseId course where the quiz should be deployed.
@@ -70,6 +74,9 @@ public class QuizController {
 
     /**
      * Defines an endpoint for retrieving the details of a quiz deployment.
+     * Accessible only with roles: ROLE_TEACHER and ROLE_ADMIN
+     * Path /quiz/quizdetails/{deployedquizId}
+     * Method GET
      *
      * @param deployedquizId id of the deployed quiz to retrieve details from.
      * @return returns details of the deployed quiz with the corresponding id
@@ -95,6 +102,8 @@ public class QuizController {
     /**
      * Defines an endpoint for grading one or multiple answers to a single question.
      * Accessible only with roles: ROLE_TEACHER or ROLE_ADMIN
+     * Path /quiz/gradeanswers
+     * Method POST
      *
      * @param gradeAnswerRequest Object used to get all required fields from the requestBody(List of answers to grade, feedback and grade)
      * @return Returns an updated version of the answers to the quiz.
@@ -127,6 +136,8 @@ public class QuizController {
     /**
      * Endpoint for saving updated values for a new quiz in creation or being edited.
      * Accessible only with roles: ROLE_TEACHER or ROLE_ADMIN
+     * Path /quiz/save/{courseId}
+     * Method POST
      *
      * @param updatedQuiz Object containing the updated details for the quiz
      * @param courseId The courseId of the course where the quiz is to be deployed
@@ -152,6 +163,8 @@ public class QuizController {
     /**
      * Endpoint for retrieving all quizAnswers for a specified deployedQuiz retrieved with deployedquizId.
      * Accessible only with roles: ROLE_TEACHER or ROLE_ADMIN.
+     * Path /quiz/quizanswers/{deployedQuizId}
+     * Method GET
      *
      * @param deployedQuizId id of the deployedQuiz to retrieve answers from
      * @return Answers of the specified deployedQuiz.
@@ -175,6 +188,8 @@ public class QuizController {
     /**
      * Endpoint to retrieve the expired quizzes for a teacher.
      * Accessible from users with any role.
+     * Path /quiz/expiredquizzes
+     * Method GET
      *
      * @return Returns a list of all the expired quizzes the user has.
      */
